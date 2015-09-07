@@ -20,13 +20,11 @@ from storage import cache
 
 
 class BaseMethod(object):
-
-  def __init__(self, docs_train, y_train, extra = {}, useCrossValidation = False, vect_options = {}):
-
-    if sys.flags.debug:
-        self.options = {}
-    else: 
-        self.options = {
+    def __init__(self, docs_train, y_train, extra = {}, useCrossValidation = False, vect_options = {}):
+        if sys.flags.debug:
+            self.options = {}
+        else:
+            self.options = {
                 'vect__ngram_range': [(1, 1)], # (2, 2), (3,3)],
                 # 'vect__stop_words': ('english', None),
                 'vect__preprocessor': (None, pr.no_prep, pr.no_usernames, pr.remove_noise, pr.placeholders, pr.all, pr.remove_all, pr.reduced_attached, pr.no_url_usernames_reduced_attached),
@@ -36,23 +34,22 @@ class BaseMethod(object):
                 'vect__sublinear_tf': (True, False)
               }
 
-    self.train(docs_train, y_train, extra, useCrossValidation, vect_options)
+        self.train(docs_train, y_train, extra, useCrossValidation, vect_options)
 
 
-  def train(self, docs_train, y_train, extra = {}, useCrossValidation = False, vect_options={}):
+    def train(self, docs_train, y_train, extra = {}, useCrossValidation = False, vect_options={}):
+        options = dict(self.options.items() + extra.items())
+        cv = StratifiedKFold(y_train, n_folds=10) if useCrossValidation else None
 
-    options = dict(self.options.items() + extra.items())
-    cv = StratifiedKFold(y_train, n_folds=10) if useCrossValidation else None
+        pipeline = Pipeline([
+            ('vect', TfidfVectorizer(tokenizer=t.tokenize, **vect_options)),
+            ('clf', self.clf),
+        ])
 
-    pipeline = Pipeline([
-        ('vect', TfidfVectorizer(tokenizer=t.tokenize, **vect_options)),
-        ('clf', self.clf),
-    ])
+        useGrid = sys.flags.optimize
 
-    useGrid = sys.flags.optimize
-
-    if useGrid:
-        self.grid = GridSearchCV(
+        if useGrid:
+            self.grid = GridSearchCV(
                 pipeline, 
                 options,
                 cv=cv,
@@ -60,59 +57,59 @@ class BaseMethod(object):
                 n_jobs=-1,
                 verbose=1
               )
-    else:
-        self.grid = pipeline
+        else:
+            self.grid = pipeline
 
-    cache_key = str(self.grid) + str(docs_train)
-    cached = cache.get(cache_key)
+        cache_key = str(self.grid) + str(docs_train)
+        cached = cache.get(cache_key)
     
-    if cached and sys.flags.debug == 0: 
-        logging.debug("# Fetched cached version of %s " % self.clf.__class__.__name__)
-        self.best_estimator = cached['est']
-        self.best_score = cached['scr']
-        self.best_params = cached['parm']
+        if cached and sys.flags.debug == 0:
+            logging.debug("# Fetched cached version of %s " % self.clf.__class__.__name__)
+            self.best_estimator = cached['est']
+            self.best_score = cached['scr']
+            self.best_params = cached['parm']
 
-    else:
-      logging.debug("# Training new instance of %s " % self.clf.__class__.__name__)
+        else:
+            logging.debug("# Training new instance of %s " % self.clf.__class__.__name__)
 
-      self.grid.fit(docs_train, y_train)
+        self.grid.fit(docs_train, y_train)
 
-      if useGrid:
-          self.best_estimator = self.grid.best_estimator_
-          self.best_params = self.grid.best_params_
-          self.best_score = self.grid.best_score_
-      else:
-          self.best_estimator = self.grid
-          self.best_params = self.grid.get_params(False)
-          self.best_score = 1
+        if useGrid:
+            self.best_estimator = self.grid.best_estimator_
+            self.best_params = self.grid.best_params_
+            self.best_score = self.grid.best_score_
+        else:
+            self.best_estimator = self.grid
+            self.best_params = self.grid.get_params(False)
+            self.best_score = 1
 
-          logging.debug("Saving to cache for %s " % self.clf.__class__.__name__)
-          cache.save(cache_key, {
-              "est": self.best_estimator,
-              "scr": self.best_score,
-              "parm": self.best_params
+            logging.debug("Saving to cache for %s " % self.clf.__class__.__name__)
+            cache.save(cache_key, {
+                "est": self.best_estimator,
+                "scr": self.best_score,
+                "parm": self.best_params
             })
 
-    self.steps = self.best_estimator.named_steps
+        self.steps = self.best_estimator.named_steps
 
-    logging.debug("# Best params for  %s :" % self.clf.__class__.__name__)
-    logging.debug(self.best_params)
+        logging.debug("# Best params for  %s :" % self.clf.__class__.__name__)
+        logging.debug(self.best_params)
 
-    logging.debug("# Best score for  %s :" % self.clf.__class__.__name__)
-    logging.debug(self.best_score)
+        logging.debug("# Best score for  %s :" % self.clf.__class__.__name__)
+        logging.debug(self.best_score)
 
-    return self.grid
+        return self.grid
 
-  def predict(self, arg_input):
-    orig = arg_input
-    if isinstance(arg_input, basestring):
-        orig = [orig]
+    def predict(self, arg_input):
+        orig = arg_input
+        if isinstance(arg_input, basestring):
+            orig = [orig]
 
-    predictions = self.best_estimator.predict(orig)
-    if isinstance(arg_input, basestring):
-      return predictions[0]
+        predictions = self.best_estimator.predict(orig)
+        if isinstance(arg_input, basestring):
+            return predictions[0]
 
-    return predictions
+        return predictions
 
-  def __str__(self):
-    return "%s" % self.__class__.__name__
+    def __str__(self):
+        return "%s" % self.__class__.__name__
