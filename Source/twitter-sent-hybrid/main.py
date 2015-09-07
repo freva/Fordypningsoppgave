@@ -28,8 +28,18 @@ c1_vect_options = {
 }
 
 c1_default_options = {'C': 0.3}
+#clf = SVM(docs_train, y_train, default_options=c1_default_options, vect_options=c1_vect_options)
+#clf = AFINN(docs_train, y_test, useCrossValidation=False, vect_options=c1_vect_options)
+#clf = Boosting(docs_train, y_test)
 
-clf = SVM(docs_train, y_train, default_options=c1_default_options, vect_options=c1_vect_options)
+if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        numCorrect = 0
+        for tweet, classification in zip(docs_test, y_test):
+            if classification == clf.predict(tweet[3]):
+                numCorrect += 1
+        print numCorrect, len(docs_test), "%.2f" % (100.0*numCorrect/len(docs_test))
 
-text = ' '.join(sys.argv[1:])
-print(clf.predict(text))
+    else:
+        text = ' '.join(sys.argv[1:])
+        print(clf.predict(text))

@@ -3,11 +3,6 @@
 """
 import math
 import re
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
-import logging
 
 from base import BaseMethod
 import utils.filters as filt
@@ -22,19 +17,16 @@ pattern_split = re.compile(r"\W+")
 
 
 class AFINN(BaseMethod):
-
-    def filter(tweet):
+    def filter(self, tweet):
         tweet = filt.no_url(tweet)
         tweet = filt.no_rt_tag(tweet)
         tweet = filt.no_emoticons(tweet)
         tweet = filt.no_usernames(tweet)
         tweet = filt.no_hash(tweet)
-
-        logging.debug("--- FINISHED FILTERING: %s" % tweet)
-
         return tweet
 
-    def sentiment(tweet_text):
+
+    def sentiment(self, tweet_text):
         """
         Returns a float for sentiment strength based on the input text.
         Positive values are positive valence, negative value are negative valence.
@@ -50,12 +42,9 @@ class AFINN(BaseMethod):
         return sentiment
 
 
-    def predict(tweet):
-        logging.debug("Doing AFINN classification")
-        filtered_tweet = AFINN.filter(tweet['text'])
-        sentiment = AFINN.sentiment(filtered_tweet)
-
-        logging.debug("--- Found sentiment: %6.2f for tweet:  %s" % (sentiment, filtered_tweet))
+    def predict(self, tweet):
+        filtered_tweet = AFINN.filter(self, tweet['text'])
+        sentiment = AFINN.sentiment(self, filtered_tweet)
 
         if sentiment > 0:
             return "positive"
