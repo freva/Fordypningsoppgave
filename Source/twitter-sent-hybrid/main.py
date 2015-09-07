@@ -5,7 +5,7 @@
     Classification scheme: <neutral, positive, negative>
 """
 import time
-start_time = time.time()
+start_time = time.clock()
 import sys
 from collections import defaultdict
 
@@ -30,8 +30,9 @@ c1_vect_options = {
 }
 
 c1_default_options = {'C': 0.3}
-clf = SVM(docs_train, y_train, default_options=c1_default_options, vect_options=c1_vect_options)
+#clf = SVM(docs_train, y_train, default_options=c1_default_options, vect_options=c1_vect_options)
 #clf = AFINN(docs_train, y_test, useCrossValidation=False, vect_options=c1_vect_options)
+clf = NB(docs_train, y_train, vect_options=c1_vect_options)
 #clf = Boosting(docs_train, y_test)
 
 if __name__ == "__main__":
@@ -55,4 +56,4 @@ if __name__ == "__main__":
         text = ' '.join(sys.argv[1:])
         print(clf.predict(text))
 
-print "In", "%.2f" % (time.time()-start_time), "sec"
+print "In", "%.2f" % (time.clock()-start_time), "sec"
