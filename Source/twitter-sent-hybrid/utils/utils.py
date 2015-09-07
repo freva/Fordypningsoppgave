@@ -1,29 +1,8 @@
 import numpy as np
 
-
-def generate_subjective_set(dataset):
-    label_i = 3 if len(dataset[0]) > 4 else 2
-
-    new_set = []
-    for i in np.array(dataset, copy=True):
-        if i[label_i] == 'objective' or i[label_i] == 'objective-OR-neutral':
-            i[label_i] = 'neutral'
-        if i[label_i] != 'neutral':
-            i[label_i] = 'subjective'
-        new_set.append(i)
-    return new_set
-
-
-def generate_polarity_set(dataset):
-    label_i = 3 if len(dataset[0]) > 4 else 2
-
-    new_set = []
-    for i in np.array(dataset, copy=True):
-        if i[label_i] != 'objective' and i[label_i] != 'neutral' and i[label_i] != 'objective-OR-neutral':
-            new_set.append(i)
-    return new_set
-
-
+"""
+    All methods below assume that normalize_test_set_classification_scheme has been called prior
+"""
 def normalize_test_set_classification_scheme(dataset):
     label_i = 3 if len(dataset[0]) > 4 else 2
 
@@ -32,6 +11,27 @@ def normalize_test_set_classification_scheme(dataset):
         if i[label_i] == 'objective' or i[label_i] == 'objective-OR-neutral':
             i[label_i] = 'neutral'
     return dataset
+
+
+def generate_polarity_set(dataset):
+    label_i = 3 if len(dataset[0]) > 4 else 2
+
+    new_set = []
+    for i in dataset:
+        if i[label_i] != 'neutral':
+            new_set.append(i)
+    return np.array(new_set)
+
+
+def generate_subjective_set(dataset):
+    label_i = 3 if len(dataset[0]) > 4 else 2
+
+    new_set = []
+    for i in dataset:
+        if i[label_i] != 'neutral':
+            i[label_i] = 'subjective'
+        new_set.append(i)
+    return np.array(new_set)
 
 
 def generate_two_part_dataset(train):
