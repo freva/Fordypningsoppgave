@@ -3,11 +3,6 @@
 """
 import logging
 import sys
-import textwrap
-import numpy as np
-from sklearn.utils.extmath import density
-
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.pipeline import Pipeline
 
 from sklearn.feature_extraction.text import TfidfVectorizer
