@@ -97,9 +97,9 @@ regex_strings = (
     ,
     # Emoticons:
     emoticon_string
-    ,    
+    ,
     # HTML tags:
-     r"""<[^>]+>"""
+    r"""<[^>]+>"""
     ,
     # Twitter username:
     r"""(?:@[\w_]+)"""
@@ -119,11 +119,11 @@ regex_strings = (
     |
     (?:\S)                         # Everything else that isn't whitespace.
     """
-    )
+)
 
 ######################################################################
 # This is the core tokenizing regex:
-    
+
 word_re = re.compile(r"""(%s)""" % "|".join(regex_strings), re.VERBOSE | re.I | re.UNICODE)
 
 # The emoticon string gets its own regex so that we can preserve case for them as needed:
@@ -138,11 +138,12 @@ amp = "&amp;"
 
 preserve_case = False
 
+
 def tokenize(s):
     """
     Argument: s -- any string or unicode object
     Value: a tokenize list of strings; conatenating this list returns the original string if preserve_case=False
-    """        
+    """
     # Try to ensure unicode:
     try:
         s = unicode(s)
@@ -154,9 +155,10 @@ def tokenize(s):
     # Tokenize:
     words = word_re.findall(s)
     # Possible alter the case, but avoid changing emoticons like :D into :d:
-    if not preserve_case:            
-        words = map((lambda x : x if emoticon_re.search(x) else x.lower()), words)
+    if not preserve_case:
+        words = map((lambda x: x if emoticon_re.search(x) else x.lower()), words)
     return words
+
 
 def __html2unicode(s):
     """
@@ -170,18 +172,18 @@ def __html2unicode(s):
             entnum = ent[2:-1]
             try:
                 entnum = int(entnum)
-                s = s.replace(ent, unichr(entnum))  
+                s = s.replace(ent, unichr(entnum))
             except:
                 pass
     # Now the alpha versions:
     ents = set(html_entity_alpha_re.findall(s))
-    ents = filter((lambda x : x != amp), ents)
+    ents = filter((lambda x: x != amp), ents)
     for ent in ents:
         entname = ent[1:-1]
-        try:            
+        try:
             s = s.replace(ent, unichr(htmlentitydefs.name2codepoint[entname]))
         except:
-            pass                    
+            pass
         s = s.replace(amp, " and ")
     return s
 
@@ -192,7 +194,7 @@ if __name__ == '__main__':
         u"RT @ #happyfuncoding: this is a typical Twitter tweet :-)",
         u"HTML entities &amp; other Web oddities can be an &aacute;cute <em class='grumpy'>pain</em> >:(",
         u"It's perhaps noteworthy that phone numbers like +1 (800) 123-4567, (800) 123-4567, and 123-4567 are treated as words despite their whitespace."
-        )
+    )
 
     for s in samples:
         print "======================================================================"
