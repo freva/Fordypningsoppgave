@@ -1,11 +1,13 @@
 """
-    A POST Server running a sentimental analysis on a tweet
-    stringified JSON Object.
+    A POST Server running a sentimental analysis on a tweet stringified JSON Object.
 
     Takes POST requests and returns a string with the classification.
     Classification scheme: <neutral, positive, negative>
 """
+import time
+start_time = time.time()
 import sys
+from collections import defaultdict
 
 # System specific
 import storage.data as d
@@ -16,15 +18,15 @@ import utils.preprocessor_methods as pr
 from models import *
 
 d.set_file_names()
-docs_test, y_test, docs_train, y_train, docs_train_subjectivity, y_train_subjectivity, docs_train_polarity, y_train_polarity = d.get_data()
+docs_test, y_test, docs_train, y_train = d.get_data()
 
 c1_vect_options = {
-  'ngram_range': (1,1),
-  'sublinear_tf': True,
-  'preprocessor': pr.remove_noise,
-  'use_idf': True,
-  'smooth_idf': True,
-  'max_df': 0.5
+    'ngram_range': (1, 1),
+    'sublinear_tf': True,
+    'preprocessor': pr.remove_noise,
+    'use_idf': True,
+    'smooth_idf': True,
+    'max_df': 0.5
 }
 
 c1_default_options = {'C': 0.3}
@@ -34,12 +36,23 @@ clf = SVM(docs_train, y_train, default_options=c1_default_options, vect_options=
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
-        numCorrect = 0
+        results = defaultdict(lambda: [])
+
         for tweet, classification in zip(docs_test, y_test):
-            if classification == clf.predict(tweet[3]):
-                numCorrect += 1
-        print numCorrect, len(docs_test), "%.2f" % (100.0*numCorrect/len(docs_test))
+            results[classification].append(classification == clf.predict(tweet[3]))
+
+        totCor, totTot = 0, 0
+        print "Class Corre Total Perce"
+        for label in sorted(results.keys(), reverse=True):
+            cor, tot = sum(results[label]), len(results[label])
+            totCor += cor
+            totTot += tot
+
+            print label[:5], str(cor).rjust(5), str(tot).rjust(5), ("%.2f" % (100.0 * cor / tot)).rjust(5)
+        print "total", str(totCor).rjust(5), str(totTot).rjust(5), ("%.2f" % (100.0 * totCor / totTot)).rjust(5)
 
     else:
         text = ' '.join(sys.argv[1:])
         print(clf.predict(text))
+
+print "In", "%.2f" % (time.time()-start_time), "sec"
