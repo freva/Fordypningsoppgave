@@ -22,9 +22,10 @@ def testFile(filename):
     data = [i.split("\t") for i in open(filename, "r").read().split("\n")]
 
     request, classifications = [], []
-    for tweetID, unknown, classification, text in data:
+    for line in data:
+        tweetID, unknown, tag, classification, text = line
         request.append(dumps({"text": text}))
-        c = classification
+        c = classification.replace('"', '')
 
         if "objective" in c:
             c = "neutral"
@@ -59,6 +60,6 @@ def dnnTestFile(filename):
     print numCorrect
 
 
-testFile("data/test/twitter-dev-gold-B.tsv")
+testFile("data/test/test_output_tweets.tsv")
 # dnnTestFile("test.tsv")
 # sentimentFromCommandLine()
