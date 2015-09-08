@@ -1,3 +1,4 @@
+from collections import defaultdict
 from json import dumps
 import requests, sys
 
@@ -31,11 +32,21 @@ def testFile(filename):
             c = "neutral"
         classifications.append(c)
 
+    results = defaultdict(lambda: [])
     response = sendPOSTRequest('\n'.join(request))
-    response = [i for i in response.text.split("\n") if len(i) > 0]
 
-    cor, tot = sum([a == b for a, b in zip(classifications, response)]), len(classifications)
-    print cor, tot, ("%.2f" % (100.0 * cor / tot))
+    for c1, c2 in zip(classifications, [i for i in response.text.split("\n") if len(i) > 0]):
+        results[c1].append(c1 == c2)
+
+    totCor, totTot = 0, 0
+    print "Class Corre Total Perce"
+    for label in sorted(results.keys(), reverse=True):
+        cor, tot = sum(results[label]), len(results[label])
+        totCor += cor
+        totTot += tot
+
+        print label[:5], str(cor).rjust(5), str(tot).rjust(5), ("%.2f" % (100.0 * cor / tot)).rjust(5)
+    print "total", str(totCor).rjust(5), str(totTot).rjust(5), ("%.2f" % (100.0 * totCor / totTot)).rjust(5)
 
 
 def dnnTestFile(filename):
