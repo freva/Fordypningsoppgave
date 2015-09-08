@@ -40,7 +40,7 @@ if __name__ == "__main__":
         results = defaultdict(lambda: [])
 
         for tweet, classification in zip(docs_test, y_test):
-            results[classification].append(classification == clf.predict(tweet[3]))
+            results[classification].append(classification == clf.predict(tweet))
 
         totCor, totTot = 0, 0
         print "Class Corre Total Perce"
