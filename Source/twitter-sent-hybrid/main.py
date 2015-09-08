@@ -30,9 +30,9 @@ c1_vect_options = {
 }
 
 c1_default_options = {'C': 0.3}
-#clf = SVM(docs_train, y_train, default_options=c1_default_options, vect_options=c1_vect_options)
+clf = SVM(docs_train, y_train, default_options=c1_default_options, vect_options=c1_vect_options)
 #clf = AFINN(docs_train, y_test, useCrossValidation=False, vect_options=c1_vect_options)
-clf = NB(docs_train, y_train, vect_options=c1_vect_options)
+#clf = NB(docs_train, y_train, vect_options=c1_vect_options)
 #clf = Boosting(docs_train, y_test)
 
 if __name__ == "__main__":
