@@ -20,11 +20,11 @@ def generate_filename(str_id):
 
 
 def save(str_id, obj):
-    full_path = generate_filename(str_id)
-    output = open(full_path, 'wb')
-    pickle.dump(obj, output)
-    output.close()
-
+#     full_path = generate_filename(str_id)
+#     output = open(full_path, 'wb')
+#     pickle.dump(obj, output)
+#     output.close()
+#
     return obj
 
 
