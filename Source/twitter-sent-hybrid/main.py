@@ -17,7 +17,8 @@ import utils.preprocessor_methods as pr
 # Remember: When adding a new method, add it to the methods/__init__.py
 from models import *
 
-d.set_file_names()
+d.set_file_names(train_set='../Testing/data/output3.tsv',
+                 test_set='../Testing/data/test/twitter-dev-gold-B.tsv')
 docs_test, y_test, docs_train, y_train = d.get_data()
 
 c1_vect_options = {
@@ -29,7 +30,7 @@ c1_vect_options = {
     'max_df': 0.5
 }
 
-c1_default_options = {'C': 1.0}
+c1_default_options = {'C': 0.3}
 clf = SVM(docs_train, y_train, default_options=c1_default_options, vect_options=c1_vect_options)
 #clf = AFINN(docs_train, y_test, useCrossValidation=False, vect_options=c1_vect_options)
 #clf = NB(docs_train, y_train, vect_options=c1_vect_options)
