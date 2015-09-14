@@ -4,6 +4,7 @@
     Takes POST requests and returns a string with the classification.
     Classification scheme: <neutral, positive, negative>
 """
+import importlib
 import time
 start_time = time.clock()
 import sys
@@ -52,6 +53,9 @@ if __name__ == "__main__":
 
             print label[:5], str(cor).rjust(5), str(tot).rjust(5), ("%.2f" % (100.0 * cor / tot)).rjust(5)
         print "total", str(totCor).rjust(5), str(totTot).rjust(5), ("%.2f" % (100.0 * totCor / totTot)).rjust(5)
+
+    elif len(sys.argv) == 3 and sys.argv[1] == "test":
+        importlib.import_module("test." + sys.argv[2])
 
     else:
         text = ' '.join(sys.argv[1:])
