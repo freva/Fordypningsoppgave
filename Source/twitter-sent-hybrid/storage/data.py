@@ -17,8 +17,8 @@ test = None
 
 def set_file_names(train_set = None, test_set = None):
     global train, test
-    train_set_filename = (train_set if train_set != None else False) or '../Testing/data/output3.tsv'
-    test_set_filename = (test_set if test_set != None else False) or '../Testing/data/test/twitter-dev-gold-B.tsv'
+    train_set_filename = (train_set if train_set != None else False) or '../Testing/data/train/training.tsv'
+    test_set_filename = (test_set if test_set != None else False) or '../Testing/data/test/dev1.tsv'
     cache.set_training_file(train_set_filename)
 
     if not path.exists(train_set_filename) or not path.exists(test_set_filename):
