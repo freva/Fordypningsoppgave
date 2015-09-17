@@ -18,8 +18,8 @@ import utils.preprocessor_methods as pr
 # Remember: When adding a new method, add it to the methods/__init__.py
 from models import *
 
-d.set_file_names(train_set='../Testing/data/train/training.tsv',
-                 test_set='../Testing/data/test/dev1.tsv')
+d.set_file_names(train_set='../Testing/2013-2-train-full-B.tsv',
+                 test_set='../Testing/2013-2-test-gold-B.tsv')
 docs_test, y_test, docs_train, y_train = d.get_data()
 
 c1_vect_options = {
