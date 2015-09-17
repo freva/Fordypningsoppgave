@@ -26,6 +26,7 @@ def set_file_names(train_set = None, test_set = None):
 
     train = np.loadtxt(train_set_filename, delimiter='\t', dtype='S', comments=None)
     test = np.loadtxt(test_set_filename, delimiter='\t', dtype='S', comments=None)
+    return train, test
 
 
 def get_full_test_set():

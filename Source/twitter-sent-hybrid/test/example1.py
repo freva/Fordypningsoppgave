@@ -8,6 +8,8 @@ from sklearn.pipeline import Pipeline
 from utils import filters as f
 from utils import preprocess as p
 
+import storage.data as d
+
 
 def add_filters(text):
     text = f.no_url(text)
@@ -26,15 +28,12 @@ def test(text):
     return text
 
 
-train_set_filename = '../Testing/data/train/training.tsv'
-test_set_filename = '../Testing/data/test/dev2.tsv'
-
-my_test_data = np.loadtxt(test_set_filename, delimiter='\t', dtype='S', comments=None)
-my_data = np.loadtxt(train_set_filename, delimiter='\t', dtype='S', comments=None)
-my_data = np.array([x for x in my_data if x[4].lower() != "not available"])
+train_set_filename = '../Testing/2013-2-train-full-B.tsv'
+test_set_filename = '../Testing/2013-2-test-gold-B.tsv'
+my_data, my_test_data = d.set_file_names(train_set=train_set_filename, test_set=test_set_filename)
 
 for x in my_data:
-    x[4] = add_filters(x[4])
+    x[3] = add_filters(x[3])
 
 # my_data = my_data[:len(my_data)-1]
 vect = CountVectorizer(preprocessor=test)
@@ -46,14 +45,14 @@ text_clf = Pipeline([
 
 print "Dataset length: %s " % len(my_data)
 print("Training...")
-my_clf = text_clf.fit(my_data[:, 4], my_data[:, 3])
+my_clf = text_clf.fit(my_data[:, 3], my_data[:, 2])
 
 print "# Features: %s" % len(vect.vocabulary_)
 
 print("Done! \nClassifying test set...")
-predicted = my_clf.predict(my_test_data[:, 4])
+predicted = my_clf.predict(my_test_data[:, 3])
 
-print(np.mean(predicted == my_test_data[:, 3]))
+print(np.mean(predicted == my_test_data[:, 2]))
 
-print "Accuracy: %.2f" % my_clf.score(my_data[:, 4], my_data[:, 3])
-print "Accuracy: %.2f" % my_clf.score(predicted, my_test_data[:, 3])
+print "Accuracy: %.2f" % my_clf.score(my_data[:, 3], my_data[:, 2])
+print "Accuracy: %.2f" % my_clf.score(predicted, my_test_data[:, 2])

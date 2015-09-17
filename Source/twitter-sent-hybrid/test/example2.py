@@ -9,6 +9,8 @@ from sklearn.cross_validation import StratifiedKFold
 from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import classification_report, confusion_matrix
 
+import storage.data as d
+
 
 def translate_to_numbers(li):
     return [conv[v] for v in li]
@@ -24,12 +26,10 @@ conv = {
 
 headers = ['"negative"', '"neutral"', '"objective"', '"objective-OR-neutral"', '"positive"']
 
-train_set_filename = '../Testing/data/train/training.tsv'
-test_set_filename = '../Testing/data/test/dev2.tsv'
+train_set_filename = '../Testing/2013-2-train-full-B.tsv'
+test_set_filename = '../Testing/2013-2-test-gold-B.tsv'
 
-test = np.loadtxt(test_set_filename, delimiter='\t', dtype='S', comments=None)
-train = np.loadtxt(train_set_filename, delimiter='\t', dtype='S', comments=None)
-train = np.array([x for x in train if x[3].lower() != "not available"])
+train, test = d.set_file_names(train_set=train_set_filename, test_set=test_set_filename)
 
 docs_train = train[:, 3]
 y_train = train[:, 2]
