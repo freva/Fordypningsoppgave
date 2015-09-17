@@ -26,8 +26,8 @@ def test(text):
     return text
 
 
-train_set_filename = '../Testing/data/train/output_tweets.tsv'
-test_set_filename = '../Testing/data/test/test_output_tweets.tsv'
+train_set_filename = '../Testing/data/train/training.tsv'
+test_set_filename = '../Testing/data/test/dev2.tsv'
 
 my_test_data = np.loadtxt(test_set_filename, delimiter='\t', dtype='S', comments=None)
 my_data = np.loadtxt(train_set_filename, delimiter='\t', dtype='S', comments=None)
