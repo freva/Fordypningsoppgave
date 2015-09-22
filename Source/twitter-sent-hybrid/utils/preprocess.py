@@ -3,9 +3,12 @@
     Used together with filtering
 """
 
-import re
+import re#, language_check
 from nltk.corpus import stopwords
 from nltk.tokenize import wordpunct_tokenize
+from nltk.stem.snowball import SnowballStemmer
+from spellcheck import correct
+
 
 
 def lower(tweet_text):
@@ -20,7 +23,6 @@ def _negation_repl(matchobj):
       Internal helper method for #negation_attachment.
     """
     if matchobj.group(2):
-
         if matchobj.group(1):
             return matchobj.group(1) + "-not not-" + matchobj.group(2)
         else:
@@ -55,3 +57,13 @@ def remove_stopwords(tweet_text, exceptionList=[]):
     word_list = wordpunct_tokenize(tweet_text)
     filtered_words = [w for w in word_list if not w in stopwords.words('english') or w in exceptionList]
     return " ".join(filtered_words)
+
+
+def stem_sentence(tweet_text):
+    stemmer = SnowballStemmer("english")
+
+    spellcheck = [correct(word.encode('ascii', 'ignore')) for word in wordpunct_tokenize(tweet_text.lower())]
+
+    return ' '.join(stemmer.stem(word) for word in spellcheck)
+
+

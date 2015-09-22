@@ -39,7 +39,7 @@ clf = SVM(docs_train, y_train, default_options=c1_default_options, vect_options=
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
-        results = defaultdict(lambda: [])
+        results, out = defaultdict(lambda: []), []
 
         for tweet, classification in zip(docs_test, y_test):
             results[classification].append(classification == clf.predict(tweet))
@@ -51,8 +51,11 @@ if __name__ == "__main__":
             totCor += cor
             totTot += tot
 
-            print label[:5], str(cor).rjust(5), str(tot).rjust(5), ("%.2f" % (100.0 * cor / tot)).rjust(5)
-        print "total", str(totCor).rjust(5), str(totTot).rjust(5), ("%.2f" % (100.0 * totCor / totTot)).rjust(5)
+            out.append("%.2f" % (100.0 * cor / tot))
+            print label[:5], str(cor).rjust(5), str(tot).rjust(5), out[-1].rjust(5)
+        out.extend(["%.2f" % (100.0 * totCor / totTot), "%.2f" % (time.clock()-start_time)])
+        print "total", str(totCor).rjust(5), str(totTot).rjust(5), out[-1].rjust(5)
+        print '\t'.join(out)
 
     elif len(sys.argv) == 3 and sys.argv[1] == "test":
         importlib.import_module("test." + sys.argv[2])

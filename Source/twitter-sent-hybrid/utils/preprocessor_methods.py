@@ -17,6 +17,7 @@ def remove_noise(text):
     text = f.no_rt_tag(text)
     text = f.reduce_letter_duplicates(text)
     # text = p.negation_attachment(text)
+    text = p.stem_sentence(text)
     return text
 
 
