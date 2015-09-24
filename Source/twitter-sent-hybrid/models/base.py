@@ -7,10 +7,12 @@ from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cross_validation import StratifiedKFold
 from sklearn.grid_search import GridSearchCV
+from sklearn.pipeline import FeatureUnion
 
 import utils.preprocessor_methods as pr
 import utils.tokenizer as t
 from storage import cache
+from word_counter import WordCounter
 
 
 class BaseMethod(object):
@@ -37,9 +39,12 @@ class BaseMethod(object):
         options = dict(self.options.items() + extra.items())
         cv = StratifiedKFold(y_train, n_folds=10) if useCrossValidation else None
 
-        pipeline = Pipeline([
+        pipeline = Pipeline([('features', FeatureUnion([
             ('vect', TfidfVectorizer(tokenizer=t.tokenize, **vect_options)),
-            ('clf', self.clf),
+            ('count', WordCounter())])),
+            # ('vect', TfidfVectorizer(tokenizer=t.tokenize, **vect_options)),
+            # ('count', WordCounter()),
+            ('clf', self.clf)
         ])
 
         useGrid = sys.flags.optimize
