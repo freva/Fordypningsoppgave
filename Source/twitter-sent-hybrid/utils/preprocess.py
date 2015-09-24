@@ -37,6 +37,7 @@ def negation_attachment(tweet_text):
       I'm not!! => I'm-not!!
       I am not short => I am-not not-short.
     """
+    tweet_text = tweet_text.replace("n't", " not")
     return re.sub(r'([\S]+)?(?:\s+)?(?:not)(?:\s+)?([a-zA-Z][\S]+)?', _negation_repl, tweet_text, flags=re.IGNORECASE)
 
 
@@ -54,11 +55,7 @@ def remove_stopwords(tweet_text, exceptionList=[]):
 
 def html_decode(tweet_text):
     h = HTMLParser.HTMLParser()
-    return h.unescape(tweet_text)
-
-
-def replace_contractions(tweet_text):
-    return tweet_text.replace("n't", " not")
+    return h.unescape(tweet_text).lower()
 
 
 def stem_sentence(tweet_text):

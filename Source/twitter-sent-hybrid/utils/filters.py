@@ -39,7 +39,8 @@ rt_tag = r'(^RT\s+|\s+RT\s+)'
 
 # URL definitions
 url = r'(\w+:\/\/\S+)'
-url_re = re.compile(url, re.UNICODE)
+
+quote = r'".*?"'
 
 
 def no_emoticons(tweet_text):
@@ -49,41 +50,41 @@ def no_emoticons(tweet_text):
     return tweet
 
 
-def no_usernames(tweet_text):
-    tweet = re.sub(usernames, "", tweet_text)
-    return tweet
-
+def no_username(tweet_text):
+    return re.sub(usernames, "", tweet_text)
 
 def username_placeholder(tweet_text):
     return re.sub(usernames, "||U||", tweet_text)
 
 
 def no_hash(tweet_text):
-    tweet = re.sub(hashtags, "", tweet_text)
-    return tweet
-
+    return re.sub(hashtags, "", tweet_text)
 
 def hash_placeholder(tweet_text):
     return re.sub(hashtags, "||H||", tweet_text)
 
 
-def hash_as_normal(tweet_text):
-    return re.sub(r'#([a-zA-Z]+[a-zA-Z0-9_]*)', "\\1", tweet_text)
-
-
 def no_rt_tag(tweet_text):
-    tweet = re.sub(rt_tag, "", tweet_text)
-    return tweet
+    return re.sub(rt_tag, "", tweet_text)
 
 
 def no_url(tweet_text):
-    tweet = re.sub(url, "", tweet_text)
-    return tweet
-
+    return re.sub(url, "", tweet_text)
 
 def url_placeholder(tweet_text):
     return re.sub(url, "||URL||", tweet_text)
 
 
+def no_quotations(tweet_text):
+    return re.sub(quote, "", tweet_text)
+
+def quote_placeholder(tweet_text):
+    return re.sub(quote, "||QUOTE||", tweet_text)
+
+
 def reduce_letter_duplicates(tweet_text):
     return re.sub(r'(.)\1{3,}', r'\1\1\1', tweet_text, flags=re.IGNORECASE)
+
+
+def hash_as_normal(tweet_text):
+    return re.sub(r'#([a-zA-Z]+[a-zA-Z0-9_]*)', "\\1", tweet_text)

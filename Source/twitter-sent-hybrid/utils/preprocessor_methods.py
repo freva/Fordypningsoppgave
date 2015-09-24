@@ -7,25 +7,25 @@ def no_prep(text):
 
 
 def no_usernames(text):
-    return f.no_usernames(text)
+    return f.no_username(text)
 
 
 def remove_noise(text):
-    text = p.html_decode(text).strip().lower()
-    #text = p.replace_contractions(text)
+    text = p.html_decode(text)
     text = f.no_url(text)
-    text = f.no_usernames(text)
+    text = f.no_username(text)
     text = f.hash_as_normal(text)
     text = f.no_rt_tag(text)
     text = f.reduce_letter_duplicates(text)
-    # text = p.negation_attachment(text)
+    text = f.quote_placeholder(text)
+    text = p.negation_attachment(text)
     # text = p.stem_sentence(text)
-    return text
+    return text.strip()
 
 
 def remove_all(text):
     text = f.no_url(text)
-    text = f.no_usernames(text)
+    text = f.no_username(text)
     text = f.no_hash(text)
     text = f.no_emoticons(text)
     text = f.no_rt_tag(text)
@@ -47,7 +47,7 @@ def reduced_attached(text):
 
 def no_url_usernames_reduced_attached(text):
     text = f.no_url(text)
-    text = f.no_usernames(text)
+    text = f.no_username(text)
     text = f.reduce_letter_duplicates(text)
     text = p.negation_attachment(text)
     return text
@@ -56,7 +56,7 @@ def no_url_usernames_reduced_attached(text):
 def all(text):
     text = text.lower()
     text = f.no_url(text)
-    text = f.no_usernames(text)
+    text = f.no_username(text)
     text = f.no_emoticons(text)
     text = f.no_hash(text)
     text = f.no_rt_tag(text)

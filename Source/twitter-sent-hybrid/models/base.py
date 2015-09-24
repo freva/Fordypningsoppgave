@@ -42,7 +42,7 @@ class BaseMethod(object):
         pipeline = Pipeline([
             ('features', FeatureUnion([
                 ('vect', TfidfVectorizer(tokenizer=t.tokenize, **vect_options)),
-                ('count', WordCounter())
+                #('count', WordCounter())
             ])),
             ('clf', self.clf)
         ])
