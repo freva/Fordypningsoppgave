@@ -11,7 +11,8 @@ def no_usernames(text):
 
 
 def remove_noise(text):
-    text = p.removeHTMLEncodings(text)
+    text = p.html_decode(text).strip().lower()
+    #text = p.replace_contractions(text)
     text = f.no_url(text)
     text = f.no_usernames(text)
     text = f.hash_as_normal(text)
