@@ -39,13 +39,16 @@ class BaseMethod(object):
         options = dict(self.options.items() + extra.items())
         cv = StratifiedKFold(y_train, n_folds=10) if useCrossValidation else None
 
-        pipeline = Pipeline([('features', FeatureUnion([
-            ('vect', TfidfVectorizer(tokenizer=t.tokenize, **vect_options)),
-            ('count', WordCounter())])),
-            # ('vect', TfidfVectorizer(tokenizer=t.tokenize, **vect_options)),
-            # ('count', WordCounter()),
+        pipeline = Pipeline([
+            ('features', FeatureUnion([
+                ('vect', TfidfVectorizer(tokenizer=t.tokenize, **vect_options)),
+                ('count', WordCounter())
+            ])),
             ('clf', self.clf)
         ])
+
+        # vars = [model[1] for model in pipeline.steps[0][1].transformer_list]
+        # print [var.fit_transform(docs_train, y_train).shape for var in vars]
 
         useGrid = sys.flags.optimize
 
