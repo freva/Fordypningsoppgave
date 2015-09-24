@@ -17,15 +17,11 @@ test = None
 
 def set_file_names(train_set = None, test_set = None):
     global train, test
-    train_set_filename = (train_set if train_set != None else False) or '../Testing/data/train/training.tsv'
-    test_set_filename = (test_set if test_set != None else False) or '../Testing/data/test/dev2.tsv'
-    cache.set_training_file(train_set_filename)
+    cache.set_training_file(train_set)
 
-    if not path.exists(train_set_filename) or not path.exists(test_set_filename):
-        raise Exception("File not found")
+    train = readTSV(train_set)
+    test = readTSV(test_set)
 
-    train = np.loadtxt(train_set_filename, delimiter='\t', dtype='S', comments=None)
-    test = np.loadtxt(test_set_filename, delimiter='\t', dtype='S', comments=None)
     return train, test
 
 
@@ -43,11 +39,11 @@ def get_data():
     # Normalize data?
     train = u.reduce_dataset(train, 3000)
 
-    # To compensate for poor TSV data structure
-    i_d = 4 if len(test[0]) > 4 else 3
-    t_d = 4 if len(train[0]) > 4 else 3
-
-    docs_test, y_test = test[:,i_d], test[:,i_d-1]
-    docs_train, y_train = train[:,t_d], train[:,t_d-1]
+    docs_test, y_test = test[:,3], test[:,2]
+    docs_train, y_train = train[:,3], train[:,2]
 
     return docs_test, y_test, docs_train, y_train
+
+
+def readTSV(filename):
+    return np.array([line.split("\t") for line in open(filename).read().decode("windows-1252").split("\n") if len(line) > 0])
