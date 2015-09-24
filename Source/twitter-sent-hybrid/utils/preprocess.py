@@ -60,9 +60,10 @@ def remove_stopwords(tweet_text, exceptionList=[]):
 
 
 def stem_sentence(tweet_text):
+    pattern = re.compile('[a-z]+')
     stemmer = SnowballStemmer("english")
 
-    spellcheck = [correct(word.encode('ascii', 'ignore')) for word in wordpunct_tokenize(tweet_text.lower())]
+    spellcheck = [correct(word.encode('ascii', 'ignore')) if pattern.match(word) else word for word in wordpunct_tokenize(tweet_text.lower())]
 
     return ' '.join(stemmer.stem(word) for word in spellcheck)
 
