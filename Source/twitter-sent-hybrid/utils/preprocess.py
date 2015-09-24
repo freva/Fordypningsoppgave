@@ -3,19 +3,12 @@
     Used together with filtering
 """
 
-import re#, language_check
+import re, HTMLParser
 from nltk.corpus import stopwords
 from nltk.tokenize import wordpunct_tokenize
 from nltk.stem.snowball import SnowballStemmer
 from spellcheck import correct
 
-
-
-def lower(tweet_text):
-    """
-      Wrapper for text.lower()
-    """
-    return tweet_text.lower()
 
 
 def _negation_repl(matchobj):
@@ -59,9 +52,13 @@ def remove_stopwords(tweet_text, exceptionList=[]):
     return " ".join(filtered_words)
 
 
-def removeHTMLEncodings(tweet_text):
-    pattern = re.compile(ur'&(?:[a-z]+|#\d+);')
-    return pattern.sub("", tweet_text)
+def html_decode(tweet_text):
+    h = HTMLParser.HTMLParser()
+    return h.unescape(tweet_text)
+
+
+def replace_contractions(tweet_text):
+    return tweet_text.replace("n't", " not")
 
 
 def stem_sentence(tweet_text):

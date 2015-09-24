@@ -46,25 +46,25 @@ def no_emoticons(tweet_text):
     tweet = re.sub(Happy_RE, "", tweet_text)
     tweet = re.sub(Sad_RE, "", tweet)
     tweet = re.sub(Emoticon_RE, "", tweet)
-    return tweet.lower().strip()
+    return tweet
 
 
 def no_usernames(tweet_text):
     tweet = re.sub(usernames, "", tweet_text)
-    return tweet.lower().strip()
+    return tweet
 
 
 def username_placeholder(tweet_text):
-    return re.sub(usernames, "||U||", tweet_text).lower()
+    return re.sub(usernames, "||U||", tweet_text)
 
 
 def no_hash(tweet_text):
     tweet = re.sub(hashtags, "", tweet_text)
-    return tweet.strip().lower()
+    return tweet
 
 
 def hash_placeholder(tweet_text):
-    return re.sub(hashtags, "||H||", tweet_text).lower()
+    return re.sub(hashtags, "||H||", tweet_text)
 
 
 def hash_as_normal(tweet_text):
@@ -73,17 +73,17 @@ def hash_as_normal(tweet_text):
 
 def no_rt_tag(tweet_text):
     tweet = re.sub(rt_tag, "", tweet_text)
-    return tweet.strip().lower()
+    return tweet
 
 
 def no_url(tweet_text):
     tweet = re.sub(url, "", tweet_text)
-    return tweet.strip().lower()
+    return tweet
 
 
 def url_placeholder(tweet_text):
-    return re.sub(url, "||URL||", tweet_text).lower()
+    return re.sub(url, "||URL||", tweet_text)
 
 
 def reduce_letter_duplicates(tweet_text):
-    return re.sub(r'(.)\1{3,}', r'\1\1\1', tweet_text, flags=re.IGNORECASE).lower()
+    return re.sub(r'(.)\1{3,}', r'\1\1\1', tweet_text, flags=re.IGNORECASE)
