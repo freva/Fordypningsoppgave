@@ -11,13 +11,14 @@ def no_usernames(text):
 
 
 def remove_noise(text):
+    text = p.removeHTMLEncodings(text)
     text = f.no_url(text)
     text = f.no_usernames(text)
     text = f.hash_as_normal(text)
     text = f.no_rt_tag(text)
     text = f.reduce_letter_duplicates(text)
     # text = p.negation_attachment(text)
-    #text = p.stem_sentence(text)
+    # text = p.stem_sentence(text)
     return text
 
 

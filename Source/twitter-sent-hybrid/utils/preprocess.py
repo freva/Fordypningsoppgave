@@ -59,8 +59,13 @@ def remove_stopwords(tweet_text, exceptionList=[]):
     return " ".join(filtered_words)
 
 
+def removeHTMLEncodings(tweet_text):
+    pattern = re.compile(ur'&(?:[a-z]+|#\d+);')
+    return pattern.sub("", tweet_text)
+
+
 def stem_sentence(tweet_text):
-    pattern = re.compile('[a-z]+')
+    pattern = re.compile(ur'[a-z]+')
     stemmer = SnowballStemmer("english")
 
     spellcheck = [correct(word.encode('ascii', 'ignore')) if pattern.match(word) else word for word in wordpunct_tokenize(tweet_text.lower())]

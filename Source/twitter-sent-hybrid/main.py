@@ -43,9 +43,6 @@ if __name__ == "__main__":
         importlib.import_module("test." + sys.argv[2])
 
     else:
-        sys.argv = ["-O"]
-        print sys.flags
-
         results, out = defaultdict(lambda: []), []
 
         for tweet, classification in zip(docs_test, y_test):
@@ -61,7 +58,7 @@ if __name__ == "__main__":
             out.append("%.2f" % (100.0 * cor / tot))
             print label[:5], str(cor).rjust(5), str(tot).rjust(5), out[-1].rjust(5)
         out.extend(["%.2f" % (100.0 * totCor / totTot), "%.2f" % (time.clock()-start_time)])
-        print "total", str(totCor).rjust(5), str(totTot).rjust(5), out[-1].rjust(5)
+        print "total", str(totCor).rjust(5), str(totTot).rjust(5), out[-2].rjust(5)
         print '\t'.join(out)
 
 print "In", "%.2f" % (time.clock()-start_time), "sec"
