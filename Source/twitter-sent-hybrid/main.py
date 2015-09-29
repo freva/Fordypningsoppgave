@@ -22,9 +22,11 @@ from models import *
 d.set_file_names(train_set='../Testing/2013-2-train-full-B.tsv',
                  test_set='../Testing/2013-2-test-gold-B.tsv')
 docs_test, y_test, docs_train, y_train = d.get_data()
+cluster_dict, brown_dict = d.get_cluster_dicts()
+
 
 c1_vect_options = {
-    'ngram_range': (1, 1),
+    'ngram_range': (1, 4),
     'sublinear_tf': True,
     'preprocessor': pr.remove_noise,
     'use_idf': True,
@@ -33,7 +35,7 @@ c1_vect_options = {
 }
 
 c1_default_options = {'C': 1.0}
-clf = SVM(docs_train, y_train, default_options=c1_default_options, vect_options=c1_vect_options)
+clf = SVM(docs_train, y_train, cluster_dict, brown_dict, default_options=c1_default_options, vect_options=c1_vect_options)
 #clf = AFINN(docs_train, y_test, useCrossValidation=False, vect_options=c1_vect_options)
 #clf = NB(docs_train, y_train, vect_options=c1_vect_options)
 #clf = Boosting(docs_train, y_test)
