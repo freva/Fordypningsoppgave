@@ -5,6 +5,7 @@ import cache
 from models import *
 
 import utils.utils as u
+import csv
 
 """
     Get data sets. Both train set and test set.
@@ -47,3 +48,15 @@ def get_data():
 
 def readTSV(filename):
     return np.array([line.split("\t") for line in open(filename).read().decode("windows-1252").split("\n") if len(line) > 0])
+
+def get_cluster_dicts():
+    unique_clusters = set()
+    brown_dict = {}
+    brown_clusters = path.realpath("D:/Skole/Fordypningsoppgave/Source/twitter-sent-hybrid/50mpaths2.txt")
+    with open(brown_clusters, 'r') as cluster_file:
+        for row in cluster_file:
+            decoded =row.decode('utf-8')
+            searchResult = decoded.replace('\n', "").split('\t')
+            unique_clusters.add(searchResult[0])
+            brown_dict[searchResult[1]] = searchResult[0]
+    return dict.fromkeys(unique_clusters, 0), brown_dict

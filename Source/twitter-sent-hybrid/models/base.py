@@ -13,10 +13,11 @@ import utils.preprocessor_methods as pr
 import utils.tokenizer as t
 from storage import cache
 from word_counter import WordCounter
+from clusters import ClusterTransformer
 
 
 class BaseMethod(object):
-    def __init__(self, docs_train, y_train, extra={}, useCrossValidation=False, vect_options={}):
+    def __init__(self, docs_train, y_train, cluster_dict, brown_dict, extra={}, useCrossValidation=False, vect_options={}):
         if sys.flags.debug:
             self.options = {}
         else:
@@ -32,17 +33,20 @@ class BaseMethod(object):
                 'vect__sublinear_tf': (True, False)
             }
 
-        self.train(docs_train, y_train, extra, useCrossValidation, vect_options)
+        self.train(docs_train, y_train, cluster_dict, brown_dict, extra, useCrossValidation, vect_options)
 
 
-    def train(self, docs_train, y_train, extra={}, useCrossValidation=False, vect_options={}):
+    def train(self, docs_train, y_train, cluster_dict, brown_dict, extra={}, useCrossValidation=False, vect_options={}):
         options = dict(self.options.items() + extra.items())
         cv = StratifiedKFold(y_train, n_folds=10) if useCrossValidation else None
+
 
         pipeline = Pipeline([
             ('features', FeatureUnion([
                 ('vect', TfidfVectorizer(tokenizer=t.tokenize, **vect_options)),
-                #('count', WordCounter())
+                ('characters', TfidfVectorizer(analyzer='char', ngram_range=(3, 5), min_df=1)),
+                ('clusters', ClusterTransformer(cluster_dict, brown_dict))
+                # ('count', WordCounter())
             ])),
             ('clf', self.clf)
         ])
