@@ -52,7 +52,7 @@ def readTSV(filename):
 def get_cluster_dicts():
     unique_clusters = set()
     brown_dict = {}
-    brown_clusters = path.realpath("D:/Skole/Fordypningsoppgave/Source/twitter-sent-hybrid/50mpaths2.txt")
+    brown_clusters = path.realpath("../Testing/dictionaries/50mpaths2.txt")
     with open(brown_clusters, 'r') as cluster_file:
         for row in cluster_file:
             decoded =row.decode('utf-8')
