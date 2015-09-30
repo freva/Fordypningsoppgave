@@ -1,11 +1,7 @@
 import numpy as np
 
-from os import path
 import cache
-from models import *
-
 import utils.utils as u
-import csv
 
 """
     Get data sets. Both train set and test set.
@@ -20,15 +16,8 @@ def set_file_names(train_set = None, test_set = None):
     global train, test
     cache.set_training_file(train_set)
 
-    train = readTSV(train_set)
-    test = readTSV(test_set)
-
-    return train, test
-
-
-def get_full_test_set():
-    global test
-    return test
+    train = read_tsv(train_set)
+    test = read_tsv(test_set)
 
 
 def get_data():
@@ -45,10 +34,9 @@ def get_data():
     return docs_test, y_test, docs_train, y_train
 
 
-def readTSV(filename):
+def read_tsv(filename):
     return np.array([line.split("\t") for line in open(filename).read().decode("windows-1252").split("\n") if len(line) > 0])
 
 
-def get_cluster_dicts():
-    brown_dict = dict(line.split("\t")[1::-1] for line in open("../Testing/dictionaries/50mpaths2.txt", 'r').read().decode('utf-8').split("\n"))
-    return dict.fromkeys(brown_dict.values(), 0), brown_dict
+def get_cluster_dict():
+    return dict(line.split("\t")[1::-1] for line in open("../Testing/dictionaries/50mpaths2.txt", 'r').read().decode('utf-8').split("\n"))

@@ -1,50 +1,28 @@
-"""
-    A POST Server running a sentimental analysis on a tweet stringified JSON Object.
-
-    Takes POST requests and returns a string with the classification.
-    Classification scheme: <neutral, positive, negative>
-"""
-import argparse
 import importlib
 import time
+
 start_time = time.clock()
 import sys
 from collections import defaultdict
 
 # System specific
 import storage.data as d
-import utils.preprocessor_methods as pr
+from storage.options import Feature
 
 # Do import of all different methods here:
 # Remember: When adding a new method, add it to the methods/__init__.py
 from models import *
 
-d.set_file_names(train_set='../Testing/2013-2-train-full-B.tsv',
-                 test_set='../Testing/2013-2-test-gold-B.tsv')
-docs_test, y_test, docs_train, y_train = d.get_data()
-cluster_dict, brown_dict = d.get_cluster_dicts()
-
-
-c1_vect_options = {
-    'ngram_range': (1, 4),
-    'sublinear_tf': True,
-    'preprocessor': pr.remove_noise,
-    'use_idf': True,
-    'smooth_idf': True,
-    'max_df': 0.5
-}
-
-c1_default_options = {'C': 1.0}
-clf = SVM(docs_train, y_train, cluster_dict, brown_dict, default_options=c1_default_options, vect_options=c1_vect_options)
-#clf = AFINN(docs_train, y_test, useCrossValidation=False, vect_options=c1_vect_options)
-#clf = NB(docs_train, y_train, vect_options=c1_vect_options)
-#clf = Boosting(docs_train, y_test)
 
 if __name__ == "__main__":
     if len(sys.argv) == 3 and sys.argv[1] == "test":
         importlib.import_module("test." + sys.argv[2])
-
     else:
+        d.set_file_names(train_set  ='../Testing/2013-2-train-full-B.tsv',
+                 test_set   ='../Testing/2013-2-test-gold-B.tsv')
+        docs_test, y_test, docs_train, y_train = d.get_data()
+
+        clf = SVM(docs_train, y_train, Feature.options)
         results, out = defaultdict(lambda: []), []
 
         for tweet, classification in zip(docs_test, y_test):
