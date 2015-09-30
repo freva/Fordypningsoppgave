@@ -6,9 +6,6 @@
 import re, HTMLParser
 from nltk.corpus import stopwords
 from nltk.tokenize import wordpunct_tokenize
-from nltk.stem.snowball import SnowballStemmer
-from spellcheck import correct
-
 
 
 def _negation_repl(matchobj):
@@ -56,14 +53,4 @@ def remove_stopwords(tweet_text, exceptionList=[]):
 def html_decode(tweet_text):
     h = HTMLParser.HTMLParser()
     return h.unescape(tweet_text).lower()
-
-
-def stem_sentence(tweet_text):
-    pattern = re.compile(ur'[a-z]+')
-    stemmer = SnowballStemmer("english")
-
-    spellcheck = [correct(word.encode('ascii', 'ignore')) if pattern.match(word) else word for word in wordpunct_tokenize(tweet_text.lower())]
-
-    return ' '.join(stemmer.stem(word) for word in spellcheck)
-
 
