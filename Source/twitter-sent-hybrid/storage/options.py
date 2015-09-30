@@ -19,12 +19,14 @@ class Feature:
 
         CHAR_NGRAMS: {
             'ngram_range': (3, 5),
+            #'preprocessor': pr.remove_noise,
             'min_df': 1
         },
 
         WORD_CLUSTERS: {
             'dictionary': d.get_cluster_dict(),
-            'norm': True
+            'norm': True,
+            'preprocessor': pr.remove_noise,
         },
 
         SVM_DEFAULT_OPTIONS: {
