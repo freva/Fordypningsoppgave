@@ -4,16 +4,18 @@ from sklearn.preprocessing import normalize
 from utils import tokenizer
 
 class ClusterTransformer(TransformerMixin, BaseEstimator):
-    def __init__(self, cluster_dict, brown_dict, norm=True):
-        self.brown_dict = brown_dict
-        self.cluster_dict = cluster_dict
+    def __init__(self, dictionary={}, norm=True):
+        self.brown_dict = dictionary
+        self.cluster_dict = dict.fromkeys(dictionary.values(), 0)
         self.normalize = norm
         self.vectorizer = None
- 
+
+
     def fit(self, raw_tweets, y=None):
         self.vectorizer = DictVectorizer().fit([self.cluster_dict])
         return self
- 
+
+
     def transform(self, raw_tweets):
         occurrence_list = []  # list holding occurrence dicts for each tweet
         for tweet in raw_tweets:

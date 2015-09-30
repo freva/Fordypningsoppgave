@@ -13,10 +13,11 @@ import utils.preprocessor_methods as pr
 import utils.tokenizer as t
 from storage import cache
 from feature import ClusterTransformer
+from storage.options import Feature
 
 
 class BaseMethod(object):
-    def __init__(self, docs_train, y_train, cluster_dict, brown_dict, extra={}, useCrossValidation=False, vect_options={}):
+    def __init__(self, docs_train, y_train, options, extra={}, useCrossValidation=False, vect_options={}):
         if sys.flags.debug:
             self.options = {}
         else:
@@ -32,30 +33,26 @@ class BaseMethod(object):
                 'vect__sublinear_tf': (True, False)
             }
 
-        self.train(docs_train, y_train, cluster_dict, brown_dict, extra, useCrossValidation, vect_options)
+        self.train(docs_train, y_train, options, extra, useCrossValidation, vect_options)
 
 
-    def train(self, docs_train, y_train, cluster_dict, brown_dict, extra={}, useCrossValidation=False, vect_options={}):
-        options = dict(self.options.items() + extra.items())
+    def train(self, docs_train, y_train, options, extra={}, useCrossValidation=False, vect_options={}):
+        #options = dict(self.options.items() + extra.items())
         cv = StratifiedKFold(y_train, n_folds=10) if useCrossValidation else None
 
 
         pipeline = Pipeline([
             ('features', FeatureUnion([
-                ('vect', TfidfVectorizer(tokenizer=t.tokenize, **vect_options)),
-                ('characters', TfidfVectorizer(analyzer='char', ngram_range=(3, 5), min_df=1)),
-                ('clusters', ClusterTransformer(cluster_dict, brown_dict))
+                (Feature.WORD_VECTORIZER, TfidfVectorizer(tokenizer=t.tokenize, **options[Feature.WORD_VECTORIZER])),
+                (Feature.CHAR_NGRAMS, TfidfVectorizer(analyzer='char', **options[Feature.CHAR_NGRAMS])),
+                (Feature.WORD_CLUSTERS, ClusterTransformer(**options[Feature.WORD_CLUSTERS]))
                 # ('count', WordCounter())
             ])),
             ('clf', self.clf)
         ])
 
-        # vars = [model[1] for model in pipeline.steps[0][1].transformer_list]
-        # print [var.fit_transform(docs_train, y_train).shape for var in vars]
-
         useGrid = sys.flags.optimize
-
-        if useGrid:
+        if useGrid:   #TODO: fix grid search
             self.grid = GridSearchCV(
                 pipeline,
                 options,
