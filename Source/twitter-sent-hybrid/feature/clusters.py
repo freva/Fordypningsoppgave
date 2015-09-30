@@ -1,11 +1,8 @@
-
 from sklearn.base import TransformerMixin, BaseEstimator
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.preprocessing import normalize
+from utils import tokenizer
 
-import tokenizer
- 
- 
 class ClusterTransformer(TransformerMixin, BaseEstimator):
     def __init__(self, cluster_dict, brown_dict, norm=True):
         self.brown_dict = brown_dict

@@ -2,8 +2,8 @@
     Base class for different methods of using sentiment analysis.
 """
 import sys
-from sklearn.pipeline import Pipeline
 
+from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cross_validation import StratifiedKFold
 from sklearn.grid_search import GridSearchCV
@@ -12,8 +12,7 @@ from sklearn.pipeline import FeatureUnion
 import utils.preprocessor_methods as pr
 import utils.tokenizer as t
 from storage import cache
-from word_counter import WordCounter
-from clusters import ClusterTransformer
+from feature import ClusterTransformer
 
 
 class BaseMethod(object):

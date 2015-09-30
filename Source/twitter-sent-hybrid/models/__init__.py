@@ -5,4 +5,3 @@ from .nb import NB
 from .svm import SVM
 from .maxent import MaxEnt
 from .boost import Boosting
-from.word_counter import WordCounter
