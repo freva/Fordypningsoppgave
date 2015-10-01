@@ -5,6 +5,7 @@ class Feature:
     WORD_VECTORIZER = "word_vectorizer"
     CHAR_NGRAMS = "char_ngrams"
     WORD_CLUSTERS = "word_clusters"
+    ALLCAPS = "allcaps"
     SVM_DEFAULT_OPTIONS = "default_options"
 
     options = {
@@ -19,7 +20,7 @@ class Feature:
 
         CHAR_NGRAMS: {
             'ngram_range': (3, 5),
-            #'preprocessor': pr.remove_noise,
+            'preprocessor': pr.remove_noise,
             'min_df': 1
         },
 
