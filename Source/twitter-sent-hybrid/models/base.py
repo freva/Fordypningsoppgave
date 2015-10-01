@@ -12,7 +12,9 @@ from sklearn.pipeline import FeatureUnion
 import utils.preprocessor_methods as pr
 import utils.tokenizer as t
 from storage import cache
-from feature import ClusterTransformer
+from transformer import ClusterTransformer
+from transformer import AllcapsTransformer
+from transformer import WordCounter
 from storage.options import Feature
 
 
@@ -45,8 +47,9 @@ class BaseMethod(object):
             ('features', FeatureUnion([
                 (Feature.WORD_VECTORIZER, TfidfVectorizer(tokenizer=t.tokenize, **options[Feature.WORD_VECTORIZER])),
                 (Feature.CHAR_NGRAMS, TfidfVectorizer(analyzer='char', **options[Feature.CHAR_NGRAMS])),
-                (Feature.WORD_CLUSTERS, ClusterTransformer(**options[Feature.WORD_CLUSTERS]))
-                # ('count', WordCounter())
+                (Feature.WORD_CLUSTERS, ClusterTransformer(**options[Feature.WORD_CLUSTERS])),
+                (Feature.ALLCAPS, AllcapsTransformer()),
+                ('count', WordCounter())
             ])),
             ('clf', self.clf)
         ])
