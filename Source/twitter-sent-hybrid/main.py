@@ -24,12 +24,12 @@ if __name__ == "__main__":
 
         clf = SVM(docs_train, y_train, Feature.options)
         print "Finished training in", "%.2f" % (time.clock()-start_time), "sec"
-        y_pred = [clf.predict(tweet) for tweet in docs_test]
+        y_pred = clf.predict(docs_test)
 
-        out = ["%.2f" % precision_score(y_test, y_pred, average='macro'),
-            "%.2f" % recall_score(y_test, y_pred, average='macro'),
-            "%.2f" % f1_score(y_test, y_pred, average='macro'),
-            "%.2f" % accuracy_score(y_test, y_pred),
+        out = ["%.2f" % (100*precision_score(y_test, y_pred, average='macro')),
+            "%.2f" % (100*recall_score(y_test, y_pred, average='macro')),
+            "%.2f" % (100*f1_score(y_test, y_pred, average='macro')),
+            "%.2f" % (100*accuracy_score(y_test, y_pred)),
             "%.2f" % (time.clock()-start_time)]
         print '\t'.join(out)
 

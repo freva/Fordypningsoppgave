@@ -10,7 +10,7 @@ class Feature:
 
     options = {
         WORD_VECTORIZER: {
-           'ngram_range': (1, 4),
+           'ngram_range': (1, 1),
             'sublinear_tf': True,
             'preprocessor': pr.remove_noise,
             'use_idf': True,
