@@ -16,6 +16,7 @@ from transformer import ClusterTransformer
 from transformer import AllcapsTransformer
 from transformer import WordCounter
 from transformer import ElongationTransformer
+from transformer import PunctuationTransformer
 from storage.options import Feature
 
 
@@ -51,6 +52,7 @@ class BaseMethod(object):
                 (Feature.WORD_CLUSTERS, ClusterTransformer(**options[Feature.WORD_CLUSTERS])),
                 (Feature.ALLCAPS, AllcapsTransformer()),
                 (Feature.ELONGATION, ElongationTransformer()),
+                (Feature.PUNCTUATION, PunctuationTransformer()),
                 ('count', WordCounter())
             ])),
             ('clf', self.clf)

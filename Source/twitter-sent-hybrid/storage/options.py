@@ -7,6 +7,7 @@ class Feature:
     WORD_CLUSTERS = "word_clusters"
     ALLCAPS = "allcaps"
     ELONGATION = "elongation"
+    PUNCTUATION = "punctuation"
     SVM_DEFAULT_OPTIONS = "default_options"
 
     options = {
@@ -30,7 +31,7 @@ class Feature:
         WORD_CLUSTERS: {
             'dictionary': d.get_cluster_dict(),
             'norm': True,
-            'preprocessor': pr.remove_noise,
+            # 'preprocessor': pr.remove_noise,
         },
 
         SVM_DEFAULT_OPTIONS: {
