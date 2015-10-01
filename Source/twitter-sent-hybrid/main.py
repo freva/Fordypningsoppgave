@@ -3,7 +3,7 @@ import time
 
 start_time = time.clock()
 import sys
-from collections import defaultdict
+from sklearn.metrics import f1_score, accuracy_score, precision_score, recall_score
 
 # System specific
 import storage.data as d
@@ -23,22 +23,15 @@ if __name__ == "__main__":
         docs_test, y_test, docs_train, y_train = d.get_data()
 
         clf = SVM(docs_train, y_train, Feature.options)
-        results, out = defaultdict(lambda: []), []
+        print "Finished training in", "%.2f" % (time.clock()-start_time), "sec"
+        y_pred = [clf.predict(tweet) for tweet in docs_test]
 
-        for tweet, classification in zip(docs_test, y_test):
-            results[classification].append(classification == clf.predict(tweet))
-
-        totCor, totTot = 0, 0
-        print "Class Corre Total Perce"
-        for label in sorted(results.keys(), reverse=True):
-            cor, tot = sum(results[label]), len(results[label])
-            totCor += cor
-            totTot += tot
-
-            out.append("%.2f" % (100.0 * cor / tot))
-            print label[:5], str(cor).rjust(5), str(tot).rjust(5), out[-1].rjust(5)
-        out.extend(["%.2f" % (100.0 * totCor / totTot), "%.2f" % (time.clock()-start_time)])
-        print "total", str(totCor).rjust(5), str(totTot).rjust(5), out[-2].rjust(5)
+        out = ["%.2f" % precision_score(y_test, y_pred, average='macro'),
+            "%.2f" % recall_score(y_test, y_pred, average='macro'),
+            "%.2f" % f1_score(y_test, y_pred, average='macro'),
+            "%.2f" % accuracy_score(y_test, y_pred),
+            "%.2f" % (time.clock()-start_time)]
         print '\t'.join(out)
+
 
 print "In", "%.2f" % (time.clock()-start_time), "sec"

@@ -54,6 +54,9 @@ class BaseMethod(object):
             ('clf', self.clf)
         ])
 
+        #vars = [model[1] for model in pipeline.steps[0][1].transformer_list]
+        #print [var.fit_transform(docs_train, y_train).shape for var in vars]
+
         useGrid = sys.flags.optimize
         if useGrid:   #TODO: fix grid search
             self.grid = GridSearchCV(

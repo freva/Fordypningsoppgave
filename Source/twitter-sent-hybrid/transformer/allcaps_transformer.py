@@ -1,6 +1,8 @@
 from sklearn.base import TransformerMixin, BaseEstimator
 from sklearn.preprocessing import normalize
 import numpy as np
+from nltk.tokenize import wordpunct_tokenize
+
 
 # from resources.tweebo_cacher import TweeboCacher
 
@@ -16,8 +18,7 @@ class AllcapsTransformer(TransformerMixin, BaseEstimator):
         allcaps_counts = np.zeros((len(raw_tweets), 1))
         for i, tweet in enumerate(raw_tweets):
             allcaps = 0
-            wordList = tweet.split(" ")
-            for word in wordList:
+            for word in wordpunct_tokenize(tweet):
                 if word.isupper():
                     allcaps += 1
             allcaps_counts[i] = allcaps
