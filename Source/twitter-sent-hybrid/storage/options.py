@@ -6,22 +6,25 @@ class Feature:
     CHAR_NGRAMS = "char_ngrams"
     WORD_CLUSTERS = "word_clusters"
     ALLCAPS = "allcaps"
+    ELONGATION = "elongation"
     SVM_DEFAULT_OPTIONS = "default_options"
 
     options = {
         WORD_VECTORIZER: {
-           'ngram_range': (1, 1),
+           'ngram_range': (1, 4),
             'sublinear_tf': True,
             'preprocessor': pr.remove_noise,
             'use_idf': True,
             'smooth_idf': True,
-            'max_df': 0.5
+            'max_df': 0.5,
+            'max_features': 300000
         },
 
         CHAR_NGRAMS: {
             'ngram_range': (3, 5),
             'preprocessor': pr.remove_noise,
-            'min_df': 1
+            'min_df': 1,
+            'max_features': 200000
         },
 
         WORD_CLUSTERS: {

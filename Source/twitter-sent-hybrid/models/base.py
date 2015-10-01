@@ -15,6 +15,7 @@ from storage import cache
 from transformer import ClusterTransformer
 from transformer import AllcapsTransformer
 from transformer import WordCounter
+from transformer import ElongationTransformer
 from storage.options import Feature
 
 
@@ -46,10 +47,11 @@ class BaseMethod(object):
         pipeline = Pipeline([
             ('features', FeatureUnion([
                 (Feature.WORD_VECTORIZER, TfidfVectorizer(tokenizer=t.tokenize, **options[Feature.WORD_VECTORIZER])),
-                #(Feature.CHAR_NGRAMS, TfidfVectorizer(analyzer='char', **options[Feature.CHAR_NGRAMS])),
-                #(Feature.WORD_CLUSTERS, ClusterTransformer(**options[Feature.WORD_CLUSTERS])),
-                #(Feature.ALLCAPS, AllcapsTransformer()),
-                #('count', WordCounter())
+                (Feature.CHAR_NGRAMS, TfidfVectorizer(analyzer='char', **options[Feature.CHAR_NGRAMS])),
+                (Feature.WORD_CLUSTERS, ClusterTransformer(**options[Feature.WORD_CLUSTERS])),
+                (Feature.ALLCAPS, AllcapsTransformer()),
+                (Feature.ELONGATION, ElongationTransformer()),
+                ('count', WordCounter())
             ])),
             ('clf', self.clf)
         ])
