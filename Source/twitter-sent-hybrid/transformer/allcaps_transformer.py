@@ -4,9 +4,6 @@ import numpy as np
 from nltk.tokenize import wordpunct_tokenize
 
 
-# from resources.tweebo_cacher import TweeboCacher
-
-
 class AllcapsTransformer(TransformerMixin, BaseEstimator):
     def __init__(self, norm=True):
         self.normalize = norm
@@ -22,9 +19,5 @@ class AllcapsTransformer(TransformerMixin, BaseEstimator):
                 if word.isupper():
                     allcaps += 1
             allcaps_counts[i] = allcaps
-            # for token in TweeboCacher.get_cached_tokens()[tweet]:
-            #     if token.isupper():
-            #         allcaps += 1
-            # allcaps_counts[i] = allcaps
         vectorized = allcaps_counts
         return normalize(vectorized) if self.normalize else vectorized
