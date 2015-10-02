@@ -3,7 +3,8 @@ import time
 
 start_time = time.clock()
 import sys
-from sklearn.metrics import f1_score, accuracy_score, precision_score, recall_score
+import numpy as np
+from sklearn.metrics import f1_score, accuracy_score, precision_score, recall_score, confusion_matrix
 
 # System specific
 import storage.data as d
@@ -32,6 +33,7 @@ if __name__ == "__main__":
             "%.2f" % (100*accuracy_score(y_test, y_pred)),
             "%.2f" % (time.clock()-start_time)]
         print '\t'.join(out)
-
+        C = confusion_matrix(y_test, y_pred)
+        print C / C.astype(np.float).sum(axis=0)
 
 print "In", "%.2f" % (time.clock()-start_time), "sec"
