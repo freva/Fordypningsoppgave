@@ -4,23 +4,23 @@
 import re
 
 # Emoticon definitions.
-NormalEyes = r'[:=]'
-Wink = r'[;]'
-NoseArea = r'(|o|O|-)'
-HappyMouths = r'[D\)\]]'
-SadMouths = r'[\(\[]'
-Tongue = r'[pP]'
-OtherMouths = r'[doO/\\]'
-Happy_RE = re.compile('(\^_\^|' + NormalEyes + NoseArea + HappyMouths + ')', re.UNICODE)
-Sad_RE = re.compile(NormalEyes + NoseArea + SadMouths, re.UNICODE)
+NormalEyes = r'[:=8]'
+HappyEyes = r'[xX]'
+WinkEyes = r'[;]'
+NoseArea = r'[\-o\Oc\^\*\']?'
+HappyMouths = r'[dD\)\]\*\>\}]'
+SadMouths = r'[c<|@L\(\[\/\{\\]'
+TongueMouths = r'[pP]'
 
-Wink_RE = re.compile(Wink + NoseArea + HappyMouths, re.UNICODE)
-Tongue_RE = re.compile(NormalEyes + NoseArea + Tongue, re.UNICODE)
-Other_RE = re.compile('(' + NormalEyes + '|' + Wink + ')' + NoseArea + OtherMouths, re.UNICODE)
+Positive_RE = re.compile('(\^_\^|' + "((" + NormalEyes + "|" + HappyEyes + "|" + WinkEyes + ")" + NoseArea + HappyMouths + ')|(?:\<3+))', re.UNICODE)
+Negative_RE = re.compile(NormalEyes + NoseArea + SadMouths, re.UNICODE)
+
+Wink_RE = re.compile(WinkEyes + NoseArea + HappyMouths, re.UNICODE)
+Tongue_RE = re.compile(NormalEyes + NoseArea + TongueMouths, re.UNICODE)
 
 Emoticon = (
-    "(" + NormalEyes + "|" + Wink + ")" + NoseArea +
-    "(" + Tongue + "|" + OtherMouths + "|" + SadMouths + "|" + HappyMouths + ")"
+    "(" + NormalEyes + "|" + HappyEyes + "|" + WinkEyes + ")" + NoseArea +
+    "(" + TongueMouths + "|" + SadMouths + "|" + HappyMouths + ")"
 )
 Emoticon_RE = re.compile(Emoticon, re.UNICODE)
 
@@ -44,8 +44,8 @@ quote = r'".*?"'
 
 
 def no_emoticons(tweet_text):
-    tweet = re.sub(Happy_RE, "", tweet_text)
-    tweet = re.sub(Sad_RE, "", tweet)
+    tweet = re.sub(Positive_RE, "", tweet_text)
+    tweet = re.sub(Negative_RE, "", tweet)
     tweet = re.sub(Emoticon_RE, "", tweet)
     return tweet
 
