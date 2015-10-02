@@ -10,6 +10,8 @@ from transformer import ElongationTransformer
 from transformer import PunctuationTransformer
 from sklearn.pipeline import FeatureUnion
 
+import utils.tokenizer as t
+
 
 class Feature:
     WORD_VECTORIZER = "word_vectorizer"
@@ -27,6 +29,7 @@ class Feature:
             'type': TfidfVectorizer,
             'ngram_range': (1, 4),
             'sublinear_tf': True,
+            'tokenizer': t.tokenize,
             'preprocessor': pr.remove_noise,
             'use_idf': True,
             'smooth_idf': True,
@@ -37,6 +40,7 @@ class Feature:
         CHAR_NGRAMS: {
             'enabled': True,
             'type': TfidfVectorizer,
+            'analyzer': 'char',
             'ngram_range': (3, 5),
             'preprocessor': pr.remove_noise,
             'min_df': 1,

@@ -6,8 +6,6 @@ import numpy as np
 from nltk.tokenize import wordpunct_tokenize
 
 
-
-
 class PunctuationTransformer(TransformerMixin, BaseEstimator):
     def __init__(self, norm=True):
         self.normalize = norm
@@ -35,13 +33,4 @@ class PunctuationTransformer(TransformerMixin, BaseEstimator):
             vectorized[i][2] = both
             vectorized[i][3] = 1 if re.match(r"[!?]{2,}", wordArray[-1]) else 0
         return normalize(vectorized) if self.normalize else vectorized
-
-
-def main():
-    pt = PunctuationTransformer()
-    pt.transform(["shit!!!! why?? meee???"])
-
-if __name__ == '__main__':
-    main()
-
 

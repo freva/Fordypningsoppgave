@@ -1,15 +1,13 @@
 """
     Base class for different methods of using sentiment analysis.
 """
-import sys
 
 from sklearn.pipeline import Pipeline
-from sklearn.cross_validation import StratifiedKFold
-from sklearn.grid_search import GridSearchCV
 
 import utils.preprocessor_methods as pr
 from storage import cache
 from storage.options import Feature
+import time
 
 
 class BaseMethod(object):
@@ -30,9 +28,6 @@ class BaseMethod(object):
 
 
     def train(self, docs_train, y_train, options, extra={}, useCrossValidation=False, vect_options={}):
-        #options = dict(self.options.items() + extra.items())
-        cv = StratifiedKFold(y_train, n_folds=10) if useCrossValidation else None
-
         self.grid = Pipeline([
             ('features', Feature.feature_union),
             ('clf', self.clf)
@@ -44,7 +39,7 @@ class BaseMethod(object):
         cache_key = str(options) + str(docs_train)
         cached = cache.get(cache_key)
 
-        if cached:
+        if False:
             print "Loading from cache..."
             self.best_estimator = cached['est']
             self.best_score = cached['scr']
