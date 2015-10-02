@@ -1,13 +1,11 @@
 """
     Base class for different methods of using sentiment analysis.
 """
-
 from sklearn.pipeline import Pipeline
 
 import utils.preprocessor_methods as pr
 from storage import cache
 from storage.options import Feature
-import time
 
 
 class BaseMethod(object):
@@ -39,7 +37,7 @@ class BaseMethod(object):
         cache_key = str(options) + str(docs_train)
         cached = cache.get(cache_key)
 
-        if False:
+        if cached:
             print "Loading from cache..."
             self.best_estimator = cached['est']
             self.best_score = cached['scr']
