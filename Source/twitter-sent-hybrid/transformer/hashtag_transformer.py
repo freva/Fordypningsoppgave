@@ -1,12 +1,11 @@
 import re
+from nltk import wordpunct_tokenize
 
 from sklearn.base import TransformerMixin, BaseEstimator
 from sklearn.preprocessing import normalize
 import numpy as np
-from nltk.tokenize import wordpunct_tokenize
 
-
-class ElongationTransformer(TransformerMixin, BaseEstimator):
+class HashtagTransformer(TransformerMixin, BaseEstimator):
     def __init__(self, norm=True):
         self.normalize = norm
 
@@ -14,12 +13,12 @@ class ElongationTransformer(TransformerMixin, BaseEstimator):
         return self
 
     def transform(self, raw_tweets):
-        elong_counts = np.zeros((len(raw_tweets), 1))
+        hashtag_counts = np.zeros((len(raw_tweets), 1))
         for i, tweet in enumerate(raw_tweets):
-            elong = 0
-            for word in wordpunct_tokenize(tweet):
-                if re.search(r'([a-zA-Z])\1{3,}', word):
-                    elong += 1
-            elong_counts[i] = elong
-        vectorized = elong_counts
+            hashtag = 0
+            for token in wordpunct_tokenize(tweet):
+                if re.match(r'#\w+', token):
+                    hashtag += 1
+            hashtag_counts[i] = hashtag
+        vectorized = hashtag_counts
         return normalize(vectorized) if self.normalize else vectorized

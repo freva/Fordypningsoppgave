@@ -8,6 +8,8 @@ from transformer import AllcapsTransformer
 from transformer import WordCounter
 from transformer import ElongationTransformer
 from transformer import PunctuationTransformer
+from transformer import EmoticonTransformer
+from transformer import HashtagTransformer
 from sklearn.pipeline import FeatureUnion
 
 import utils.tokenizer as t
@@ -22,6 +24,8 @@ class Feature:
     PUNCTUATION = "punctuation"
     SVM_DEFAULT_OPTIONS = "default_options"
     WORD_COUNT = "word_count"
+    EMOTICONS = "emoticons"
+    HASHTAGS = "hashtags"
 
     options = {
         WORD_VECTORIZER: {
@@ -73,6 +77,16 @@ class Feature:
         WORD_COUNT: {
             'enabled': True,
             'type': WordCounter
+        },
+
+        EMOTICONS: {
+            'enabled': True,
+            'type': EmoticonTransformer
+        },
+
+        HASHTAGS: {
+            'enabled': True,
+            'type': HashtagTransformer
         },
 
         SVM_DEFAULT_OPTIONS: {
