@@ -4,3 +4,4 @@ from .word_counter import WordCounter
 from .allcaps_transformer import AllcapsTransformer
 from .elongation_transformer import ElongationTransformer
 from .punctuation_transformer import PunctuationTransformer
+from .tfidf_neg_transformer import TfidfNegTransformer
