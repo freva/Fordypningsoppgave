@@ -24,23 +24,12 @@ Emoticon = (
 )
 Emoticon_RE = re.compile(Emoticon, re.UNICODE)
 
-# Username definitions
-usernames = r'(@[a-zA-Z0-9_]{1,15})'
-
-
-# Hashtag definitions
-hashtags = r'(#[a-zA-Z]+[a-zA-Z0-9_]*)'
-hashtags_filter = r'(#([a-zA-Z]+[a-zA-Z0-9_]*))'
-
-
-# RT definitions
-rt_tag = r'(^RT\s+|\s+RT\s+)'
-
-
-# URL definitions
-url = r'(\w+:\/\/\S+)'
-
-quote = r'".*?"'
+# Tag definitions
+username_RE = re.compile(r'(@[a-zA-Z0-9_]{1,15})')
+hashtag_RE = re.compile(r'(#[a-zA-Z]+[a-zA-Z0-9_]*)')
+rt_tag_RE = re.compile(r'(^RT\s+|\s+RT\s+)')
+quote_RE = re.compile(r'".*?"')
+url_RE = re.compile(r'(\w+:\/\/\S+)')
 
 
 def no_emoticons(tweet_text):
@@ -51,35 +40,35 @@ def no_emoticons(tweet_text):
 
 
 def no_username(tweet_text):
-    return re.sub(usernames, "", tweet_text)
+    return username_RE.sub("", tweet_text)
 
 def username_placeholder(tweet_text):
-    return re.sub(usernames, "||U||", tweet_text)
+    return username_RE.sub("||U||", tweet_text)
 
 
 def no_hash(tweet_text):
-    return re.sub(hashtags, "", tweet_text)
+    return hashtag_RE.sub("", tweet_text)
 
 def hash_placeholder(tweet_text):
-    return re.sub(hashtags, "||H||", tweet_text)
+    return hashtag_RE.sub("||H||", tweet_text)
 
 
 def no_rt_tag(tweet_text):
-    return re.sub(rt_tag, "", tweet_text)
+    return rt_tag_RE.sub("", tweet_text)
 
 
 def no_url(tweet_text):
-    return re.sub(url, "", tweet_text)
+    return url_RE.sub("", tweet_text)
 
 def url_placeholder(tweet_text):
-    return re.sub(url, "||URL||", tweet_text)
+    return url_RE.sub("||URL||", tweet_text)
 
 
 def no_quotations(tweet_text):
-    return re.sub(quote, "", tweet_text)
+    return quote_RE.sub("", tweet_text)
 
 def quote_placeholder(tweet_text):
-    return re.sub(quote, "||QUOTE||", tweet_text)
+    return quote_RE.sub("||QUOTE||", tweet_text)
 
 
 def reduce_letter_duplicates(tweet_text):
