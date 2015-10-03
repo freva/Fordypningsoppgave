@@ -22,6 +22,6 @@ class EmoticonTransformer(TransformerMixin, BaseEstimator):
             sad = float(len(filters.Negative_RE.findall(tweet)))
 
             vectorized.append([happy, sad])
-            #if sum(vectorized[i]) != 0: print vectorized[i], tweet
+            #if sum(vectorized[i]): print vectorized[i], tweet
         return normalize(vectorized) if self.norm else vectorized
 

@@ -2,7 +2,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 from transformer import ClusterTransformer
 from transformer import AllcapsTransformer
-from transformer import WordCounter
 from transformer import ElongationTransformer
 from transformer import PunctuationTransformer
 from transformer import EmoticonTransformer
@@ -54,17 +53,16 @@ class Feature:
 
         "elongation": {
             'enabled': True,
-            'type': ElongationTransformer
+            'type': ElongationTransformer,
+            'preprocessor': pr.html_decode,
+            'norm': True
         },
 
         "punctuation": {
             'enabled': True,
-            'type': PunctuationTransformer
-        },
-
-        "word_count": {
-            'enabled': True,
-            'type': WordCounter
+            'type': PunctuationTransformer,
+            'preprocessor': pr.html_decode,
+            'norm': False
         },
 
         "emoticons": {
@@ -84,7 +82,7 @@ class Feature:
 
     TRAIN_SET = '../Testing/2013-2-train-full-B.tsv'
     TEST_SET = '../Testing/2013-2-test-gold-B.tsv'
-    USE_CACHE = True
+    USE_CACHE = False
     HASH = str({name: {key: val if isinstance(val, (basestring, bool, int, tuple, float)) else type(val) for key, val in vars.items()} for name, vars in transformer_options.items()})
     FEATURE_UNION = FeatureUnion([(name, vars.pop("type")(**transformer_options[name]))
                                   for name, vars in transformer_options.items() if vars.pop("enabled", False)])

@@ -2,24 +2,22 @@ import re
 
 from sklearn.base import TransformerMixin, BaseEstimator
 from sklearn.preprocessing import normalize
-import numpy as np
-from nltk.tokenize import wordpunct_tokenize
 
 
 class ElongationTransformer(TransformerMixin, BaseEstimator):
-    def __init__(self, norm=True):
+    def __init__(self, norm=True, preprocessor=None):
         self.normalize = norm
+        self.preprocessor = preprocessor
 
     def fit(self, raw_tweets, y=None):
         return self
 
     def transform(self, raw_tweets):
-        elong_counts = np.zeros((len(raw_tweets), 1))
+        vectorized, repeat_RE = [], re.compile(r"([a-zA-Z])\1{2,}")
         for i, tweet in enumerate(raw_tweets):
-            elong = 0
-            for word in wordpunct_tokenize(tweet):
-                if re.search(r'([a-zA-Z])\1{3,}', word):
-                    elong += 1
-            elong_counts[i] = elong
-        vectorized = elong_counts
+            if self.preprocessor:
+                tweet = self.preprocessor(tweet)
+
+            vectorized.append([float(len(repeat_RE.findall(tweet)))])
+            #if sum(vectorized[i]): print vectorized[i], tweet
         return normalize(vectorized) if self.normalize else vectorized
