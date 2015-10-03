@@ -9,7 +9,7 @@ from storage.options import Feature
 
 
 class BaseMethod(object):
-    def __init__(self, docs_train, y_train, options, extra={}, useCrossValidation=False, vect_options={}):
+    def __init__(self, docs_train, y_train, useCrossValidation=False):
         self.options = {
             'vect__ngram_range': [(1, 1)],  # (2, 2), (3,3)],
             #'vect__stop_words': ('english', None),
@@ -22,22 +22,22 @@ class BaseMethod(object):
             'vect__sublinear_tf': (True, False)
         }
 
-        self.train(docs_train, y_train, options, extra, useCrossValidation, vect_options)
+        self.train(docs_train, y_train, useCrossValidation)
 
 
-    def train(self, docs_train, y_train, options, extra={}, useCrossValidation=False, vect_options={}):
+    def train(self, docs_train, y_train, useCrossValidation=False):
         self.grid = Pipeline([
-            ('features', Feature.feature_union),
+            ('features', Feature.FEATURE_UNION),
             ('clf', self.clf)
         ])
 
         #vars = [model[1] for model in pipeline.steps[0][1].transformer_list]
         #print [var.fit_transform(docs_train, y_train).shape for var in vars]
 
-        cache_key = str(options) + str(docs_train)
+        cache_key = str(Feature.HASH) + str(docs_train)
         cached = cache.get(cache_key)
 
-        if cached:
+        if cached and Feature.USE_CACHE:
             print "Loading from cache..."
             self.best_estimator = cached['est']
             self.best_score = cached['scr']

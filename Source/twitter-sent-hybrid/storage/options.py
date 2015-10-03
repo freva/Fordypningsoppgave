@@ -1,6 +1,3 @@
-import storage.data as d
-import utils.preprocessor_methods as pr
-
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 from transformer import ClusterTransformer
@@ -12,23 +9,14 @@ from transformer import EmoticonTransformer
 from transformer import HashtagTransformer
 from sklearn.pipeline import FeatureUnion
 
+import utils.preprocessor_methods as pr
 import utils.tokenizer as t
+import storage.data as d
 
 
 class Feature:
-    WORD_VECTORIZER = "word_vectorizer"
-    CHAR_NGRAMS = "char_ngrams"
-    WORD_CLUSTERS = "word_clusters"
-    ALL_CAPS = "allcaps"
-    ELONGATION = "elongation"
-    PUNCTUATION = "punctuation"
-    SVM_DEFAULT_OPTIONS = "default_options"
-    WORD_COUNT = "word_count"
-    EMOTICONS = "emoticons"
-    TAGS = "hashtags"
-
-    options = {
-        WORD_VECTORIZER: {
+    transformer_options = {
+        "word_vectorizer": {
             'enabled': True,
             'type': TfidfVectorizer,
             'ngram_range': (1, 4),
@@ -41,7 +29,7 @@ class Feature:
             'max_features': 300000
         },
 
-        CHAR_NGRAMS: {
+        "char_ngrams": {
             'enabled': True,
             'type': TfidfVectorizer,
             'analyzer': 'char',
@@ -51,51 +39,56 @@ class Feature:
             'max_features': 200000
         },
 
-        WORD_CLUSTERS: {
+        "word_clusters": {
             'enabled': True,
             'type': ClusterTransformer,
-            'dictionary': d.get_cluster_dict(),
+            'dictionary': d.get_cluster_dict,
             'norm': True,
             # 'preprocessor': pr.remove_noise,
         },
 
-        ALL_CAPS: {
+        "allcaps": {
             'enabled': True,
             'type': AllcapsTransformer
         },
 
-        ELONGATION: {
+        "elongation": {
             'enabled': True,
             'type': ElongationTransformer
         },
 
-        PUNCTUATION: {
+        "punctuation": {
             'enabled': True,
             'type': PunctuationTransformer
         },
 
-        WORD_COUNT: {
+        "word_count": {
             'enabled': True,
             'type': WordCounter
         },
 
-        EMOTICONS: {
+        "emoticons": {
             'enabled': True,
             'type': EmoticonTransformer,
             'preprocessor': pr.remove_noise,
             'norm': True
         },
 
-        TAGS: {
+        "hashtags": {
             'enabled': True,
             'type': HashtagTransformer,
             'preprocessor': pr.html_decode,
             'norm': False
-        },
-
-        SVM_DEFAULT_OPTIONS: {
-            'C': 1.0
         }
     }
 
-    feature_union = FeatureUnion([(name, vars.pop("type")(**options[name])) for name, vars in options.items() if vars.pop("enabled", False)])
+    TRAIN_SET = '../Testing/2013-2-train-full-B.tsv'
+    TEST_SET = '../Testing/2013-2-test-gold-B.tsv'
+    USE_CACHE = True
+    HASH = str({name: {key: val if isinstance(val, (basestring, bool, int, tuple, float)) else type(val) for key, val in vars.items()} for name, vars in transformer_options.items()})
+    FEATURE_UNION = FeatureUnion([(name, vars.pop("type")(**transformer_options[name]))
+                                  for name, vars in transformer_options.items() if vars.pop("enabled", False)])
+
+    SVM_DEFAULT_OPTIONS = {
+        'C': 1.0
+    }

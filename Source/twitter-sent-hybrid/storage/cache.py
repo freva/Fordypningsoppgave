@@ -6,16 +6,9 @@ import pickle
 from os import path
 
 dir_path = "pickles/"
-training_filename = ""
-
-
-def set_training_file(filename):
-    global training_filename
-    training_filename = filename
-
 
 def generate_filename(str_id):
-    filename = md5(str(str_id) + training_filename).hexdigest()
+    filename = md5(str(str_id)).hexdigest()
     return str(dir_path + filename + ".pkl")
 
 

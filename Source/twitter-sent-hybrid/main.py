@@ -19,11 +19,9 @@ if __name__ == "__main__":
     if len(sys.argv) == 3 and sys.argv[1] == "test":
         importlib.import_module("test." + sys.argv[2])
     else:
-        d.set_file_names(train_set  ='../Testing/2013-2-train-full-B.tsv',
-                 test_set   ='../Testing/2013-2-test-gold-B.tsv')
-        docs_test, y_test, docs_train, y_train = d.get_data()
+        docs_test, y_test, docs_train, y_train = d.get_data(Feature.TRAIN_SET, Feature.TEST_SET)
 
-        clf = SVM(docs_train, y_train, Feature.options)
+        clf = SVM(docs_train, y_train)
         print "Finished training in", "%.2f" % (time.clock()-start_time), "sec"
         y_pred = clf.predict(docs_test)
 
