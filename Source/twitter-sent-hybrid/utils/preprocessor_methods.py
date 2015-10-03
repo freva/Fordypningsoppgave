@@ -10,6 +10,10 @@ def no_usernames(text):
     return f.no_username(text)
 
 
+def html_decode(text):
+    return p.html_decode(text)
+
+
 def remove_noise(text):
     text = p.html_decode(text)
     text = f.no_url(text)
