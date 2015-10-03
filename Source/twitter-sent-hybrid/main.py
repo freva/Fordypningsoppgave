@@ -34,6 +34,7 @@ if __name__ == "__main__":
             "%.2f" % (time.clock()-start_time)]
         print '\t'.join(out)
         C = confusion_matrix(y_test, y_pred)
-        print C / C.astype(np.float).sum(axis=0)
+        np.set_printoptions(formatter={'float': '{: 0.2f}'.format})
+        print 100.0*C / np.sum(C)
 
 print "In", "%.2f" % (time.clock()-start_time), "sec"
