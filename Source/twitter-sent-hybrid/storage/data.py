@@ -1,6 +1,5 @@
 import numpy as np
 
-import cache
 import utils.utils as u
 
 """
@@ -9,19 +8,11 @@ import utils.utils as u
 
     E.g. on a set of 2000 entries, 1500 is used for training and 500 for testing. 
 """
-train = None
-test = None
 
-def set_file_names(train_set = None, test_set = None):
-    global train, test
-    cache.set_training_file(train_set)
 
+def get_data(train_set, test_set):
     train = read_tsv(train_set)
     test = read_tsv(test_set)
-
-
-def get_data():
-    global train, test
 
     test = u.normalize_test_set_classification_scheme(test)
     train = u.normalize_test_set_classification_scheme(train)

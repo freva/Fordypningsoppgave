@@ -4,9 +4,9 @@ from sklearn.preprocessing import normalize
 from utils import tokenizer
 
 class ClusterTransformer(TransformerMixin, BaseEstimator):
-    def __init__(self, dictionary={}, norm=True, preprocessor=None):
-        self.brown_dict = dictionary
-        self.cluster_dict = dict.fromkeys(dictionary.values(), 0)
+    def __init__(self, dictionary, norm=True, preprocessor=None):
+        self.brown_dict = dictionary()
+        self.cluster_dict = dict.fromkeys(self.brown_dict.values(), 0)
         self.normalize = norm
         self.vectorizer = None
         self.preprocessor = preprocessor
