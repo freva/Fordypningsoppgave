@@ -25,7 +25,7 @@ class Feature:
     SVM_DEFAULT_OPTIONS = "default_options"
     WORD_COUNT = "word_count"
     EMOTICONS = "emoticons"
-    HASHTAGS = "hashtags"
+    TAGS = "hashtags"
 
     options = {
         WORD_VECTORIZER: {
@@ -81,12 +81,16 @@ class Feature:
 
         EMOTICONS: {
             'enabled': True,
-            'type': EmoticonTransformer
+            'type': EmoticonTransformer,
+            'preprocessor': pr.remove_noise,
+            'norm': True
         },
 
-        HASHTAGS: {
+        TAGS: {
             'enabled': True,
-            'type': HashtagTransformer
+            'type': HashtagTransformer,
+            'preprocessor': pr.html_decode,
+            'norm': False
         },
 
         SVM_DEFAULT_OPTIONS: {
