@@ -24,12 +24,10 @@ def generate_polarity_set(dataset):
 
 
 def generate_subjective_set(dataset):
-    label_i = 3 if len(dataset[0]) > 4 else 2
-
     new_set = []
     for i in dataset:
-        if i[label_i] != 'neutral':
-            i[label_i] = 'subjective'
+        if i[2] != 'neutral':
+            i[2] = 'subjective'
         new_set.append(i)
     return np.array(new_set)
 
