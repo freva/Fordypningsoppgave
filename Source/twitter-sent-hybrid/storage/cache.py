@@ -1,8 +1,8 @@
 """
     Module for caching trained classifier. 
 """
-from hashlib import md5
 import pickle
+from hashlib import md5
 from os import path
 
 dir_path = "pickles/"

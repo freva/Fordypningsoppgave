@@ -8,20 +8,20 @@ from sklearn.metrics import f1_score, accuracy_score, precision_score, recall_sc
 
 # System specific
 import storage.data as d
-from storage.options import Feature
+from storage.options import General, SubjectivityFeatures
 
 # Do import of all different methods here:
 # Remember: When adding a new method, add it to the methods/__init__.py
-from models import *
+from models.base import BaseMethod
 
 
 if __name__ == "__main__":
     if len(sys.argv) == 3 and sys.argv[1] == "test":
         importlib.import_module("test." + sys.argv[2])
     else:
-        docs_test, y_test, docs_train, y_train = d.get_data(Feature.TRAIN_SET, Feature.TEST_SET)
+        docs_test, y_test, docs_train, y_train = d.get_data(General.TRAIN_SET, General.TEST_SET)
 
-        clf = SVM(docs_train, y_train)
+        clf = BaseMethod(docs_train, y_train, **SubjectivityFeatures.CLASSIFIER)
         print "Finished training in", "%.2f" % (time.clock()-start_time), "sec"
         y_pred = clf.predict(docs_test)
 
