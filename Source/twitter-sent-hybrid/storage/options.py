@@ -17,7 +17,7 @@ import storage.data as d
 class Feature:
     transformer_options = {
         "word_vectorizer": {
-            'enabled': True,
+            'enabled': False,
             'type': TfidfVectorizer,
             'ngram_range': (1, 4),
             'sublinear_tf': True,
@@ -30,7 +30,7 @@ class Feature:
         },
 
         "char_ngrams": {
-            'enabled': True,
+            'enabled': False,
             'type': TfidfVectorizer,
             'analyzer': 'char',
             'ngram_range': (3, 5),
@@ -45,7 +45,7 @@ class Feature:
         },
 
         "word_clusters": {
-            'enabled': True,
+            'enabled': False,
             'type': ClusterTransformer,
             'dictionary': d.get_cluster_dict,
             'norm': True,
@@ -53,33 +53,33 @@ class Feature:
         },
 
         "allcaps": {
-            'enabled': True,
+            'enabled': False,
             'type': AllcapsTransformer
         },
 
         "elongation": {
-            'enabled': True,
+            'enabled': False,
             'type': ElongationTransformer,
             'preprocessor': pr.html_decode,
             'norm': True
         },
 
         "punctuation": {
-            'enabled': True,
+            'enabled': False,
             'type': PunctuationTransformer,
             'preprocessor': pr.html_decode,
             'norm': False
         },
 
         "emoticons": {
-            'enabled': True,
+            'enabled': False,
             'type': EmoticonTransformer,
             'preprocessor': pr.remove_noise,
             'norm': True
         },
 
         "hashtags": {
-            'enabled': True,
+            'enabled': False,
             'type': HashtagTransformer,
             'preprocessor': pr.html_decode,
             'norm': False
