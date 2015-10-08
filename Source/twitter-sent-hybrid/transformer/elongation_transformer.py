@@ -9,8 +9,10 @@ class ElongationTransformer(TransformerMixin, BaseEstimator):
         self.normalize = norm
         self.preprocessor = preprocessor
 
+
     def fit(self, raw_tweets, y=None):
         return self
+
 
     def transform(self, raw_tweets):
         vectorized, repeat_RE = [], re.compile(r"([a-zA-Z])\1{2,}")
