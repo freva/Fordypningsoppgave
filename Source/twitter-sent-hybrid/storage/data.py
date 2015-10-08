@@ -17,8 +17,11 @@ def get_data(train_set, test_set):
     test = u.normalize_test_set_classification_scheme(test)
     train = u.normalize_test_set_classification_scheme(train)
 
+    test = u.generate_polarity_set(test)
+    train = u.generate_polarity_set(train)
+
     # Normalize data?
-    train = u.reduce_dataset(train, 3000)
+    #train = u.reduce_dataset(train, 3000)
 
     docs_test, y_test = test[:,3], test[:,2]
     docs_train, y_train = train[:,3], train[:,2]
