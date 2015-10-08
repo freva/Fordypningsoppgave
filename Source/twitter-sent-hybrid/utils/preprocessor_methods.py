@@ -28,6 +28,7 @@ def remove_noise(text):
 
 
 def remove_all(text):
+    text = p.html_decode(text)
     text = f.no_url(text)
     text = f.no_username(text)
     text = f.no_hash(text)
