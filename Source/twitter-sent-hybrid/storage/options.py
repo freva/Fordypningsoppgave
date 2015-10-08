@@ -6,6 +6,7 @@ from transformer import ElongationTransformer
 from transformer import PunctuationTransformer
 from transformer import EmoticonTransformer
 from transformer import HashtagTransformer
+from transformer import POSTransformer
 from sklearn.pipeline import FeatureUnion
 
 import utils.preprocessor_methods as pr
@@ -36,6 +37,11 @@ class Feature:
             'preprocessor': pr.remove_noise,
             'min_df': 1,
             'max_features': 200000
+        },
+
+        "pos_tagger": {
+            'enabled': True,
+            'type': POSTransformer,
         },
 
         "word_clusters": {

@@ -1,26 +1,23 @@
-from sklearn.base import TransformerMixin, BaseEstimator
-from sklearn.feature_extraction import DictVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import normalize
+import nltk
+import utils.preprocessor_methods as t
 
-class POSTransformer(TransformerMixin, BaseEstimator):
-    def __init__(self, norm=True):
+
+class POSTransformer(TfidfVectorizer):
+    def __init__(self, norm=False, **kwargs):
+        super(POSTransformer, self).__init__(self, **kwargs)
         self.vectorizer = None
         self.normalize = norm
 
-    def fit(self, X, y=None, **fit_params):
-        self.vectorizer = DictVectorizer().fit([TweeboCacher.tag_dict])
-        return self
-
     def transform(self, raw_tweets, **transform_params):
-        pos_counts = []
+        pos_tweets = []
         for tweet in raw_tweets:
-            try:
-                tweet_tags_count = TweeboCacher.get_cached_pos_counts()[tweet]
-            except KeyError:
-                print('KeyError!')
-                print(tweet)
-                TweeboCacher.cache(raw_tweets)
-                tweet_tags_count = TweeboCacher.get_cached_pos_counts()[tweet]
-            pos_counts.append(tweet_tags_count)
-        vectorized = self.vectorizer.transform(pos_counts)
-        return normalize(vectorized) if self.normalize else vectorized
+            tweet = t.remove_all(tweet)
+            tokens = nltk.word_tokenize(tweet)
+            tagged = nltk.pos_tag(tokens)
+            new_sentence = " ".join([i[1] for i in tagged])
+            pos_tweets.append(new_sentence)
+        #vectorized = self.vectorizer.transform(pos_tweets)
+        self.X = normalize(pos_tweets) if self.normalize else pos_tweets
+        return self.X
