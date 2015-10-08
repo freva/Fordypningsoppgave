@@ -1,21 +1,23 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-from transformer import ClusterTransformer
-from transformer import AllcapsTransformer
-from transformer import ElongationTransformer
-from transformer import PunctuationTransformer
-from transformer import EmoticonTransformer
-from transformer import HashtagTransformer
-from transformer import POSTransformer
+from transformer import *
+from models import *
 from sklearn.pipeline import FeatureUnion
 
 import utils.preprocessor_methods as pr
 import utils.tokenizer as t
 import storage.data as d
+from sklearn.svm import LinearSVC
 
 
-class Feature:
-    transformer_options = {
+class General:
+    TRAIN_SET = '../Testing/2013-2-train-full-B.tsv'
+    TEST_SET = '../Testing/2013-2-test-gold-B.tsv'
+    USE_CACHE = False
+
+
+class SubjectivityFeatures:
+    TRANSFORMER_OPTIONS = {
         "word_vectorizer": {
             'enabled': False,
             'type': TfidfVectorizer,
@@ -86,13 +88,12 @@ class Feature:
         }
     }
 
-    TRAIN_SET = '../Testing/2013-2-train-full-B.tsv'
-    TEST_SET = '../Testing/2013-2-test-gold-B.tsv'
-    USE_CACHE = False
-    HASH = str({name: {key: val if isinstance(val, (basestring, bool, int, tuple, float)) else type(val) for key, val in vars.items()} for name, vars in transformer_options.items()})
-    FEATURE_UNION = FeatureUnion([(name, vars.pop("type")(**transformer_options[name]))
-                                  for name, vars in transformer_options.items() if vars.pop("enabled", False)])
 
-    SVM_DEFAULT_OPTIONS = {
-        'C': 1.0
+    CLASSIFIER = {
+        'clf': LinearSVC,
+        'defaults': {'C': 1.0},
+        'useCache': True,
+        'feature_union': FeatureUnion([(name, vars.pop("type")(**TRANSFORMER_OPTIONS[name]))
+                                  for name, vars in TRANSFORMER_OPTIONS.items() if vars.pop("enabled", False)])
     }
+

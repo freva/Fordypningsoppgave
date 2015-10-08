@@ -3,13 +3,12 @@
 """
 from sklearn.pipeline import Pipeline
 
-import utils.preprocessor_methods as pr
 from storage import cache
-from storage.options import Feature
+import utils.preprocessor_methods as pr
 
 
 class BaseMethod(object):
-    def __init__(self, docs_train, y_train, useCrossValidation=False):
+    def __init__(self, docs_train, y_train, feature_union=None, useCache=True, clf=None, defaults={}):
         self.options = {
             'vect__ngram_range': [(1, 1)],  # (2, 2), (3,3)],
             #'vect__stop_words': ('english', None),
@@ -22,22 +21,23 @@ class BaseMethod(object):
             'vect__sublinear_tf': (True, False)
         }
 
-        self.train(docs_train, y_train, useCrossValidation)
+        self.clf = clf(**defaults)
+        self.train(docs_train, y_train, feature_union, useCache)
 
 
-    def train(self, docs_train, y_train, useCrossValidation=False):
+    def train(self, docs_train, y_train, feature_union, useCache=True):
         self.grid = Pipeline([
-            ('features', Feature.FEATURE_UNION),
+            ('features', feature_union),
             ('clf', self.clf)
         ])
 
         #vars = [model[1] for model in pipeline.steps[0][1].transformer_list]
         #print [var.fit_transform(docs_train, y_train).shape for var in vars]
 
-        cache_key = str(Feature.HASH) + str(docs_train)
+        cache_key = str(feature_union) + str(docs_train)
         cached = cache.get(cache_key)
 
-        if cached and Feature.USE_CACHE:
+        if cached and useCache:
             print "Loading from cache..."
             self.best_estimator = cached['est']
             self.best_score = cached['scr']
@@ -68,7 +68,3 @@ class BaseMethod(object):
             return predictions[0]
 
         return predictions
-
-
-    def __str__(self):
-        return "%s" % self.__class__.__name__
