@@ -9,19 +9,19 @@ dir_path = "pickles/"
 
 def generate_filename(str_id):
     filename = md5(str(str_id)).hexdigest()
-    return str(dir_path + filename + ".pkl")
+    return str(filename + ".pkl")
 
 
-def save(str_id, obj):
-    full_path = generate_filename(str_id)
+def save(str_id, obj, prefix=None):
+    full_path = dir_path + (prefix if prefix else "") + generate_filename(str_id)
     output = open(full_path, 'wb')
     pickle.dump(obj, output)
     output.close()
     return obj
 
 
-def get(str_id):
-    full_path = generate_filename(str_id)
+def get(str_id, prefix=None):
+    full_path = dir_path + (prefix if prefix else "") + generate_filename(str_id)
     if not path.exists(full_path):
         return False
 
