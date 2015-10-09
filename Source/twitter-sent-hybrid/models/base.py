@@ -8,7 +8,7 @@ import utils.preprocessor_methods as pr
 
 
 class BaseMethod(object):
-    def __init__(self, docs_train, y_train, feature_union=None, useCache=True, clf=None, defaults={}):
+    def __init__(self, train, feature_union=None, useCache=True, clf=None, defaults={}):
         self.options = {
             'vect__ngram_range': [(1, 1)],  # (2, 2), (3,3)],
             #'vect__stop_words': ('english', None),
@@ -23,19 +23,20 @@ class BaseMethod(object):
 
         self.clf = clf(**defaults)
         self.useCache = useCache
-        self.train(docs_train, y_train, feature_union)
+        self.feature_union = feature_union
+        self.train(train[:,0], train[:,1])
 
 
-    def train(self, docs_train, y_train, feature_union):
+    def train(self, docs_train, y_train):
         self.grid = Pipeline([
-            ('features', feature_union),
+            ('features', self.feature_union),
             ('clf', self.clf)
         ])
 
         #vars = [model[1] for model in pipeline.steps[0][1].transformer_list]
         #print [var.fit_transform(docs_train, y_train).shape for var in vars]
 
-        cache_key = str(feature_union) + str(docs_train)
+        cache_key = str(self.feature_union) + str(docs_train)
         cached = cache.get(cache_key)
 
         if cached and self.useCache:
