@@ -43,6 +43,7 @@ class SubjectivityFeatures:
         "pos_tagger": {
             'enabled': True,
             'type': POSTransformer,
+            'preprocessor': pr.remove_all
         },
 
         "word_clusters": {
@@ -125,6 +126,7 @@ class PolarityFeatures:
         "pos_tagger": {
             'enabled': True,
             'type': POSTransformer,
+            'preprocessor': pr.remove_all
         },
 
         "word_clusters": {
