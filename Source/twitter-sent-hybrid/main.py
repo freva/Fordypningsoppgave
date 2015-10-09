@@ -21,7 +21,8 @@ if __name__ == "__main__":
     else:
         docs_test, y_test, docs_train, y_train = d.get_data(General.TRAIN_SET, General.TEST_SET)
 
-        clf = BaseMethod(docs_train, y_train, **SubjectivityFeatures.CLASSIFIER)
+        #clf = BaseMethod(docs_train, y_train, **SubjectivityFeatures.CLASSIFIER)
+        clf =
         print "Finished training in", "%.2f" % (time.clock()-start_time), "sec"
         y_pred = clf.predict(docs_test)
 

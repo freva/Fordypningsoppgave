@@ -22,10 +22,11 @@ class BaseMethod(object):
         }
 
         self.clf = clf(**defaults)
-        self.train(docs_train, y_train, feature_union, useCache)
+        self.useCache = useCache
+        self.train(docs_train, y_train, feature_union)
 
 
-    def train(self, docs_train, y_train, feature_union, useCache=True):
+    def train(self, docs_train, y_train, feature_union):
         self.grid = Pipeline([
             ('features', feature_union),
             ('clf', self.clf)
@@ -37,7 +38,7 @@ class BaseMethod(object):
         cache_key = str(feature_union) + str(docs_train)
         cached = cache.get(cache_key)
 
-        if cached and useCache:
+        if cached and self.useCache:
             print "Loading from cache..."
             self.best_estimator = cached['est']
             self.best_score = cached['scr']
