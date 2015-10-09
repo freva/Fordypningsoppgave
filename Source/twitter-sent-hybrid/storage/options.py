@@ -13,13 +13,12 @@ from sklearn.svm import LinearSVC
 class General:
     TRAIN_SET = '../Testing/2013-2-train-full-B.tsv'
     TEST_SET = '../Testing/2013-2-test-gold-B.tsv'
-    USE_CACHE = False
 
 
 class SubjectivityFeatures:
     TRANSFORMER_OPTIONS = {
         "word_vectorizer": {
-            'enabled': False,
+            'enabled': True,
             'type': TfidfVectorizer,
             'ngram_range': (1, 4),
             'sublinear_tf': True,
@@ -32,7 +31,7 @@ class SubjectivityFeatures:
         },
 
         "char_ngrams": {
-            'enabled': False,
+            'enabled': True,
             'type': TfidfVectorizer,
             'analyzer': 'char',
             'ngram_range': (3, 5),
@@ -47,7 +46,7 @@ class SubjectivityFeatures:
         },
 
         "word_clusters": {
-            'enabled': False,
+            'enabled': True,
             'type': ClusterTransformer,
             'dictionary': d.get_cluster_dict,
             'norm': True,
@@ -60,28 +59,28 @@ class SubjectivityFeatures:
         },
 
         "elongation": {
-            'enabled': False,
+            'enabled': True,
             'type': ElongationTransformer,
             'preprocessor': pr.html_decode,
             'norm': True
         },
 
         "punctuation": {
-            'enabled': False,
+            'enabled': True,
             'type': PunctuationTransformer,
             'preprocessor': pr.html_decode,
             'norm': False
         },
 
         "emoticons": {
-            'enabled': False,
+            'enabled': True,
             'type': EmoticonTransformer,
             'preprocessor': pr.remove_noise,
             'norm': True
         },
 
         "hashtags": {
-            'enabled': False,
+            'enabled': True,
             'type': HashtagTransformer,
             'preprocessor': pr.html_decode,
             'norm': False
@@ -92,7 +91,7 @@ class SubjectivityFeatures:
     CLASSIFIER = {
         'clf': LinearSVC,
         'defaults': {'C': 1.0},
-        'useCache': True,
+        'useCache': False,
         'feature_union': FeatureUnion([(name, vars.pop("type")(**TRANSFORMER_OPTIONS[name]))
                                   for name, vars in TRANSFORMER_OPTIONS.items() if vars.pop("enabled", False)])
     }
@@ -101,7 +100,7 @@ class SubjectivityFeatures:
 class PolarityFeatures:
     TRANSFORMER_OPTIONS = {
         "word_vectorizer": {
-            'enabled': False,
+            'enabled': True,
             'type': TfidfVectorizer,
             'ngram_range': (1, 4),
             'sublinear_tf': True,
@@ -114,7 +113,7 @@ class PolarityFeatures:
         },
 
         "char_ngrams": {
-            'enabled': False,
+            'enabled': True,
             'type': TfidfVectorizer,
             'analyzer': 'char',
             'ngram_range': (3, 5),
@@ -129,7 +128,7 @@ class PolarityFeatures:
         },
 
         "word_clusters": {
-            'enabled': False,
+            'enabled': True,
             'type': ClusterTransformer,
             'dictionary': d.get_cluster_dict,
             'norm': True,
@@ -174,7 +173,7 @@ class PolarityFeatures:
     CLASSIFIER = {
         'clf': LinearSVC,
         'defaults': {'C': 1.0},
-        'useCache': True,
+        'useCache': False,
         'feature_union': FeatureUnion([(name, vars.pop("type")(**TRANSFORMER_OPTIONS[name]))
                                   for name, vars in TRANSFORMER_OPTIONS.items() if vars.pop("enabled", False)])
     }
