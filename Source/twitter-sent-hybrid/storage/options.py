@@ -43,25 +43,14 @@ class SubjectivityFeatures:
         "pos_tagger": {
             'enabled': True,
             'type': POSTransformer,
-            'preprocessor': pr.remove_all
+            'preprocessor': pr.remove_all,
+            'norm': True
         },
 
         "word_clusters": {
             'enabled': True,
             'type': ClusterTransformer,
             'dictionary': d.get_cluster_dict,
-            'norm': True,
-            # 'preprocessor': pr.remove_noise,
-        },
-
-        "allcaps": {
-            'enabled': False,
-            'type': AllcapsTransformer
-        },
-
-        "elongation": {
-            'enabled': True,
-            'type': ElongationTransformer,
             'preprocessor': pr.html_decode,
             'norm': True
         },
@@ -69,20 +58,20 @@ class SubjectivityFeatures:
         "punctuation": {
             'enabled': True,
             'type': PunctuationTransformer,
-            'preprocessor': pr.html_decode,
-            'norm': False
+            'preprocessor': pr.no_url_username,
+            'norm': True
         },
 
         "emoticons": {
             'enabled': True,
             'type': EmoticonTransformer,
-            'preprocessor': pr.remove_noise,
+            'preprocessor': pr.no_url_username,
             'norm': True
         },
 
-        "hashtags": {
+        "tags": {
             'enabled': True,
-            'type': HashtagTransformer,
+            'type': TagTransformer,
             'preprocessor': pr.html_decode,
             'norm': False
         }
@@ -137,18 +126,6 @@ class PolarityFeatures:
             # 'preprocessor': pr.remove_noise,
         },
 
-        "allcaps": {
-            'enabled': False,
-            'type': AllcapsTransformer
-        },
-
-        "elongation": {
-            'enabled': False,
-            'type': ElongationTransformer,
-            'preprocessor': pr.html_decode,
-            'norm': True
-        },
-
         "punctuation": {
             'enabled': False,
             'type': PunctuationTransformer,
@@ -163,9 +140,9 @@ class PolarityFeatures:
             'norm': True
         },
 
-        "hashtags": {
+        "tags": {
             'enabled': False,
-            'type': HashtagTransformer,
+            'type': TagTransformer,
             'preprocessor': pr.html_decode,
             'norm': False
         }

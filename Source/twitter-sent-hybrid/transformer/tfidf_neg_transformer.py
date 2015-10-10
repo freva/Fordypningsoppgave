@@ -1,8 +1,8 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
-
 from storage import cache
 from storage import data
 import scipy
+
 
 class TfidfNegTransformer(TfidfVectorizer):
     def __init__(self, negate=True, **kwargs):

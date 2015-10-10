@@ -1,6 +1,5 @@
 from sklearn.base import TransformerMixin, BaseEstimator
 from sklearn.preprocessing import normalize
-
 from utils import filters
 
 
@@ -8,6 +7,7 @@ class EmoticonTransformer(TransformerMixin, BaseEstimator):
     def __init__(self, norm=True, preprocessor=None):
         self.norm = norm
         self.preprocessor = preprocessor
+
 
     def fit(self, raw_tweets, y=None):
         return self
