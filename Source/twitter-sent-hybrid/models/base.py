@@ -2,25 +2,11 @@
     Base class for different methods of using sentiment analysis.
 """
 from sklearn.pipeline import Pipeline
-
 from storage import cache
-import utils.preprocessor_methods as pr
 
 
 class BaseMethod(object):
     def __init__(self, train, feature_union=None, useCache=True, clf=None, defaults={}):
-        self.options = {
-            'vect__ngram_range': [(1, 1)],  # (2, 2), (3,3)],
-            #'vect__stop_words': ('english', None),
-            'vect__preprocessor': (
-            None, pr.no_prep, pr.no_usernames, pr.remove_noise, pr.placeholders, pr.all, pr.remove_all,
-            pr.reduced_attached, pr.no_url_username_reduced_attached),
-            'vect__use_idf': (True, False),
-            'vect__max_df': (0.5,),
-            'vect__smooth_idf': (True, False),
-            'vect__sublinear_tf': (True, False)
-        }
-
         self.clf = clf(**defaults)
         self.useCache = useCache
         self.feature_union = feature_union
