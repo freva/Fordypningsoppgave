@@ -18,7 +18,7 @@ class General:
 class SubjectivityFeatures:
     TRANSFORMER_OPTIONS = {
         "word_vectorizer": {
-            'enabled': False,
+            'enabled': True,
             'type': TfidfVectorizer,
             'ngram_range': (1, 4),
             'sublinear_tf': True,
@@ -31,7 +31,7 @@ class SubjectivityFeatures:
         },
 
         "char_ngrams": {
-            'enabled': False,
+            'enabled': True,
             'type': TfidfVectorizer,
             'analyzer': 'char',
             'ngram_range': (3, 5),
@@ -48,7 +48,7 @@ class SubjectivityFeatures:
         },
 
         "word_clusters": {
-            'enabled': False,
+            'enabled': True,
             'type': ClusterTransformer,
             'dictionary': d.get_cluster_dict,
             'preprocessor': pr.html_decode,
