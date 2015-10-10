@@ -50,7 +50,14 @@ def reduced_attached(text):
     return text
 
 
-def no_url_usernames_reduced_attached(text):
+def no_url_username(text):
+    text = p.html_decode(text)
+    text = f.no_url(text)
+    text = f.no_username(text)
+    return text.strip()
+
+
+def no_url_username_reduced_attached(text):
     text = f.no_url(text)
     text = f.no_username(text)
     text = f.reduce_letter_duplicates(text)

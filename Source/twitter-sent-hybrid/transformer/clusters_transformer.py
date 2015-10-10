@@ -3,6 +3,7 @@ from sklearn.feature_extraction import DictVectorizer
 from sklearn.preprocessing import normalize
 from utils import tokenizer
 
+
 class ClusterTransformer(TransformerMixin, BaseEstimator):
     def __init__(self, dictionary, norm=True, preprocessor=None):
         self.brown_dict = dictionary()

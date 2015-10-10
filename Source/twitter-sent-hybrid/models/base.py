@@ -14,7 +14,7 @@ class BaseMethod(object):
             #'vect__stop_words': ('english', None),
             'vect__preprocessor': (
             None, pr.no_prep, pr.no_usernames, pr.remove_noise, pr.placeholders, pr.all, pr.remove_all,
-            pr.reduced_attached, pr.no_url_usernames_reduced_attached),
+            pr.reduced_attached, pr.no_url_username_reduced_attached),
             'vect__use_idf': (True, False),
             'vect__max_df': (0.5,),
             'vect__smooth_idf': (True, False),
