@@ -80,7 +80,11 @@ class SubjectivityFeatures:
 
     CLASSIFIER = {
         'clf': SVC,
-        'defaults': {'C': 1.0},
+        'defaults': {
+            'C': 0.5,
+            'gamma': 0.001,
+            'kernel': 'linear'
+        },
         'useCache': False,
         'feature_union': FeatureUnion([(name, vars.pop("type")(**TRANSFORMER_OPTIONS[name]))
                                   for name, vars in TRANSFORMER_OPTIONS.items() if vars.pop("enabled", False)])

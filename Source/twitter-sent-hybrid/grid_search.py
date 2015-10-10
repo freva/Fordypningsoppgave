@@ -23,29 +23,37 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
         'clf__gamma': (0.001, 0.1, 0.02),
         'features__punctuation__preprocessor': (pr.html_decode, pr.no_url_username),
         'features__punctuation__norm': (True, False),
+        'features__emoticons__preprocessor': [pr.html_decode],
         'features__emoticons__norm': (True, False),
-        'features__tags__preprocessor': (pr.html_decode, pr.no_url_username),
+        'features__tags__preprocessor': [pr.html_decode],
         'features__tags__norm': (True, False)
     }
 
-    print "Performing grid search..."
     grid = GridSearchCV(
         pipeline,
         param_grid=parameters,
         scoring=make_scorer(f1_score, pos_label="neutral", average='binary'),
-        cv=StratifiedKFold(y_train, 10, shuffle=True),
+        cv=StratifiedKFold(y_train, 2),#, shuffle=True), #IDI maskinen sin scikit-learn stotter ikke shuffle (gammel versjon)
         n_jobs=-1,
         verbose=10
     )
 
     grid.fit(docs_train, y_train)
-    print("Performed SVM grid search in %0.3fs" % (time() - t0))
-    print("Best grid search CV score: {:0.3f}".format(grid.best_score_))
-    print("Best parameters set:")
+
+    f = open("results.txt", "w")
+    f.write("Performed SVM grid search in %0.3fs\n" % (time() - t0))
+    f.write("Best grid search CV score: {:0.3f}\n".format(grid.best_score_))
+    f.write("Best parameters set:\n")
 
     best_parameters = grid.best_estimator_.get_params()
     for param_name in sorted(parameters.keys()):
-        print("\t%s: %r" % (param_name, best_parameters[param_name]))
+        f.write("\t%s: %r\n" % (param_name, best_parameters[param_name]))
+
+    f.write("\nParam scores:\n")
+    for s in grid.grid_scores_:
+        f.write(str.format("{0:.3f}", s.cv_validation_scores.mean()*100) + "\t" +
+                str.format("{0:.3f}", s.cv_validation_scores.std()*100) + "\t" + str(s.parameters) + "\n")
+    f.close()
 
     return grid.best_estimator_
 
