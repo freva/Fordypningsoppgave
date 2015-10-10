@@ -1,3 +1,5 @@
+from collections import defaultdict
+from operator import itemgetter
 from sklearn.cross_validation import StratifiedKFold
 from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import make_scorer, f1_score, precision_score
@@ -6,7 +8,9 @@ from sklearn.pipeline import Pipeline
 
 from storage import data as d
 from storage.options import General, SubjectivityFeatures
+
 import utils.preprocessor_methods as pr
+import utils.tokenizer as t
 
 
 def grid_search(clf, feature_pipeline, docs_train, y_train):
@@ -23,20 +27,23 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
         'clf__gamma': (0.001, 0.1, 0.3, 0.5),
         'features__word_vectorizer__ngram_range': [(1, 1), (1, 2), (1, 3), (1, 4), (1, 5)],
         'features__word_vectorizer__sublinear_tf': (True, False),
+        'features__word_vectorizer__tokenizer': [t.tokenize],
         'features__word_vectorizer__use_idf': (True, False),
         'features__word_vectorizer__smooth_idf': (True, False),
         'features__word_vectorizer__max_df': (0.25, 0.5, 0.75, 1),
         'features__word_vectorizer__max_features': (None, 100000, 200000, 300000),
         'features__word_vectorizer__preprocessor': (pr.remove_all, pr.remove_noise),
+        'features__char_ngrams__analyzer': ['char'],
         'features__char_ngrams__ngram_range': [(2, 5), (3, 5), (3, 6), (3, 7)],
         'features__char_ngrams__sublinear_tf': (True, False),
         'features__char_ngrams__use_idf': (True, False),
         'features__char_ngrams__smooth_idf': (True, False),
-        'features__char_ngrams__max_df': (0.25, 0.5, 0.75, 1),
+        'features__char_ngrams__min_df': (0.25, 0.5, 0.75, 1),
         'features__char_ngrams__max_features': (None, 100000, 200000, 300000),
         'features__char_ngrams__preprocessor': (pr.remove_all, pr.remove_noise),
-        'features__word_clusters__preprocessor': [pr.html_decode],      #Dictionary contains hashtags, emotes and even usernames. Dont think any further filtering is possible
-        'features__word_clusters__norm': (True, False),
+        #'features__word_clusters__dictionary': [d.get_cluster_dict],
+        #'features__word_clusters__preprocessor': [pr.html_decode],      #Dictionary contains hashtags, emotes and even usernames. Dont think any further filtering is possible
+        #'features__word_clusters__norm': (True, False),
         'features__punctuation__preprocessor': (pr.html_decode, pr.no_url_username),    #On average better result with html_decode, but logically doesnt make sense
         'features__punctuation__norm': [True],              #No preference
         'features__emoticons__preprocessor': [pr.html_decode],  #Technically could run with no_url_username //overlap with tags
@@ -58,7 +65,7 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
 
     f = open("results.txt", "w")
     f.write("Performed SVM grid search in %0.3fs\n" % (time() - t0))
-    f.write("Best grid search CV score: {:0.3f}\n".format(grid.best_score_))
+    f.write("Best grid search CV score: {:0.3f}\n".format(100*grid.best_score_))
     f.write("Best parameters set:\n")
 
     best_parameters = grid.best_estimator_.get_params()
@@ -66,9 +73,17 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
         f.write("\t%s: %r\n" % (param_name, best_parameters[param_name]))
 
     f.write("\nParam scores:\n")
+    cat_score = defaultdict(list)
     for s in grid.grid_scores_:
         f.write(str.format("{0:.3f}", s.cv_validation_scores.mean()*100) + "\t" +
                 str.format("{0:.3f}", s.cv_validation_scores.std()*100) + "\t" + str(s.parameters) + "\n")
+        for cat in s.parameters.keys():
+            cat_score[cat + "=" + str(s.parameters[cat])].append(s.cv_validation_scores.mean()*100)
+
+    f.write("\nEfficient params:\n")
+    cat_score = {key: sum(val)/len(val) for key, val in cat_score.items()}
+    for k, v in sorted(cat_score.items(), key=itemgetter(0), reverse=True):
+        f.write(k + "\t" + str(v) + "\n")
     f.close()
 
     return grid.best_estimator_
