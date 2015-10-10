@@ -17,8 +17,8 @@ def get_data(train_set, test_set):
     test = u.normalize_test_set_classification_scheme(test)
     train = u.normalize_test_set_classification_scheme(train)
 
-    #test = u.generate_subjective_set(test)
-    #train = u.generate_subjective_set(train)
+    test = u.generate_subjective_set(test)
+    train = u.generate_subjective_set(train)
 
     # Normalize data?
     #train = u.reduce_dataset(train, 3000)

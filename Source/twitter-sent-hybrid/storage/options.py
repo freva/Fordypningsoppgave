@@ -7,7 +7,7 @@ from sklearn.pipeline import FeatureUnion
 import utils.preprocessor_methods as pr
 import utils.tokenizer as t
 import storage.data as d
-from sklearn.svm import LinearSVC
+from sklearn.svm import LinearSVC, SVC
 
 
 class General:
@@ -18,7 +18,7 @@ class General:
 class SubjectivityFeatures:
     TRANSFORMER_OPTIONS = {
         "word_vectorizer": {
-            'enabled': True,
+            'enabled': False,
             'type': TfidfVectorizer,
             'ngram_range': (1, 4),
             'sublinear_tf': True,
@@ -31,7 +31,7 @@ class SubjectivityFeatures:
         },
 
         "char_ngrams": {
-            'enabled': True,
+            'enabled': False,
             'type': TfidfVectorizer,
             'analyzer': 'char',
             'ngram_range': (3, 5),
@@ -41,14 +41,14 @@ class SubjectivityFeatures:
         },
 
         "pos_tagger": {
-            'enabled': True,
+            'enabled': False,
             'type': POSTransformer,
             'preprocessor': pr.remove_all,
             'norm': True
         },
 
         "word_clusters": {
-            'enabled': True,
+            'enabled': False,
             'type': ClusterTransformer,
             'dictionary': d.get_cluster_dict,
             'preprocessor': pr.html_decode,
@@ -79,7 +79,7 @@ class SubjectivityFeatures:
 
 
     CLASSIFIER = {
-        'clf': LinearSVC,
+        'clf': SVC,
         'defaults': {'C': 1.0},
         'useCache': False,
         'feature_union': FeatureUnion([(name, vars.pop("type")(**TRANSFORMER_OPTIONS[name]))
