@@ -48,7 +48,7 @@ class SubjectivityFeatures:
         },
 
         "word_clusters": {
-            'enabled': True,
+            'enabled': False,
             'type': ClusterTransformer,
             'dictionary': d.get_cluster_dict,
             'preprocessor': pr.html_decode,

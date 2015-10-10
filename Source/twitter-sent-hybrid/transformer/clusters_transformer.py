@@ -5,8 +5,8 @@ from utils import tokenizer
 
 
 class ClusterTransformer(TransformerMixin, BaseEstimator):
-    def __init__(self, dictionary, norm=True, preprocessor=None):
-        self.brown_dict = dictionary()
+    def __init__(self, dictionary=None, norm=True, preprocessor=None):
+        self.brown_dict = dictionary() if dictionary else {}
         self.cluster_dict = dict.fromkeys(self.brown_dict.values(), 0)
         self.normalize = norm
         self.vectorizer = None
