@@ -27,6 +27,13 @@ if __name__ == "__main__":
         print "Finished training in", "%.2f" % (time.clock()-start_time), "sec"
         y_pred = clf.predict(docs_test)
 
+        """out = ["%.2f" % (100*precision_score(y_test, y_pred, pos_label="neutral", average='binary')),
+            "%.2f" % (100*recall_score(y_test, y_pred, pos_label="neutral", average='binary')),
+            "%.2f" % (100*f1_score(y_test, y_pred, pos_label="neutral", average='binary')),
+            "%.2f" % (100*accuracy_score(y_test, y_pred)),
+            "%.2f" % (time.clock()-start_time)]
+        print '\t'.join(out)"""
+
         out = ["%.2f" % (100*precision_score(y_test, y_pred, pos_label=None, average='macro')),
             "%.2f" % (100*recall_score(y_test, y_pred, pos_label=None, average='macro')),
             "%.2f" % (100*f1_score(y_test, y_pred, pos_label=None, average='macro')),
@@ -37,5 +44,4 @@ if __name__ == "__main__":
         C = confusion_matrix(y_test, y_pred)
         np.set_printoptions(formatter={'float': '{: 0.2f}'.format})
         print 100.0*C / np.sum(C)
-
-print "In", "%.2f" % (time.clock()-start_time), "sec"
+    print "In", "%.2f" % (time.clock()-start_time), "sec"
