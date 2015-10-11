@@ -1,5 +1,4 @@
 import numpy as np
-
 import utils.utils as u
 
 """
@@ -32,23 +31,3 @@ def read_tsv(filename):
 
 def get_cluster_dict():
     return dict(line.split("\t")[1::-1] for line in open("../Testing/dictionaries/50mpaths2.txt", 'r').read().decode('utf-8').split("\n"))
-
-def get_sentiment_lexicon():
-    lexicon = {}
-    with open("../Testing/data/AFINN/AFINN-111.txt", 'r') as f:
-        for line in f.read().decode('utf-8').split("\n"):
-            newLine = line.split("\t")
-            lexicon[(newLine[0])] = newLine[1]
-    return lexicon
-
-def get_neg_and_pos_word_lexicon():
-    lexicon = {}
-    with open("../Testing/data/BingLiu/negative-words.txt", 'r') as f:
-        for word in f.read().decode('utf-8').split("\n"):
-            lexicon[str(word)] = -3
-
-    with open("../Testing/data/BingLiu/positive-words.txt", 'r') as f:
-        for word in f.read().decode('utf-8').split("\n"):
-            lexicon[str(word)] = 3
-
-    return lexicon
