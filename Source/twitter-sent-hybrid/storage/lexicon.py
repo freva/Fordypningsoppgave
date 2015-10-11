@@ -2,6 +2,7 @@ bing_liu_negative_path = "../Testing/lexica/BingLiu/negative-words.txt"
 bing_liu_positive_path = "../Testing/lexica/BingLiu/positive-words.txt"
 mpqa_lexicon_path = "../Testing/lexica/MPQA/subjclueslen1-HLTEMNLP05.tff"
 nrc_emoticon_path = "../Testing/lexica/NRC-Emotion-Lexicon-v0.92/NRC-emotion-lexicon-wordlevel-alphabetized-v0.92.txt"
+brown_word_cluster_path = "../Testing/dictionaries/50mpaths2.txt"
 
 def get_automated_lexicon(filename):
     lexicon = {}
@@ -43,3 +44,7 @@ def get_nrc_emotion_lexicon():
             elif newLine[1] == 'negative':
                 lexicon[newLine[0]] = -1
     return lexicon
+
+
+def get_brown_cluster_dict():
+    return dict(line.split("\t")[1::-1] for line in open(brown_word_cluster_path, 'r').read().decode('utf-8').split("\n"))
