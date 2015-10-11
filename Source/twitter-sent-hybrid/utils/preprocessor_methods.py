@@ -23,6 +23,8 @@ def remove_noise(text):
     text = f.reduce_letter_duplicates(text)
     text = f.quote_placeholder(text)
     text = p.negation_attachment(text)
+    text = f.no_punctuation(text)
+    # text = p.stem_sentence(text)
     return text.strip()
 
 

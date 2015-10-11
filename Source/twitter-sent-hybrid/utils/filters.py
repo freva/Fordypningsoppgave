@@ -77,3 +77,6 @@ def reduce_letter_duplicates(tweet_text):
 
 def hash_as_normal(tweet_text):
     return re.sub(r'#([a-zA-Z]+[a-zA-Z0-9_]*)', "\\1", tweet_text)
+
+def no_punctuation(tweet_text):
+    return "".join(c for c in tweet_text if c not in ('!','.',':',','))
