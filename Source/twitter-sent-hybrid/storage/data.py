@@ -28,6 +28,3 @@ def get_data(train_set, test_set):
 def read_tsv(filename):
     return np.array([line.split("\t") for line in open(filename).read().decode("windows-1252").split("\n") if len(line) > 0])
 
-
-def get_cluster_dict():
-    return dict(line.split("\t")[1::-1] for line in open("../Testing/dictionaries/50mpaths2.txt", 'r').read().decode('utf-8').split("\n"))
