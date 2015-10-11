@@ -40,6 +40,12 @@ class SubjectivityFeatures:
             'max_features': 200000
         },
 
+        "lexicon": {
+            'enabled': True,
+            'type': LexiconTransformer,
+            'preprocessor': pr.remove_noise
+        },
+
         "pos_tagger": {
             'enabled': False,
             'type': POSTransformer,
@@ -56,21 +62,21 @@ class SubjectivityFeatures:
         },
 
         "punctuation": {
-            'enabled': True,
+            'enabled': False,
             'type': PunctuationTransformer,
             'preprocessor': pr.no_url_username,
             'norm': True
         },
 
         "emoticons": {
-            'enabled': True,
+            'enabled': False,
             'type': EmoticonTransformer,
             'preprocessor': pr.no_url_username,
             'norm': True
         },
 
         "tags": {
-            'enabled': True,
+            'enabled': False,
             'type': TagTransformer,
             'preprocessor': pr.html_decode,
             'norm': False
@@ -114,6 +120,12 @@ class PolarityFeatures:
             'preprocessor': pr.remove_noise,
             'min_df': 1,
             'max_features': 200000
+        },
+
+        "lexicon": {
+            'enabled': True,
+            'type': LexiconTransformer,
+            'preprocessor': pr.remove_noise
         },
 
         "pos_tagger": {
