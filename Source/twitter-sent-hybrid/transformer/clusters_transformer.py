@@ -5,9 +5,11 @@ from utils import tokenizer
 
 
 class ClusterTransformer(TransformerMixin, BaseEstimator):
+    dictionary = None
+
     def __init__(self, dictionary=None, norm=True, preprocessor=None):
-        self.brown_dict = dictionary() if dictionary else {}
-        self.cluster_dict = dict.fromkeys(self.brown_dict.values(), 0)
+        ClusterTransformer.dictionary = dictionary() if dictionary else {}
+        self.cluster_dict = dict.fromkeys(ClusterTransformer.dictionary.values(), 0)
         self.normalize = norm
         self.vectorizer = None
         self.preprocessor = preprocessor
@@ -25,8 +27,8 @@ class ClusterTransformer(TransformerMixin, BaseEstimator):
                 tweet = self.preprocessor(tweet)
             occurrences = self.cluster_dict.copy()
             for token in tokenizer.tokenize(tweet):
-                if token in self.brown_dict:
-                    occurrences[self.brown_dict[token]] += 1
+                if token in ClusterTransformer.dictionary:
+                    occurrences[ClusterTransformer.dictionary[token]] += 1
             occurrence_list.append(occurrences)
         vectorized = self.vectorizer.transform(occurrence_list)
         return normalize(vectorized, axis=0) if self.normalize else vectorized
