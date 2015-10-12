@@ -22,15 +22,15 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
     ])
 
     parameters = {
-        'clf__kernel': ('linear', 'rbf', 'sigmoid'),
+        'clf__kernel': ('linear', 'rbf'),
         'clf__C': (0.5, 0.75, 1.0, 1.25),
         'clf__gamma': (0.001, 0.1, 0.3, 0.5),
-        'features__word_vectorizer__ngram_range': [(1, 1), (1, 2), (1, 3), (1, 4), (1, 5)],
-        'features__word_vectorizer__sublinear_tf': (True, False),
+        'features__word_vectorizer__ngram_range': [(1, 4)], #(1,4) slight better than (1,3) and (1,5), then (1,2) and (1,1) is worst
+        'features__word_vectorizer__sublinear_tf': [True],  #Virtually identical
         'features__word_vectorizer__tokenizer': [t.tokenize],
-        'features__word_vectorizer__use_idf': (True, False),
-        'features__word_vectorizer__smooth_idf': (True, False),
-        'features__word_vectorizer__max_df': (0.25, 0.5, 0.75, 1),
+        'features__word_vectorizer__use_idf': [True],       #False appears to be slightly better on average, but is not in optimal
+        'features__word_vectorizer__smooth_idf': [True],    #Virtually identical
+        'features__word_vectorizer__max_df': (0.25, 0.5, 0.75, 1), #0.5 significantly better than 1.0
         'features__word_vectorizer__max_features': (None, 100000, 200000, 300000),
         'features__word_vectorizer__preprocessor': (pr.remove_all, pr.remove_noise),
         'features__char_ngrams__analyzer': ['char'],
@@ -44,10 +44,10 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
         #'features__word_clusters__dictionary': [d.get_cluster_dict],
         #'features__word_clusters__preprocessor': [pr.html_decode],      #Dictionary contains hashtags, emotes and even usernames. Dont think any further filtering is possible
         #'features__word_clusters__norm': (True, False),
-        'features__punctuation__preprocessor': (pr.html_decode, pr.no_url_username),    #On average better result with html_decode, but logically doesnt make sense
+        'features__punctuation__preprocessor': [pr.no_url_username],    #Remove url and username works better than just html decode
         'features__punctuation__norm': [True],              #No preference
         'features__emoticons__preprocessor': [pr.html_decode],  #Technically could run with no_url_username //overlap with tags
-        'features__emoticons__norm': (True, False),         #0.01% difference in favor of True
+        'features__emoticons__norm': [True],                #0.01% difference in favor of True
         'features__tags__preprocessor': [pr.html_decode],   #Counts links, no real pre-processing needed
         'features__tags__norm': [True]                      #No preference
     }
