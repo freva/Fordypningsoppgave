@@ -23,7 +23,7 @@ class SubjectivityFeatures:
             'ngram_range': (1, 4),
             'sublinear_tf': True,
             'tokenizer': t.tokenize,
-            'preprocessor': pr.remove_noise,
+            'preprocessor': pr.remove_all,
             'use_idf': True,
             'smooth_idf': True,
             'max_df': 0.5,
@@ -54,7 +54,7 @@ class SubjectivityFeatures:
         },
 
         "word_clusters": {
-            'enabled': False,
+            'enabled': True,
             'type': ClusterTransformer,
             'dictionary': d.get_cluster_dict,
             'preprocessor': pr.html_decode,
@@ -62,21 +62,21 @@ class SubjectivityFeatures:
         },
 
         "punctuation": {
-            'enabled': False,
+            'enabled': True,
             'type': PunctuationTransformer,
             'preprocessor': pr.no_url_username,
             'norm': True
         },
 
         "emoticons": {
-            'enabled': False,
+            'enabled': True,
             'type': EmoticonTransformer,
             'preprocessor': pr.no_url_username,
             'norm': True
         },
 
         "tags": {
-            'enabled': False,
+            'enabled': True,
             'type': TagTransformer,
             'preprocessor': pr.html_decode,
             'norm': False
@@ -105,7 +105,7 @@ class PolarityFeatures:
             'ngram_range': (1, 4),
             'sublinear_tf': True,
             'tokenizer': t.tokenize,
-            'preprocessor': pr.remove_noise,
+            'preprocessor': pr.remove_all,
             'use_idf': True,
             'smooth_idf': True,
             'max_df': 0.5,
@@ -129,7 +129,7 @@ class PolarityFeatures:
         },
 
         "pos_tagger": {
-            'enabled': True,
+            'enabled': False,
             'type': POSTransformer,
             'preprocessor': pr.remove_all
         },
@@ -138,21 +138,21 @@ class PolarityFeatures:
             'enabled': True,
             'type': ClusterTransformer,
             'dictionary': d.get_cluster_dict,
+            'preprocessor': pr.html_decode,
             'norm': True,
-            # 'preprocessor': pr.remove_noise,
         },
 
         "punctuation": {
             'enabled': False,
             'type': PunctuationTransformer,
-            'preprocessor': pr.html_decode,
-            'norm': False
+            'preprocessor': pr.no_url_username,
+            'norm': True
         },
 
         "emoticons": {
             'enabled': False,
             'type': EmoticonTransformer,
-            'preprocessor': pr.remove_noise,
+            'preprocessor': pr.no_url_username,
             'norm': True
         },
 
@@ -160,14 +160,18 @@ class PolarityFeatures:
             'enabled': False,
             'type': TagTransformer,
             'preprocessor': pr.html_decode,
-            'norm': False
+            'norm': True
         }
     }
 
 
     CLASSIFIER = {
-        'clf': LinearSVC,
-        'defaults': {'C': 1.0},
+        'clf': SVC,
+        'defaults': {
+            'C': 0.5,
+            'gamma': 0.001,
+            'kernel': 'linear'
+        },
         'useCache': False,
         'feature_union': FeatureUnion([(name, vars.pop("type")(**TRANSFORMER_OPTIONS[name]))
                                   for name, vars in TRANSFORMER_OPTIONS.items() if vars.pop("enabled", False)])
