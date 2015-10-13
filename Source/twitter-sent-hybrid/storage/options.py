@@ -73,13 +73,6 @@ class SubjectivityFeatures:
             'type': EmoticonTransformer,
             'preprocessor': pr.no_url_username,
             'norm': True
-        },
-
-        "tags": {
-            'enabled': True,
-            'type': TagTransformer,
-            'preprocessor': pr.html_decode,
-            'norm': False
         }
     }
 
@@ -153,13 +146,6 @@ class PolarityFeatures:
             'enabled': False,
             'type': EmoticonTransformer,
             'preprocessor': pr.no_url_username,
-            'norm': True
-        },
-
-        "tags": {
-            'enabled': False,
-            'type': TagTransformer,
-            'preprocessor': pr.html_decode,
             'norm': True
         }
     }
