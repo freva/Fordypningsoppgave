@@ -21,13 +21,12 @@ class SubjectivityFeatures:
             'enabled': True,
             'type': TfidfVectorizer,
             'ngram_range': (1, 4),
-            'sublinear_tf': True,
             'tokenizer': t.tokenize,
             'preprocessor': pr.remove_all,
+            'sublinear_tf': True,
             'use_idf': True,
             'smooth_idf': True,
             'max_df': 0.5,
-            'max_features': 300000
         },
 
         "char_ngrams": {
@@ -35,9 +34,11 @@ class SubjectivityFeatures:
             'type': TfidfVectorizer,
             'analyzer': 'char',
             'ngram_range': (3, 5),
-            'preprocessor': pr.remove_noise,
+            'preprocessor': pr.remove_all,
+            'sublinear_tf': True,
+            'use_idf': True,
+            'smooth_idf': False,
             'min_df': 1,
-            'max_features': 200000
         },
 
         "lexicon": {
@@ -56,7 +57,6 @@ class SubjectivityFeatures:
         "word_clusters": {
             'enabled': True,
             'type': ClusterTransformer,
-            'dictionary': d.get_cluster_dict,
             'preprocessor': pr.html_decode,
             'norm': True
         },
@@ -130,7 +130,6 @@ class PolarityFeatures:
         "word_clusters": {
             'enabled': True,
             'type': ClusterTransformer,
-            'dictionary': d.get_cluster_dict,
             'preprocessor': pr.html_decode,
             'norm': True,
         },
