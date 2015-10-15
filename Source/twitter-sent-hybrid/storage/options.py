@@ -26,6 +26,7 @@ class SubjectivityFeatures:
             'sublinear_tf': True,
             'use_idf': True,
             'smooth_idf': True,
+            'min_df': 0.0,
             'max_df': 0.5,
         },
 
@@ -38,7 +39,8 @@ class SubjectivityFeatures:
             'sublinear_tf': True,
             'use_idf': True,
             'smooth_idf': False,
-            'min_df': 1,
+            'min_df': 0.0,
+            'max_df': 0.5,
         },
 
         "lexicon": {
