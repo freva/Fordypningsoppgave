@@ -6,9 +6,13 @@ import nltk
 
 
 class POSTransformer(TransformerMixin, BaseEstimator):
-    occurrences = cache.get("pos_tags", True)
-    if not occurrences:
+    pos_tweets = cache.get("pos_tags", False)
+    if not pos_tweets:
         raise Exception("PoS cache not found!")
+    classes = ['BES', 'CC', 'CD', 'DT', 'EX', 'FW', 'HT', 'IN', 'JJ', 'JJR', 'JJS', 'MB', 'MD', 'NN', 'NNP', 'NNPS',
+               'NNS', 'PDT', 'POS', 'PRP', 'RB', 'RBR', 'RBS', 'RP', 'RT', 'SYM', 'TO', 'UH', 'URL', 'USR', 'VB',
+               'VBD','VBG', 'VBN', 'VBP', 'VBZ', 'WDT', 'WP', 'WRB', 'X']
+
 
     def __init__(self, norm=True, preprocessor=None):
         self.vectorizer = None
@@ -23,12 +27,14 @@ class POSTransformer(TransformerMixin, BaseEstimator):
 
 
     def transform(self, raw_tweets, **transform_params):
-        updated = False
         pos_tabs = []
 
         for raw_tweet in raw_tweets:
-            if raw_tweet in POSTransformer.occurrences:
-                tag_frequencies = POSTransformer.occurrences[raw_tweet]
+            if raw_tweet in POSTransformer.pos_tweets:
+                occurrences = self.pos_dict.copy()
+                for pos in POSTransformer.pos_tweets[raw_tweet]:
+                    occurrences[pos] += 1
+                pos_tabs.append(occurrences)
             else:
                 raise Exception("Tweet \"" + raw_tweet + "\" not found in cache")
         vectorized = self.vectorizer.transform(pos_tabs)
