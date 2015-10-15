@@ -12,16 +12,16 @@ def generate_filename(str_id):
     return str(filename + ".pkl")
 
 
-def save(str_id, obj, prefix=None):
-    full_path = dir_path + (prefix if prefix else "") + generate_filename(str_id)
+def save(str_id, obj, useHash=True):
+    full_path = dir_path + (str_id + ".pkl") if useHash else generate_filename(str_id)
     output = open(full_path, 'wb')
     pickle.dump(obj, output, protocol=2)
     output.close()
     return obj
 
 
-def get(str_id, prefix=None):
-    full_path = dir_path + (prefix if prefix else "") + generate_filename(str_id)
+def get(str_id, useHash=True):
+    full_path = dir_path + (str_id + ".pkl") if useHash else generate_filename(str_id)
     if not path.exists(full_path):
         return False
 

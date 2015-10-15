@@ -35,7 +35,7 @@ class SubjectivityFeatures:
             'type': TfidfVectorizer,
             'analyzer': 'char',
             'ngram_range': (3, 5),
-            'preprocessor': pr.remove_all,
+            'preprocessor': pr.remove_noise,
             'sublinear_tf': True,
             'use_idf': True,
             'smooth_idf': False,
@@ -50,7 +50,7 @@ class SubjectivityFeatures:
         },
 
         "pos_tagger": {
-            'enabled': False,
+            'enabled': True,
             'type': POSTransformer,
             'preprocessor': pr.remove_all,
             'norm': True
