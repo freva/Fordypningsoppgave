@@ -31,7 +31,7 @@ class SubjectivityFeatures:
         },
 
         "char_ngrams": {
-            'enabled': True,
+            'enabled': False,
             'type': TfidfVectorizer,
             'analyzer': 'char',
             'ngram_range': (3, 5),
@@ -44,7 +44,7 @@ class SubjectivityFeatures:
         },
 
         "lexicon": {
-            'enabled': True,
+            'enabled': False,
             'type': LexiconTransformer,
             'preprocessor': pr.remove_noise
         },
@@ -52,26 +52,25 @@ class SubjectivityFeatures:
         "pos_tagger": {
             'enabled': False,
             'type': POSTransformer,
-            'preprocessor': pr.remove_all,
             'norm': True
         },
 
         "word_clusters": {
-            'enabled': True,
+            'enabled': False,
             'type': ClusterTransformer,
             'preprocessor': pr.html_decode,
             'norm': True
         },
 
         "punctuation": {
-            'enabled': True,
+            'enabled': False,
             'type': PunctuationTransformer,
             'preprocessor': pr.no_url_username,
             'norm': True
         },
 
         "emoticons": {
-            'enabled': True,
+            'enabled': False,
             'type': EmoticonTransformer,
             'preprocessor': pr.no_url_username,
             'norm': True
@@ -124,7 +123,7 @@ class PolarityFeatures:
         },
 
         "pos_tagger": {
-            'enabled': False,
+            'enabled': True,
             'type': POSTransformer,
             'preprocessor': pr.remove_all
         },
