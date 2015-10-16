@@ -22,9 +22,7 @@ def remove_noise(text):
     text = f.no_rt_tag(text)
     text = f.reduce_letter_duplicates(text)
     text = f.quote_placeholder(text)
-    text = p.new_negation_attachment(text)
-    text = f.no_punctuation(text)
-    # text = p.stem_sentence(text)
+    text = p.naive_negation_attachment(text)
     return text.strip()
 
 
@@ -46,6 +44,7 @@ def remove_all(text):
     text = f.no_hash(text)
     text = f.no_emoticons(text)
     text = f.no_rt_tag(text)
+    text = p.naive_negation_attachment(text)
     return text
 
 
@@ -58,7 +57,7 @@ def placeholders(text):
 
 def reduced_attached(text):
     text = f.reduce_letter_duplicates(text)
-    text = p.negation_attachment(text)
+    text = p.naive_negation_attachment(text)
     return text
 
 
@@ -73,7 +72,7 @@ def no_url_username_reduced_attached(text):
     text = f.no_url(text)
     text = f.no_username(text)
     text = f.reduce_letter_duplicates(text)
-    text = p.negation_attachment(text)
+    text = p.naive_negation_attachment(text)
     return text
 
 
@@ -86,5 +85,5 @@ def all(text):
     text = f.no_hash(text)
     text = f.no_rt_tag(text)
     text = f.reduce_letter_duplicates(text)
-    text = p.negation_attachment(text)
+    text = p.naive_negation_attachment(text)
     return text
