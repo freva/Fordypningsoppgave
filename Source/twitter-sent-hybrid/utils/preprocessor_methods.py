@@ -22,9 +22,20 @@ def remove_noise(text):
     text = f.no_rt_tag(text)
     text = f.reduce_letter_duplicates(text)
     text = f.quote_placeholder(text)
-    text = p.negation_attachment(text)
+    text = p.new_negation_attachment(text)
     text = f.no_punctuation(text)
     # text = p.stem_sentence(text)
+    return text.strip()
+
+
+def remove_for_negation(text):
+    text = p.html_decode(text)
+    text = f.no_url(text)
+    text = f.no_username(text)
+    text = f.hash_as_normal(text)
+    text = f.no_rt_tag(text)
+    text = f.reduce_letter_duplicates(text)
+    text = f.quote_placeholder(text)
     return text.strip()
 
 

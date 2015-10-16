@@ -50,7 +50,7 @@ class SubjectivityFeatures:
         },
 
         "pos_tagger": {
-            'enabled': True,
+            'enabled': False,
             'type': POSTransformer,
             'preprocessor': pr.remove_all,
             'norm': True
