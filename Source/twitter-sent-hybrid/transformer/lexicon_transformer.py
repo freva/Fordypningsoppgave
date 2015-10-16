@@ -40,8 +40,19 @@ class LexiconTransformer(TransformerMixin, BaseEstimator):
             if bigram:
                 contexts = zip(contexts, contexts[1:])
             for token in contexts:
+                negated_regex = r'(.*)_NEG(?:FIRST)?$'
                 if bigram:
+                    word_1 = token[0]
+                    word_2 = token[1]
+                    if re.match(negated_regex, token[0]):
+                        word_1 = re.sub(negated_regex, r'\1', token[0])
+                    elif re.match(negated_regex, token[1]):
+                        word_2 = re.sub(negated_regex, r'\1', token[1])
+                    token = (word_1, word_2)
                     token = ' '.join(token)
+                else:
+                    if re.match(negated_regex, token):
+                        token = re.sub(negated_regex, r'\1', token)
                 try:
                     tweet_scores.append(lexicon[token])
                 except KeyError:
@@ -56,7 +67,8 @@ class LexiconTransformer(TransformerMixin, BaseEstimator):
     def _manual_lexicon_scorer(self, raw_tweets, lexicon_dict):
         scores = np.zeros((len(raw_tweets), 4))
         for i, contexts in enumerate(raw_tweets):
-            for token in contexts.split(" "):
+            contexts = (self.preprocessor(contexts)).split(" ") if self.preprocessor else contexts.split(" ")
+            for token in contexts:
                 try:
                     negated_regex = r'(.*)_NEG(?:FIRST)?$'
                     if re.match(negated_regex, token):
