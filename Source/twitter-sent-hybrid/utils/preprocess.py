@@ -8,6 +8,16 @@ from nltk.corpus import stopwords
 from nltk.tokenize import wordpunct_tokenize
 
 
+negation_cues = ['hardly', 'lack', 'lacking', 'lacks', 'neither', 'nor', 'never', 'no', 'nobody', 'none',
+             'nothing', 'nowhere', 'not', 'without', 'aint', 'cant', 'cannot', 'darent', 'dont', 'doesnt',
+             'didnt', 'hadnt', 'hasnt', 'havent', 'havnt', 'isnt', 'mightnt', 'mustnt', 'neednt', 'oughtnt',
+             'shant', 'shouldnt', 'wasnt', 'wouldnt', ".*n't"]
+
+punctuation = ['.', ',', '!', '?', '(', ')']
+
+cue_pattern = re.compile('^' + '$|^'.join(negation_cues) + '$', re.IGNORECASE)
+
+
 def _negation_repl(matchobj):
     """
       Internal helper method for #negation_attachment.
@@ -53,4 +63,33 @@ def remove_stopwords(tweet_text, exceptionList=[]):
 def html_decode(tweet_text):
     h = HTMLParser.HTMLParser()
     return h.unescape(tweet_text).lower()
+
+
+def new_negation_attachment(tweet_text):
+    negated = False
+    new_sentences = []
+    for word in tweet_text.split(" "):
+        if re.match(cue_pattern, word):
+            negated = True
+            negated_sentence = ""
+            old_sentence = ""
+        if len(word) > 0:
+            if negated and word[0] not in punctuation:
+                old_sentence += word + " "
+                negated_sentence += word + "_NEG" + " "
+                if punctuation_in_word(word):
+                    negated = False
+                    new_sentences.append([old_sentence, negated_sentence])
+            elif negated:
+                if punctuation_in_word(word):
+                    negated = False
+                    new_sentences.append([old_sentence, negated_sentence])
+    new_tweet = tweet_text
+    for pair in new_sentences:
+        new_tweet = new_tweet.replace(pair[0].rstrip(), pair[1].rstrip())
+    return new_tweet
+
+
+def punctuation_in_word(word):
+    return any(char in punctuation for char in word)
 
