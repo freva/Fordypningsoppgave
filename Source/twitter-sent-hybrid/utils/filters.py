@@ -1,6 +1,7 @@
 """
     A collection of different filter methods for the tweets.
 """
+import HTMLParser
 import re
 
 # Emoticon definitions.
@@ -30,6 +31,22 @@ hashtag_RE = re.compile(r'(#[a-zA-Z]+[a-zA-Z0-9_]*)')
 rt_tag_RE = re.compile(r'(^RT\s+|\s+RT\s+)')
 quote_RE = re.compile(r'".*?"')
 url_RE = re.compile(r'(\w+:\/\/\S+)')
+
+
+punctuation = ['.', ',', '!', '?', '(', ')']
+negation_cues = open("../Testing/dictionaries/negation_cues.txt", "r").read().split("\n")
+
+word_finder = re.compile(r'(\S+)')
+not_finder = re.compile(r'(^|\s)(' + '|'.join(negation_cues) + ')(\s.*?)(?=[' + ''.join(punctuation) + ']|$)', re.IGNORECASE)
+
+
+def html_decode(tweet_text):
+    h = HTMLParser.HTMLParser()
+    return h.unescape(tweet_text).lower()
+
+
+def naive_negation_attachment(tweet_text):
+    return not_finder.sub((lambda m: m.group(1) + m.group(2) + word_finder.sub(r'\1_NEG', m.group(3))), tweet_text)
 
 
 def no_emoticons(tweet_text):
@@ -78,5 +95,5 @@ def reduce_letter_duplicates(tweet_text):
 def hash_as_normal(tweet_text):
     return re.sub(r'#([a-zA-Z]+[a-zA-Z0-9_]*)', "\\1", tweet_text)
 
-def no_punctuation(tweet_text):
-    return "".join(c for c in tweet_text if c not in ('!','.',':',','))
+def strip_tweet(tweet_text):
+    return " ".join(tweet_text.split())

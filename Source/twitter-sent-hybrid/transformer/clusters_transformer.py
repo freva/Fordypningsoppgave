@@ -8,24 +8,23 @@ from storage import lexicon
 class ClusterTransformer(TransformerMixin, BaseEstimator):
     dictionary = None
 
-    def __init__(self, norm=True, preprocessor=None):
+    def __init__(self, norm=True, preprocessors=None):
         ClusterTransformer.dictionary = lexicon.get_brown_cluster_dict()
         self.cluster_dict = dict.fromkeys(ClusterTransformer.dictionary.values(), 0)
         self.normalize = norm
         self.vectorizer = None
-        self.preprocessor = preprocessor
-
+        self.preprocessors = preprocessors
 
     def fit(self, raw_tweets, y=None):
         self.vectorizer = DictVectorizer().fit([self.cluster_dict])
         return self
 
-
     def transform(self, raw_tweets):
-        occurrence_list = []  # list holding occurrence dicts for each tweet
+        occurrence_list = []
         for tweet in raw_tweets:
-            if self.preprocessor:
-                tweet = self.preprocessor(tweet)
+            for preprocessor in self.preprocessors:
+                tweet = preprocessor(tweet)
+
             occurrences = self.cluster_dict.copy()
             for token in tokenizer.tokenize(tweet):
                 if token in ClusterTransformer.dictionary:

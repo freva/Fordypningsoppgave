@@ -6,6 +6,7 @@ from storage import lexicon
 
 
 class LexiconTransformer(TransformerMixin, BaseEstimator):
+    negated_RE = re.compile(r'(.*)_NEG(?:FIRST)?$')
     manual_lexicon = [lexicon.get_bing_liu_lexicon(), lexicon.get_mpqa_lexicon(), lexicon.get_nrc_emotion_lexicon()]
     automatic_lexicon = [(lexicon.get_automated_lexicon(name), bigram) for name, bigram in [
         ('../Testing/lexica/Sentiment140/S140-AFFLEX-NEGLEX-unigrams.txt',      False),
@@ -14,21 +15,26 @@ class LexiconTransformer(TransformerMixin, BaseEstimator):
         ('../Testing/lexica/HashtagSentiment/HS-AFFLEX-NEGLEX-bigrams.txt',     True)
     ]]
 
-    def __init__(self, norm=True, preprocessor=None):
+    def __init__(self, norm=True, preprocessors=None):
         self.normalize = norm
-        self.preprocessor = preprocessor
-
+        self.preprocessors = preprocessors
 
     def fit(self, raw_tweets, y=None):
         return self
 
     def transform(self, raw_tweets, y=None):
-        matrix = self._automatic_lexicon_scorer(raw_tweets, LexiconTransformer.automatic_lexicon[0][0], LexiconTransformer.automatic_lexicon[0][1])
+        filtered_tweets = []
+        for tweet in raw_tweets:
+            for preprocessor in self.preprocessors:
+                tweet = preprocessor(tweet)
+            filtered_tweets.append(tweet)
+
+        matrix = self._automatic_lexicon_scorer(filtered_tweets, LexiconTransformer.automatic_lexicon[0][0], LexiconTransformer.automatic_lexicon[0][1])
         for lexicon in LexiconTransformer.automatic_lexicon[1:]:
-            matrix = np.concatenate((matrix, self._automatic_lexicon_scorer(raw_tweets, lexicon[0], lexicon[1])), axis=1)
+            matrix = np.concatenate((matrix, self._automatic_lexicon_scorer(filtered_tweets, lexicon[0], lexicon[1])), axis=1)
 
         for lexicon in LexiconTransformer.manual_lexicon:
-            matrix = np.concatenate((matrix, self._manual_lexicon_scorer(raw_tweets, lexicon)), axis=1)
+            matrix = np.concatenate((matrix, self._manual_lexicon_scorer(filtered_tweets, lexicon)), axis=1)
         return matrix
 
 
@@ -36,23 +42,22 @@ class LexiconTransformer(TransformerMixin, BaseEstimator):
         scores = np.zeros((len(raw_tweets), 4))
         for i, contexts in enumerate(raw_tweets):
             tweet_scores = []
-            contexts = (self.preprocessor(contexts)).split(" ") if self.preprocessor else contexts.split(" ")
+            contexts = contexts.split(" ")
             if bigram:
                 contexts = zip(contexts, contexts[1:])
             for token in contexts:
-                negated_regex = r'(.*)_NEG(?:FIRST)?$'
                 if bigram:
                     word_1 = token[0]
                     word_2 = token[1]
-                    if re.match(negated_regex, token[0]):
-                        word_1 = re.sub(negated_regex, r'\1', token[0])
-                    elif re.match(negated_regex, token[1]):
-                        word_2 = re.sub(negated_regex, r'\1', token[1])
+                    if LexiconTransformer.negated_RE.match(token[0]):
+                        word_1 = LexiconTransformer.negated_RE.sub(r'\1', token[0])
+                    elif LexiconTransformer.negated_RE.match(token[1]):
+                        word_2 = LexiconTransformer.negated_RE.sub(r'\1', token[1])
                     token = (word_1, word_2)
                     token = ' '.join(token)
                 else:
-                    if re.match(negated_regex, token):
-                        token = re.sub(negated_regex, r'\1', token)
+                    if LexiconTransformer.negated_RE.match(token):
+                        token = LexiconTransformer.negated_RE.sub(r'\1', token)
                 try:
                     tweet_scores.append(lexicon[token])
                 except KeyError:
@@ -67,12 +72,10 @@ class LexiconTransformer(TransformerMixin, BaseEstimator):
     def _manual_lexicon_scorer(self, raw_tweets, lexicon_dict):
         scores = np.zeros((len(raw_tweets), 4))
         for i, contexts in enumerate(raw_tweets):
-            contexts = (self.preprocessor(contexts)).split(" ") if self.preprocessor else contexts.split(" ")
-            for token in contexts:
+            for token in contexts.split(" "):
                 try:
-                    negated_regex = r'(.*)_NEG(?:FIRST)?$'
-                    if re.match(negated_regex, token):
-                        token = re.sub(negated_regex, r'\1', token)
+                    if LexiconTransformer.negated_RE.match(token):
+                        token = LexiconTransformer.negated_RE.sub(r'\1', token)
                         scores[i][2 if lexicon_dict[token] > 0 else 3] += lexicon_dict[token]
                     else:
                         scores[i][0 if lexicon_dict[token] > 0 else 1] += lexicon_dict[token]

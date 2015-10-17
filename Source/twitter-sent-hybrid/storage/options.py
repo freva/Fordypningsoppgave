@@ -1,13 +1,10 @@
-from sklearn.feature_extraction.text import TfidfVectorizer
-
-from transformer import *
+from transformer import TfidfNegTransformer, LexiconTransformer, POSTransformer, ClusterTransformer, PunctuationTransformer, EmoticonTransformer
 from models import *
 from sklearn.pipeline import FeatureUnion
 
-import utils.preprocessor_methods as pr
+import utils.filters as f
 import utils.tokenizer as t
-import storage.data as d
-from sklearn.svm import LinearSVC, SVC
+from sklearn.svm import SVC
 
 
 class General:
@@ -19,10 +16,11 @@ class SubjectivityFeatures:
     TRANSFORMER_OPTIONS = {
         "word_vectorizer": {
             'enabled': True,
-            'type': TfidfVectorizer,
+            'type': TfidfNegTransformer,
             'ngram_range': (1, 4),
             'tokenizer': t.tokenize,
-            'preprocessor': pr.remove_all,
+            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.no_hash, f.no_emoticons, f.no_rt_tag,
+                             f.naive_negation_attachment],
             'sublinear_tf': True,
             'use_idf': True,
             'smooth_idf': True,
@@ -31,11 +29,12 @@ class SubjectivityFeatures:
         },
 
         "char_ngrams": {
-            'enabled': False,
-            'type': TfidfVectorizer,
+            'enabled': True,
+            'type': TfidfNegTransformer,
             'analyzer': 'char',
             'ngram_range': (3, 5),
-            'preprocessor': pr.remove_noise,
+            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
+                             f.reduce_letter_duplicates, f.quote_placeholder, f.naive_negation_attachment],
             'sublinear_tf': True,
             'use_idf': True,
             'smooth_idf': False,
@@ -44,35 +43,36 @@ class SubjectivityFeatures:
         },
 
         "lexicon": {
-            'enabled': False,
+            'enabled': True,
             'type': LexiconTransformer,
-            'preprocessor': pr.remove_noise
+            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
+                             f.reduce_letter_duplicates, f.quote_placeholder, f.naive_negation_attachment, f.strip_tweet],
         },
 
         "pos_tagger": {
-            'enabled': False,
+            'enabled': True,
             'type': POSTransformer,
             'norm': True
         },
 
         "word_clusters": {
-            'enabled': False,
+            'enabled': True,
             'type': ClusterTransformer,
-            'preprocessor': pr.html_decode,
+            'preprocessors': [f.html_decode],
             'norm': True
         },
 
         "punctuation": {
-            'enabled': False,
+            'enabled': True,
             'type': PunctuationTransformer,
-            'preprocessor': pr.no_url_username,
+            'preprocessors': [f.html_decode, f.no_url, f.no_username],
             'norm': True
         },
 
         "emoticons": {
-            'enabled': False,
+            'enabled': True,
             'type': EmoticonTransformer,
-            'preprocessor': pr.no_url_username,
+            'preprocessors': [f.html_decode, f.no_url, f.no_username],
             'norm': True
         }
     }
@@ -95,57 +95,58 @@ class PolarityFeatures:
     TRANSFORMER_OPTIONS = {
         "word_vectorizer": {
             'enabled': True,
-            'type': TfidfVectorizer,
+            'type': TfidfNegTransformer,
             'ngram_range': (1, 4),
             'sublinear_tf': True,
             'tokenizer': t.tokenize,
-            'preprocessor': pr.remove_all,
+            'preprocessor': [f.html_decode, f.no_url, f.no_username, f.no_hash, f.no_emoticons, f.no_rt_tag,
+                             f.naive_negation_attachment],
             'use_idf': True,
             'smooth_idf': True,
             'max_df': 0.5,
-            'max_features': 300000
         },
 
         "char_ngrams": {
             'enabled': True,
-            'type': TfidfVectorizer,
+            'type': TfidfNegTransformer,
             'analyzer': 'char',
             'ngram_range': (3, 5),
-            'preprocessor': pr.remove_noise,
+            'preprocessor': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
+                             f.reduce_letter_duplicates, f.quote_placeholder, f.naive_negation_attachment],
             'min_df': 1,
-            'max_features': 200000
         },
 
         "lexicon": {
             'enabled': True,
             'type': LexiconTransformer,
-            'preprocessor': pr.remove_noise
+            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
+                             f.reduce_letter_duplicates, f.quote_placeholder, f.naive_negation_attachment],
         },
 
         "pos_tagger": {
             'enabled': True,
             'type': POSTransformer,
-            'preprocessor': pr.remove_all
+            'norm': True,
         },
 
         "word_clusters": {
             'enabled': True,
             'type': ClusterTransformer,
-            'preprocessor': pr.html_decode,
+            'preprocessors': [f.html_decode],
             'norm': True,
         },
 
         "punctuation": {
             'enabled': False,
             'type': PunctuationTransformer,
-            'preprocessor': pr.no_url_username,
+            'preprocessors': [f.html_decode, f.no_url, f.no_username],
             'norm': True
         },
 
         "emoticons": {
             'enabled': False,
             'type': EmoticonTransformer,
-            'preprocessor': pr.no_url_username,
+            'preprocessors': [f.html_decode, f.no_url, f.no_username],
             'norm': True
         }
     }
