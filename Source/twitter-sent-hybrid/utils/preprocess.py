@@ -7,10 +7,7 @@ import re, HTMLParser
 
 
 punctuation = ['.', ',', '!', '?', '(', ')']
-negation_cues = ['hardly', 'lack', 'lacking', 'lacks', 'neither', 'nor', 'never', 'not', 'nobody', 'none',
-             'nothing', 'nowhere', 'no', 'without', 'aint', 'cant', 'cannot', 'darent', 'dont', 'doesnt',
-             'didnt', 'hadnt', 'hasnt', 'havent', 'havnt', 'isnt', 'mightnt', 'mustnt', 'neednt', 'oughtnt',
-             'shant', 'shouldnt', 'wasnt', 'wouldnt']
+negation_cues = open("../Testing/dictionaries/negation_cues.txt", "r").read().split("\n")
 
 word_finder = re.compile(r'(\S+)')
 not_finder = re.compile(r'(^|\s)(' + '|'.join(negation_cues) + ')(\s.*?)(?=[' + ''.join(punctuation) + ']|$)', re.IGNORECASE)
