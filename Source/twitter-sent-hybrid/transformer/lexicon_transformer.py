@@ -7,7 +7,7 @@ from storage import lexicon
 
 class LexiconTransformer(TransformerMixin, BaseEstimator):
     negated_RE = re.compile(r'(.*)_NEG(?:FIRST)?$')
-    manual_lexicon = [lexicon.get_bing_liu_lexicon(), lexicon.get_mpqa_lexicon(), lexicon.get_nrc_emotion_lexicon()]
+    manual_lexicon = [lexicon.get_bing_liu_lexicon(), lexicon.get_mpqa_lexicon(), lexicon.get_nrc_emotion_lexicon(), lexicon.get_afinn_lexicon()]
     automatic_lexicon = [(lexicon.get_automated_lexicon(name), bigram) for name, bigram in [
         ('../Testing/lexica/Sentiment140/S140-AFFLEX-NEGLEX-unigrams.txt',      False),
         ('../Testing/lexica/Sentiment140/S140-AFFLEX-NEGLEX-bigrams.txt',       True),
@@ -58,10 +58,9 @@ class LexiconTransformer(TransformerMixin, BaseEstimator):
                 else:
                     if LexiconTransformer.negated_RE.match(token):
                         token = LexiconTransformer.negated_RE.sub(r'\1', token)
-                try:
+                if token in lexicon:
                     tweet_scores.append(lexicon[token])
-                except KeyError:
-                    pass
+
             scores[i][0] = len([score for score in tweet_scores if score != 0])
             scores[i][1] = sum(tweet_scores) if tweet_scores else 0
             scores[i][2] = max(map(abs, tweet_scores)) if tweet_scores else 0

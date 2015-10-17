@@ -1,5 +1,6 @@
 bing_liu_negative_path = "../Testing/lexica/BingLiu/negative-words.txt"
 bing_liu_positive_path = "../Testing/lexica/BingLiu/positive-words.txt"
+afinn_lexicon_path = "../Testing/lexica/AFINN/AFINN-111.txt"
 mpqa_lexicon_path = "../Testing/lexica/MPQA/subjclueslen1-HLTEMNLP05.tff"
 nrc_emoticon_path = "../Testing/lexica/NRC-Emotion-Lexicon-v0.92/NRC-emotion-lexicon-wordlevel-alphabetized-v0.92.txt"
 brown_word_cluster_path = "../Testing/dictionaries/50mpaths2.txt"
@@ -14,12 +15,8 @@ def get_automated_lexicon(filename):
 
 
 def get_afinn_lexicon():
-    lexicon = {}
-    with open("../Testing/lexica/AFINN/AFINN-111.txt", 'r') as f:
-        for line in f.read().decode('utf-8').split("\n"):
-            newLine = line.split("\t")
-            lexicon[(newLine[0])] = newLine[1]
-    return lexicon
+    return {word: int(score)
+            for word, score in [line.split("\t") for line in open(afinn_lexicon_path, 'r').read().decode('utf-8').split("\n")]}
 
 def get_bing_liu_lexicon():
     lexicon = {str(word): -3 for word in open(bing_liu_negative_path).read().decode('utf-8').split("\n")}
