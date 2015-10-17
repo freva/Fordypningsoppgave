@@ -4,9 +4,9 @@ import re
 
 
 class PunctuationTransformer(TransformerMixin, BaseEstimator):
-    def __init__(self, norm=True, preprocessor=None):
+    def __init__(self, norm=True, preprocessors=None):
         self.normalize = norm
-        self.preprocessor = preprocessor
+        self.preprocessors = preprocessors
 
     def fit(self, raw_tweets, y=None):
         return self
@@ -16,10 +16,9 @@ class PunctuationTransformer(TransformerMixin, BaseEstimator):
         repeat_alpha_RE = re.compile(r"([a-zA-Z])\1{2,}")
         repeat_punkt_re = re.compile(r"[!?.,]{2,}")
 
-
         for tweet in raw_tweets:
-            if self.preprocessor:
-                tweet = self.preprocessor(tweet)
+            for preprocessor in self.preprocessors:
+                tweet = preprocessor(tweet)
 
             vectorized.append([float(tweet.count(i)) for i in search] +
                               [len(repeat_alpha_RE.findall(tweet)), len(repeat_punkt_re.findall(tweet))])
