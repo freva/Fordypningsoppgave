@@ -43,7 +43,7 @@ class SubjectivityFeatures:
         },
 
         "lexicon": {
-            'enabled': True,
+            'enabled': False,
             'type': LexiconTransformer,
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
                              f.reduce_letter_duplicates, f.quote_placeholder, f.naive_negation_attachment, f.strip_tweet],
@@ -51,13 +51,13 @@ class SubjectivityFeatures:
         },
 
         "pos_tagger": {
-            'enabled': True,
+            'enabled': False,
             'type': POSTransformer,
             'norm': True
         },
 
         "word_clusters": {
-            'enabled': True,
+            'enabled': False,
             'type': ClusterTransformer,
             'preprocessors': [f.html_decode],
             'norm': True
