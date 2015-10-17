@@ -39,8 +39,8 @@ class LexiconTransformer(TransformerMixin, BaseEstimator):
 
 
     def _automatic_lexicon_scorer(self, raw_tweets, lexicon, bigram):
-        scores = np.zeros((len(raw_tweets), 4))
-        for i, contexts in enumerate(raw_tweets):
+        scores = []
+        for contexts in raw_tweets:
             tweet_scores = []
             contexts = contexts.split(" ")
             if bigram:
@@ -58,13 +58,13 @@ class LexiconTransformer(TransformerMixin, BaseEstimator):
                 else:
                     if LexiconTransformer.negated_RE.match(token):
                         token = LexiconTransformer.negated_RE.sub(r'\1', token)
-                if token in lexicon:
-                    tweet_scores.append(lexicon[token])
+                tweet_scores.append(lexicon[token] if token in lexicon else 0)
 
-            scores[i][0] = len([score for score in tweet_scores if score != 0])
-            scores[i][1] = sum(tweet_scores) if tweet_scores else 0
-            scores[i][2] = max(map(abs, tweet_scores)) if tweet_scores else 0
-            scores[i][3] = tweet_scores[-1] if tweet_scores else 0
+            scores.append([len([score for score in tweet_scores if score != 0]),
+                           len(tweet_scores),
+                           sum(tweet_scores) if tweet_scores else 0,
+                           max(map(abs, tweet_scores)) if tweet_scores else 0,
+                           tweet_scores[-1] if tweet_scores else 0])
         return normalize(scores) if self.normalize else scores
 
 
