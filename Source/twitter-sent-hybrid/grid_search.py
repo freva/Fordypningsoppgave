@@ -10,7 +10,7 @@ from storage import data as d
 from storage.options import General, SubjectivityFeatures
 
 import utils.tokenizer as t
-import utils.filters as f
+import utils.filters as p
 
 
 def grid_search(clf, feature_pipeline, docs_train, y_train):
@@ -32,11 +32,11 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
         'features__word_vectorizer__smooth_idf': [True],
         'features__word_vecotrizer__min_df': [0.0],
         'features__word_vectorizer__max_df': [0.5],
-        'features__word_vectorizer__preprocessor': [[f.html_decode, f.no_url, f.no_username, f.no_hash, f.no_emoticons, f.no_rt_tag, f.naive_negation_attachment],
-                                                    [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_emoticons, f.no_rt_tag, f.naive_negation_attachment],
-                                                    [f.html_decode, f.no_url, f.no_username, f.no_hash, f.no_emoticons, f.no_rt_tag],
-                                                    [f.html_decode, f.no_url, f.no_username, f.no_hash, f.no_emoticons, f.no_rt_tag, f.naive_negation_attachment, f.strip_tweet],
-                                                    [f.html_decode, f.no_url, f.no_username, f.no_hash, f.no_emoticons, f.no_rt_tag, f.reduce_letter_duplicates, f.naive_negation_attachment]],
+        'features__word_vectorizer__preprocessor': [[p.html_decode, p.no_url, p.no_username, p.no_hash, p.no_emoticons, p.no_rt_tag, p.naive_negation_attachment],
+                                                    [p.html_decode, p.no_url, p.no_username, p.hash_as_normal, p.no_emoticons, p.no_rt_tag, p.naive_negation_attachment],
+                                                    [p.html_decode, p.no_url, p.no_username, p.no_hash, p.no_emoticons, p.no_rt_tag],
+                                                    [p.html_decode, p.no_url, p.no_username, p.no_hash, p.no_emoticons, p.no_rt_tag, p.naive_negation_attachment, p.strip_tweet],
+                                                    [p.html_decode, p.no_url, p.no_username, p.no_hash, p.no_emoticons, p.no_rt_tag, p.reduce_letter_duplicates, p.naive_negation_attachment]],
         'features__char_ngrams__analyzer': ['char'],
         'features__char_ngrams__ngram_range': [(3, 5)],
         'features__char_ngrams__sublinear_tf': [True],
@@ -44,18 +44,18 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
         'features__char_ngrams__smooth_idf': [True],
         'features__char_ngrams__min_df': [0.0],
         'features__char_ngrams__max_df': [0.5],
-        'features__char_ngrams__preprocessor': [[f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag, f.reduce_letter_duplicates, f.quote_placeholder, f.naive_negation_attachment],
-                                                [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag, f.reduce_letter_duplicates, f.quote_placeholder, f.naive_negation_attachment, f.strip_tweet],
-                                                [f.html_decode, f.no_url, f.no_username, f.no_hash, f.no_rt_tag, f.reduce_letter_duplicates, f.quote_placeholder, f.naive_negation_attachment],
-                                                [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag, f.reduce_letter_duplicates, f.naive_negation_attachment],
-                                                [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag, f.reduce_letter_duplicates, f.quote_placeholder],
-                                                [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag, f.quote_placeholder, f.naive_negation_attachment]],
+        'features__char_ngrams__preprocessor': [[p.html_decode, p.no_url, p.no_username, p.hash_as_normal, p.no_rt_tag, p.reduce_letter_duplicates, p.quote_placeholder, p.naive_negation_attachment],
+                                                [p.html_decode, p.no_url, p.no_username, p.hash_as_normal, p.no_rt_tag, p.reduce_letter_duplicates, p.quote_placeholder, p.naive_negation_attachment, p.strip_tweet],
+                                                [p.html_decode, p.no_url, p.no_username, p.no_hash, p.no_rt_tag, p.reduce_letter_duplicates, p.quote_placeholder, p.naive_negation_attachment],
+                                                [p.html_decode, p.no_url, p.no_username, p.hash_as_normal, p.no_rt_tag, p.reduce_letter_duplicates, p.naive_negation_attachment],
+                                                [p.html_decode, p.no_url, p.no_username, p.hash_as_normal, p.no_rt_tag, p.reduce_letter_duplicates, p.quote_placeholder],
+                                                [p.html_decode, p.no_url, p.no_username, p.hash_as_normal, p.no_rt_tag, p.quote_placeholder, p.naive_negation_attachment]],
         #'features__word_clusters__dictionary': [d.get_cluster_dict],
         #'features__word_clusters__preprocessor': [pr.html_decode],
         #'features__word_clusters__norm': (True, False),
-        'features__punctuation__preprocessor': [[f.html_decode, f.no_url, f.no_username]],
+        'features__punctuation__preprocessor': [[p.html_decode, p.no_url, p.no_username]],
         'features__punctuation__norm': [True],
-        'features__emoticons__preprocessor': [[f.html_decode], [f.html_decode, f.no_url]],
+        'features__emoticons__preprocessor': [[p.html_decode], [p.html_decode, p.no_url]],
         'features__emoticons__norm': [True],
     }
 
