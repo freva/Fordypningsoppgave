@@ -97,3 +97,7 @@ def hash_as_normal(tweet_text):
 
 def strip_tweet(tweet_text):
     return " ".join(tweet_text.split())
+
+
+def dummy(text):
+    return text
