@@ -2,11 +2,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 class TfidfNegTransformer(TfidfVectorizer):
-    def __init__(self, negate=True, preprocessors=[], tokenizer=None, analyzer='word',
-                 stop_words=None, token_pattern=r"(?u)\b\w\w+\b", ngram_range=(1, 1), max_df=1.0, min_df=1,
-                 use_idf=True, smooth_idf=True, sublinear_tf=False):
-        super(TfidfNegTransformer, self).__init__(self, tokenizer=tokenizer,
-            analyzer=analyzer, stop_words=stop_words, token_pattern=token_pattern, ngram_range=ngram_range,
+    def __init__(self, negate=True, preprocessors=[], tokenizer=None, analyzer='word', ngram_range=(1, 1), max_df=1.0,
+                 min_df=1, use_idf=True, smooth_idf=True, sublinear_tf=False):
+        super(TfidfNegTransformer, self).__init__(self, tokenizer=tokenizer, analyzer=analyzer, ngram_range=ngram_range,
             max_df=max_df, min_df=min_df, use_idf=use_idf, smooth_idf=smooth_idf, sublinear_tf=sublinear_tf)
         self.negate = negate
         self.preprocessors = preprocessors
