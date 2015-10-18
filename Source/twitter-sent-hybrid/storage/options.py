@@ -19,8 +19,7 @@ class SubjectivityFeatures:
             'type': TfidfNegTransformer,
             'ngram_range': (1, 4),
             'tokenizer': t.tokenize,
-            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.no_hash, f.no_emoticons, f.no_rt_tag,
-                             f.naive_negation_attachment],
+            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.no_hash, f.no_emoticons, f.no_rt_tag],
             'sublinear_tf': True,
             'use_idf': True,
             'smooth_idf': True,
@@ -34,7 +33,7 @@ class SubjectivityFeatures:
             'analyzer': 'char',
             'ngram_range': (3, 5),
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
-                             f.reduce_letter_duplicates, f.quote_placeholder, f.naive_negation_attachment],
+                             f.reduce_letter_duplicates, f.naive_negation_attachment],
             'sublinear_tf': True,
             'use_idf': True,
             'smooth_idf': False,
@@ -43,7 +42,7 @@ class SubjectivityFeatures:
         },
 
         "lexicon": {
-            'enabled': False,
+            'enabled': True,
             'type': LexiconTransformer,
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
                              f.reduce_letter_duplicates, f.quote_placeholder, f.naive_negation_attachment, f.strip_tweet],
@@ -51,13 +50,13 @@ class SubjectivityFeatures:
         },
 
         "pos_tagger": {
-            'enabled': False,
+            'enabled': True,
             'type': POSTransformer,
             'norm': True
         },
 
         "word_clusters": {
-            'enabled': False,
+            'enabled': True,
             'type': ClusterTransformer,
             'preprocessors': [f.html_decode],
             'norm': True
@@ -73,7 +72,7 @@ class SubjectivityFeatures:
         "emoticons": {
             'enabled': True,
             'type': EmoticonTransformer,
-            'preprocessors': [f.html_decode, f.no_url, f.no_username],
+            'preprocessors': [f.html_decode, f.no_url],
             'norm': True
         }
     }
