@@ -2,7 +2,7 @@ from collections import namedtuple
 import csv
 from time import time
 import tempfile
-import pickle as pkl
+import pickles as pkl
 import os
 import numpy as np
 
@@ -13,6 +13,12 @@ from sklearn.cross_validation import StratifiedKFold, StratifiedShuffleSplit
 from sklearn.metrics import f1_score, precision_score, recall_score, classification_report, confusion_matrix
 
 from crf_transformer import CRFTransformer
+
+crf_params = {'c1' : 0.1,
+              'c2' : 1,
+              'max_distance' : 7,
+              'max_iterations' : 1000,
+              'linesearch' : 'MoreThuente'}
 
 
 class CRF(BaseEstimator, ClassifierMixin):
@@ -33,7 +39,7 @@ class CRF(BaseEstimator, ClassifierMixin):
             # include transitions that are possible, but not observed
             'feature.possible_transitions': True
         })
-        self.model_dir = model_dir
+        self.model_dir = True
         self.model_file = None
 
     def set_params(self, **params):
@@ -51,14 +57,16 @@ class CRF(BaseEstimator, ClassifierMixin):
             self.trainer.append(xseq, yseq)
         if self.model_dir:
             _, self.model_file = tempfile.mkstemp(suffix='.crfsuite', dir=self.model_dir)
-        else:
-            self.model_file = resources.crf_model
+        # else:
+            # self.model_file = resources.crf_model
         self.trainer.train(self.model_file)
         return self
 
     def predict(self, X):
         tagger = pycrfsuite.Tagger()
-        tagger.open(self.model_file if self.model_file else resources.crf_model)
+        # Old implementation:
+        # tagger.open(self.model_file if self.model_file else resources.crf_model)
+        tagger.open(self.model_file)
         return [tagger.tag(xseq) for xseq in X]
 
 
@@ -141,38 +149,38 @@ def cross_validate(X, y, tweet_cues, num_folds, max_distance, **crf_params):
     return scores
 
 
-def grid_search(X, y, tweet_cues):
-    grid_config = resources.config['grid_search_crf']
-    parameters = {
-        'c1': [float(num) for num in grid_config['c1'].split(',')],
-        'c2': [float(num) for num in grid_config['c2'].split(',')],
-        'max_distance': [int(num) for num in grid_config['max_distance'].split(',')],
-        'max_iterations': [int(num) for num in grid_config['max_iterations'].split(',')],
-        'linesearch': grid_config['linesearch'].split(','),
-    }
-
-    t0 = time()
-    n_folds = 7
-    num_param_sets = len(parameters['c1']) * len(parameters['c2']) * len(parameters['max_distance']) * \
-        len(parameters['max_iterations']) * len(parameters['linesearch'])
-
-    print("Performing CRF grid search over {} * {} =  {}...".format(num_param_sets, n_folds, num_param_sets * n_folds)
-          )
-    with open('ntn_output.tsv', 'w') as f:
-        writer = csv.writer(f, delimiter='\t')
-        writer.writerow(['c1', 'c2', 'max_dist', 'precision', 'recall', 'f1', 'pcs'])
-        for c1 in parameters['c1']:
-            for c2 in parameters['c2']:
-                for max_dist in parameters['max_distance']:
-                    for max_iter in parameters['max_iterations']:
-                        for linesearch in parameters['linesearch']:
-                            print("c1 = {}, c2 = {}, max_dist = {}, max_iter = {}, linesearch = {}".format(
-                                c1, c2, max_dist, max_iter, linesearch)
-                            )
-                            scores = cross_validate(X, y, tweet_cues, n_folds, max_dist,
-                                                    c1=c1, c2=c2, max_iterations=max_iter, linesearch=linesearch)
-                            writer.writerow([c1, c2, max_dist, scores.precision, scores.recall, scores.f1, scores.pcs])
-    print("Performed CRF grid search in %0.3fs" % (time() - t0))
+# def grid_search(X, y, tweet_cues):
+#     grid_config = resources.config['grid_search_crf']
+#     parameters = {
+#         'c1': [float(num) for num in grid_config['c1'].split(',')],
+#         'c2': [float(num) for num in grid_config['c2'].split(',')],
+#         'max_distance': [int(num) for num in grid_config['max_distance'].split(',')],
+#         'max_iterations': [int(num) for num in grid_config['max_iterations'].split(',')],
+#         'linesearch': grid_config['linesearch'].split(','),
+#     }
+#
+#     t0 = time()
+#     n_folds = 7
+#     num_param_sets = len(parameters['c1']) * len(parameters['c2']) * len(parameters['max_distance']) * \
+#         len(parameters['max_iterations']) * len(parameters['linesearch'])
+#
+#     print("Performing CRF grid search over {} * {} =  {}...".format(num_param_sets, n_folds, num_param_sets * n_folds)
+#           )
+#     with open('ntn_output.tsv', 'w') as f:
+#         writer = csv.writer(f, delimiter='\t')
+#         writer.writerow(['c1', 'c2', 'max_dist', 'precision', 'recall', 'f1', 'pcs'])
+#         for c1 in parameters['c1']:
+#             for c2 in parameters['c2']:
+#                 for max_dist in parameters['max_distance']:
+#                     for max_iter in parameters['max_iterations']:
+#                         for linesearch in parameters['linesearch']:
+#                             print("c1 = {}, c2 = {}, max_dist = {}, max_iter = {}, linesearch = {}".format(
+#                                 c1, c2, max_dist, max_iter, linesearch)
+#                             )
+#                             scores = cross_validate(X, y, tweet_cues, n_folds, max_dist,
+#                                                     c1=c1, c2=c2, max_iterations=max_iter, linesearch=linesearch)
+#                             writer.writerow([c1, c2, max_dist, scores.precision, scores.recall, scores.f1, scores.pcs])
+#     print("Performed CRF grid search in %0.3fs" % (time() - t0))
 
 
 def load_data(parsed_corpus):
@@ -205,7 +213,7 @@ def score_classifier(trained_classifier, transformer, X_test, X_test_seq, y_test
 
 
 def get_classifier(corpus, force_new=False):
-    crf_path = os.path.join(resources.pickles, 'crf.pkl')
+    crf_path = 'pickles/crf.pkl'
     if os.path.exists(crf_path) and not force_new:
         print("Loading CRF classifier from pickle...")
         with open(crf_path, 'rb') as f:
@@ -214,7 +222,7 @@ def get_classifier(corpus, force_new=False):
         print("Loading and dependency parsing negation corpus...")
         X, y, tweet_cues = load_data(corpus)
 
-        crf_params = resources.config['crf_parameters']
+        # crf_params = resources.config['crf_parameters']
 
         transformer = CRFTransformer(int(crf_params['max_distance']))
         y_tweet_negated = ['negated' in tweet for tweet in y]
@@ -259,7 +267,7 @@ def get_classifier(corpus, force_new=False):
     return clf
 
 
-def main():
+# def main():
     # crf_params = resources.config['crf_parameters']
     # transformer = CRFTransformer(int(crf_params['max_distance']))
     # clf = CRF(float(crf_params['c1']), float(crf_params['c1']),
@@ -268,8 +276,8 @@ def main():
     # X_seq = transformer.transform(X, tweet_cues=tweet_cues)
     #
     # print(np.mean(cross_val_score(clf, X_seq, y, scoring=make_scorer(sequence_f1_score), cv=10, verbose=10)))
-    get_classifier(parse_twitter_negation(), True)
+    # get_classifier(parse_twitter_negation(), True)
 
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()

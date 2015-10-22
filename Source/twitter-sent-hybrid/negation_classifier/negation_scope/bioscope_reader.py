@@ -1,6 +1,6 @@
 import re
 import lxml.etree as et
-from utils.twokenizer import tokenize
+from utils.tokenizer import tokenize
 
 
 def wrap_words(element):
@@ -29,7 +29,7 @@ def fix_bioscope(file):
     for sentence in root.iter('sentence'):
         wrap_words(sentence)
     tree = et.ElementTree(root)
-    with open(resources.bioscope_corpus, 'wb') as f:
+    with open('bioscope_fixed.xml', 'wb') as f:
         tree.write(f)
 
 
