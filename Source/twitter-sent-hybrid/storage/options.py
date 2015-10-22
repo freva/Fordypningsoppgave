@@ -25,6 +25,7 @@ class SubjectivityFeatures:
             'smooth_idf': True,
             'min_df': 0.0,
             'max_df': 0.5,
+            'negate': False
         },
 
         "char_ngrams": {
@@ -39,10 +40,11 @@ class SubjectivityFeatures:
             'smooth_idf': False,
             'min_df': 0.0,
             'max_df': 0.5,
+            'negate': False
         },
 
         "lexicon": {
-            'enabled': True,
+            'enabled': False,
             'type': LexiconTransformer,
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
                              f.reduce_letter_duplicates, f.quote_placeholder, f.strip_tweet],
@@ -50,27 +52,27 @@ class SubjectivityFeatures:
         },
 
         "pos_tagger": {
-            'enabled': True,
+            'enabled': False,
             'type': POSTransformer,
             'norm': True
         },
 
         "word_clusters": {
-            'enabled': True,
+            'enabled': False,
             'type': ClusterTransformer,
             'preprocessors': [f.html_decode, f.reduce_letter_duplicates, f.hash_as_normal],
             'norm': True
         },
 
         "punctuation": {
-            'enabled': True,
+            'enabled': False,
             'type': PunctuationTransformer,
             'preprocessors': [f.html_decode, f.no_url, f.no_username],
             'norm': True
         },
 
         "emoticons": {
-            'enabled': True,
+            'enabled': False,
             'type': EmoticonTransformer,
             'preprocessors': [f.html_decode, f.no_url],
             'norm': True
