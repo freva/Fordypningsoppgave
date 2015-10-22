@@ -1,4 +1,5 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
+from storage.neg_cacher import NegCacher
 
 
 class TfidfNegTransformer(TfidfVectorizer):
@@ -24,5 +25,8 @@ class TfidfNegTransformer(TfidfVectorizer):
         return super(TfidfNegTransformer, self).fit_transform(self.filter(raw_documents), y)
 
     def transform(self, raw_documents, **kwargs):
+        if self.negate:
+            NegCacher.cache(raw_documents)
+            raw_documents = [' '.join(NegCacher.cached[tweet]) for tweet in raw_documents]
         return super(TfidfNegTransformer, self).transform(self.filter(raw_documents), **kwargs)
 

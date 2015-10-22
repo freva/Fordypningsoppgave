@@ -2,7 +2,7 @@ from collections import namedtuple
 import csv
 from time import time
 import tempfile
-import pickles as pkl
+import pickle as pkl
 import os
 import numpy as np
 
