@@ -1,24 +1,16 @@
 from sklearn.base import TransformerMixin, BaseEstimator
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.preprocessing import normalize
-from storage import cache
-import nltk
+from storage.tweebo_cache import TweeboCacher
 
 
 class POSTransformer(TransformerMixin, BaseEstimator):
-    pos_tweets = cache.get("pos_tags", False)
-    if not pos_tweets:
-        raise Exception("PoS cache not found!")
-    classes = ['BES', 'CC', 'CD', 'DT', 'EX', 'FW', 'HT', 'IN', 'JJ', 'JJR', 'JJS', 'MB', 'MD', 'NN', 'NNP', 'NNPS',
-               'NNS', 'PDT', 'POS', 'PRP', 'RB', 'RBR', 'RBS', 'RP', 'RT', 'SYM', 'TO', 'UH', 'URL', 'USR', 'VB',
-               'VBD','VBG', 'VBN', 'VBP', 'VBZ', 'WDT', 'WP', 'WRB', 'X']
-
-
     def __init__(self, norm=True, preprocessor=None):
         self.vectorizer = None
         self.normalize = norm
         self.preprocessor = preprocessor
-        self.pos_dict = dict.fromkeys(POSTransformer.classes, 0)
+        self.pos_dict = dict.fromkeys(['!', ',', '^', 'V', 'R', 'A', 'N', 'P', 'D', '$', 'E', '~', '@', 'O', 'T',
+                                       'U', 'L', '&', 'X', '#', 'G', 'Z', 'Y', 'S', 'M'], 0)
 
 
     def fit(self, raw_tweets, y=None):
@@ -27,15 +19,17 @@ class POSTransformer(TransformerMixin, BaseEstimator):
 
 
     def transform(self, raw_tweets, **transform_params):
-        pos_tabs = []
+        pos_counts = []
+        for tweet in raw_tweets:
+            try:
+                tweet_tags_count = TweeboCacher.get_cached_pos_counts()[tweet]
+            except KeyError:
+                for item in TweeboCacher.get_cached_pos_counts().keys():
+                    if "More footage" in item:
+                        print item
+                print "Not found in cache:", tweet
+                raise Exception('KeyError!')
 
-        for raw_tweet in raw_tweets:
-            if raw_tweet in POSTransformer.pos_tweets:
-                occurrences = self.pos_dict.copy()
-                for pos in POSTransformer.pos_tweets[raw_tweet]:
-                    occurrences[pos] += 1
-                pos_tabs.append(occurrences)
-            else:
-                raise Exception("Tweet \"" + raw_tweet + "\" not found in cache")
-        vectorized = self.vectorizer.transform(pos_tabs)
+            pos_counts.append(tweet_tags_count)
+        vectorized = self.vectorizer.transform(pos_counts)
         return normalize(vectorized) if self.normalize else vectorized
