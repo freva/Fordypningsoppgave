@@ -1,5 +1,6 @@
 import re
 from lxml.etree import parse
+from storage.tweebo_cache import TweeboCacher
 
 
 def find_cues(root):
@@ -32,7 +33,7 @@ def parse_file(filename):
 
 
 def parse_twitter_negation():
-    tweets = parse_file(resources.twitter_negation_corpus)
+    tweets = parse_file('twitter_negation_corpus.xml')
 
     TweeboCacher.cache([[token for token, label, is_cue in tweet] for tweet in tweets], True, True)
     pos_tokens = TweeboCacher.get_cached_pos_tokens()

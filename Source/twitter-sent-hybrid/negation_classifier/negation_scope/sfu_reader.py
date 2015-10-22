@@ -2,6 +2,7 @@ import fnmatch
 import os
 import re
 from lxml.etree import parse
+from storage.tweebo_cache import TweeboCacher
 
 
 def find_cues(root):
@@ -35,7 +36,7 @@ def parse_file(filename):
 
 def parse_sfu():
     sentences = []
-    for root, dirname, filenames in os.walk(resources.sfu_corpus):
+    for root, dirname, filenames in os.walk('SFU_Review_Corpus_Negation_Speculation'):
         for filename in fnmatch.filter(filenames, '*.xml'):
             sentences.extend(parse_file(os.path.join(root, filename)))
     print("Number of sentences:", len(sentences))
