@@ -1,46 +1,17 @@
-import re
-import string
-from storage import data
-from storage.options import General
-from utils import preprocessor_methods as pr
+from sklearn.metrics import classification_report
+from negation_classifier.negation_scope.twitter_negation_reader import parse_twitter_negation
+from negation_classifier.cue_detector import CueDetector
 
-def main():
-    negation_cues = ['hardly', 'lack', 'lacking', 'lacks', 'neither', 'nor', 'never', 'not', 'nobody', 'none',
-                 'nothing', 'nowhere', 'no', 'without', 'aint', 'cant', 'cannot', 'darent', 'dont', 'doesnt',
-                 'didnt', 'hadnt', 'hasnt', 'havent', 'havnt', 'isnt', 'mightnt', 'mustnt', 'neednt', 'oughtnt',
-                 'shant', 'shouldnt', 'wasnt', 'wouldnt', ".*n't"]
-
-    cue_pattern = re.compile('^' + '$|^'.join(negation_cues) + '$', re.IGNORECASE)
-
-    punctuation = ['!', '?', ',', '.', '(', ')', ':']
+def evaluate():
+    # _, brown_dict = load_clusters()
+    detector = CueDetector()
+    tweets = parse_twitter_negation()
+    tokens = [[token for token, _, _, _, _ in tweet]
+              for tweet in tweets]
+    cues = [is_cue for tweet in tweets for _, _, _, is_cue, _ in tweet]
+    pred_cues = [is_cue for tweet in detector.predict(tokens) for is_cue in tweet]
+    print(classification_report(cues, pred_cues, digits=3))
 
 
-    # naive_matcher = '('+'|'.join(negation_cues) + ')([^' + ''.join(punctuation) + ']*)(|$)'
-    naive_matcher = ur"(hardly|lack|lacking|lacks|neither|nor|never|not|nobody|none|nothing|nowhere|no|without|aint|cant|cannot|darent|dont|doesnt|didnt|hadnt|hasnt|havent|havnt|isnt|mightnt|mustnt|neednt|oughtnt|shant|shouldnt|wasnt|wouldnt|.*n't)([^!?,.():]*)(|$)"
-    print naive_matcher
-    cue_pattern = re.compile(naive_matcher)
-
-
-    training, test = data.get_data(General.TRAIN_SET, General.TEST_SET)
-
-
-    for line in training[:10]:
-        cleaned = pr.remove_noise(line[0])
-        print cleaned
-        for match in cue_pattern.findall(cleaned):
-            negated_part = match[1]
-            print match
-        #     if any(char in punctuation for char in word):
-        #         negated = False
-        #     if bool(re.match(cue_pattern, word)):
-
-            # if(bool(re.match(cue_pattern, word))):
-            #     print word
-    #
-    # match = bool(re.match(cue_pattern, "don't"))
-    # print match
-
-
-
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    evaluate()

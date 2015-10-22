@@ -1,3 +1,4 @@
+# coding=utf-8
 import re
 from lxml.etree import parse
 from storage.tweebo_cache import TweeboCacher
@@ -33,9 +34,8 @@ def parse_file(filename):
 
 
 def parse_twitter_negation():
-    tweets = parse_file('twitter_negation_corpus.xml')
+    tweets = parse_file('negation_classifier/negation_scope/twitter_negation_corpus.xml')
 
-    TweeboCacher.cache([[token for token, label, is_cue in tweet] for tweet in tweets], True, True)
     pos_tokens = TweeboCacher.get_cached_pos_tokens()
     dependency_tweets = TweeboCacher.get_cached_dependency()
 

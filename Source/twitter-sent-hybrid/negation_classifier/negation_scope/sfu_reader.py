@@ -41,7 +41,6 @@ def parse_sfu():
             sentences.extend(parse_file(os.path.join(root, filename)))
     print("Number of sentences:", len(sentences))
 
-    TweeboCacher.cache([[token for token, label, is_cue in sentence] for sentence in sentences], True, True)
     pos_tokens = TweeboCacher.get_cached_pos_tokens()
     dependency_tweets = TweeboCacher.get_cached_dependency()
 
