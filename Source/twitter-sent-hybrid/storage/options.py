@@ -1,5 +1,4 @@
 from transformer import TfidfNegTransformer, LexiconTransformer, POSTransformer, ClusterTransformer, PunctuationTransformer, EmoticonTransformer
-from models import *
 from sklearn.pipeline import FeatureUnion
 
 import utils.filters as f
@@ -44,7 +43,7 @@ class SubjectivityFeatures:
         },
 
         "lexicon": {
-            'enabled': False,
+            'enabled': True,
             'type': LexiconTransformer,
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
                              f.reduce_letter_duplicates, f.quote_placeholder, f.strip_tweet],
@@ -52,27 +51,27 @@ class SubjectivityFeatures:
         },
 
         "pos_tagger": {
-            'enabled': False,
+            'enabled': True,
             'type': POSTransformer,
             'norm': True
         },
 
         "word_clusters": {
-            'enabled': False,
+            'enabled': True,
             'type': ClusterTransformer,
             'preprocessors': [f.html_decode, f.reduce_letter_duplicates, f.hash_as_normal],
             'norm': True
         },
 
         "punctuation": {
-            'enabled': False,
+            'enabled': True,
             'type': PunctuationTransformer,
             'preprocessors': [f.html_decode, f.no_url, f.no_username],
             'norm': True
         },
 
         "emoticons": {
-            'enabled': False,
+            'enabled': True,
             'type': EmoticonTransformer,
             'preprocessors': [f.html_decode, f.no_url],
             'norm': True
