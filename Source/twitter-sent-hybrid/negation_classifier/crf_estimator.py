@@ -39,7 +39,7 @@ class CRF(BaseEstimator, ClassifierMixin):
             # include transitions that are possible, but not observed
             'feature.possible_transitions': True
         })
-        self.model_dir = True
+        self.model_dir = False
         self.model_file = None
 
     def set_params(self, **params):
@@ -53,12 +53,13 @@ class CRF(BaseEstimator, ClassifierMixin):
         return self
 
     def fit(self, X, y):
+        print 'runs'
         for xseq, yseq in zip(X, y):
             self.trainer.append(xseq, yseq)
         if self.model_dir:
             _, self.model_file = tempfile.mkstemp(suffix='.crfsuite', dir=self.model_dir)
-        # else:
-            # self.model_file = resources.crf_model
+        else:
+            self.model_file = 'pickles/model.crf'
         self.trainer.train(self.model_file)
         return self
 
@@ -66,6 +67,7 @@ class CRF(BaseEstimator, ClassifierMixin):
         tagger = pycrfsuite.Tagger()
         # Old implementation:
         # tagger.open(self.model_file if self.model_file else resources.crf_model)
+        print self.model_file
         tagger.open(self.model_file)
         return [tagger.tag(xseq) for xseq in X]
 
@@ -262,7 +264,7 @@ def get_classifier(corpus, force_new=False):
         #         print(file=f)
 
         with open(crf_path, 'wb') as f:
-            pkl.dump(clf, f)
+            pkl.dump(clf, f, protocol=2)
 
     return clf
 
