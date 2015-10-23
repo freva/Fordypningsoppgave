@@ -39,8 +39,23 @@ def parse_twitter_negation():
     pos_tokens = TweeboCacher.get_cached_pos_tokens()
     dependency_tweets = TweeboCacher.get_cached_dependency()
 
-    return [[(token, pos_tokens[i][j], dependency_tweets[i][j], is_cue, label)
-             for j, (token, label, is_cue) in enumerate(sentence)] for i, sentence in enumerate(tweets)]
+    #return [[(token, pos_tokens[i][j], dependency_tweets[i][j], is_cue, label)
+    #         for j, (token, label, is_cue) in enumerate(sentence)] for i, sentence in enumerate(tweets)]
+
+    data = [items[3].split(" ") for items in [line.split("\t") for line in open("../Testing/twitter_negation_scope.txt").read().decode("utf-8").split("\n")] if len(items) > 3]
+    for i, sentence in enumerate(tweets):
+        #
+        if not [w[0] for w in sentence] == data[i]:
+            print "1x:", i, sentence
+            print len(pos_tokens[i]), pos_tokens[i]
+            print len(dependency_tweets[i]), dependency_tweets[i]
+            print len(data[i]), data[i]
+            print [w[0] for w in sentence]
+            print
+        for j, (token, label, is_cue) in enumerate(sentence):
+            print "2x:", j, token, pos_tokens[i][j], dependency_tweets[i][j], is_cue, label
+    return []
+
 
 
 def main():

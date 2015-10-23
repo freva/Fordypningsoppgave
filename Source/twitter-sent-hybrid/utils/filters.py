@@ -42,7 +42,7 @@ not_finder = re.compile(r'(^|\s)(' + '|'.join(negation_cues) + ')(\s.*?)(?=[' + 
 
 def html_decode(tweet_text):
     h = HTMLParser.HTMLParser()
-    return h.unescape(tweet_text).lower()
+    return h.unescape(tweet_text.decode("utf-8", "ignore")).lower()
 
 
 def naive_negation_attachment(tweet_text):
