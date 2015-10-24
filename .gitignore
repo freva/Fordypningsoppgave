@@ -2,5 +2,7 @@
 *.pyo
 
 *.pkl
+*.json
+*.crf
 
 .idea/*

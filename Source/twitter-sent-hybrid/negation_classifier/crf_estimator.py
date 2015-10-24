@@ -53,21 +53,17 @@ class CRF(BaseEstimator, ClassifierMixin):
         return self
 
     def fit(self, X, y):
-        print 'runs'
         for xseq, yseq in zip(X, y):
             self.trainer.append(xseq, yseq)
         if self.model_dir:
             _, self.model_file = tempfile.mkstemp(suffix='.crfsuite', dir=self.model_dir)
         else:
-            self.model_file = 'pickles/model.crf'
+            self.model_file = 'cache/model.crf'
         self.trainer.train(self.model_file)
         return self
 
     def predict(self, X):
         tagger = pycrfsuite.Tagger()
-        # Old implementation:
-        # tagger.open(self.model_file if self.model_file else resources.crf_model)
-        print self.model_file
         tagger.open(self.model_file)
         return [tagger.tag(xseq) for xseq in X]
 
@@ -215,7 +211,7 @@ def score_classifier(trained_classifier, transformer, X_test, X_test_seq, y_test
 
 
 def get_classifier(corpus, force_new=False):
-    crf_path = 'pickles/crf.pkl'
+    crf_path = 'cache/crf.pkl'
     if os.path.exists(crf_path) and not force_new:
         print("Loading CRF classifier from pickle...")
         with open(crf_path, 'rb') as f:
@@ -267,19 +263,3 @@ def get_classifier(corpus, force_new=False):
             pkl.dump(clf, f, protocol=2)
 
     return clf
-
-
-# def main():
-    # crf_params = resources.config['crf_parameters']
-    # transformer = CRFTransformer(int(crf_params['max_distance']))
-    # clf = CRF(float(crf_params['c1']), float(crf_params['c1']),
-    #           int(crf_params['max_iterations']), crf_params['linesearch'])
-    # X, y, tweet_cues = load_data(parse_twitter_negation())
-    # X_seq = transformer.transform(X, tweet_cues=tweet_cues)
-    #
-    # print(np.mean(cross_val_score(clf, X_seq, y, scoring=make_scorer(sequence_f1_score), cv=10, verbose=10)))
-    # get_classifier(parse_twitter_negation(), True)
-
-
-# if __name__ == '__main__':
-#     main()

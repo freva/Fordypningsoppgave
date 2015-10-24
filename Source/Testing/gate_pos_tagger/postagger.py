@@ -37,7 +37,7 @@ def main():
         if "_" not in line: continue
         raw_pos.append(pos_tags_RE.findall(line))
 
-    full_path = '../../twitter-sent-hybrid/pickles/pos_tags.pkl'
+    full_path = '../../twitter-sent-hybrid/cache/pos_tags.pkl'
     output = open(full_path, 'wb')
     pickle.dump(dict(zip(raw_tweets, raw_pos)), output, protocol=2)
     output.close()

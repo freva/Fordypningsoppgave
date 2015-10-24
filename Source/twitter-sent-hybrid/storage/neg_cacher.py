@@ -1,5 +1,6 @@
 from negation_classifier.crf_estimator import CRF, get_classifier
 from negation_classifier.crf_transformer import CRFTransformer
+from negation_classifier.negation_scope.twitter_negation_reader import parse_twitter_negation
 from tweebo_cache import TweeboCacher
 
 
@@ -12,7 +13,7 @@ def _split_into_contexts(raw_tweets):
     )] for tweet in raw_tweets]
     crf_data = crf_transformer.transform(tweet_token_data)
 
-    predicted = get_classifier().predict(crf_data)
+    predicted = get_classifier(parse_twitter_negation()).predict(crf_data)
 
     tweets = []
     for i, labels in enumerate(predicted):
