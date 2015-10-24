@@ -26,5 +26,5 @@ def get_data(train_set, test_set):
 
 
 def read_tsv(filename):
-    return np.array([line.split("\t") for line in open(filename).read().split("\n") if len(line) > 0])
+    return np.array([line.split("\t") for line in open(filename).read().decode("ISO8859-16").split("\n") if len(line) > 0])
 

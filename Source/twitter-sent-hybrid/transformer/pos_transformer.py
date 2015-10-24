@@ -12,11 +12,9 @@ class POSTransformer(TransformerMixin, BaseEstimator):
         self.pos_dict = dict.fromkeys(['!', ',', '^', 'V', 'R', 'A', 'N', 'P', 'D', '$', 'E', '~', '@', 'O', 'T',
                                        'U', 'L', '&', 'X', '#', 'G', 'Z', 'Y', 'S', 'M'], 0)
 
-
     def fit(self, raw_tweets, y=None):
         self.vectorizer = DictVectorizer().fit([self.pos_dict])
         return self
-
 
     def transform(self, raw_tweets, **transform_params):
         pos_counts = []
@@ -24,9 +22,6 @@ class POSTransformer(TransformerMixin, BaseEstimator):
             try:
                 tweet_tags_count = TweeboCacher.get_cached_pos_counts()[tweet]
             except KeyError:
-                for item in TweeboCacher.get_cached_pos_counts().keys():
-                    if "More footage" in item:
-                        print item
                 print "Not found in cache:", tweet
                 raise Exception('KeyError!')
 

@@ -23,7 +23,7 @@ class BaseMethod(object):
         #print [var.fit_transform(docs_train, y_train).shape for var in vars]
 
         cache_key = str(self.feature_union) + str(docs_train)
-        cached = cache.get(cache_key)
+        cached = cache.load_pickle(cache_key)
 
         if cached and self.useCache:
             print "Loading from cache..."
@@ -37,7 +37,7 @@ class BaseMethod(object):
             self.best_params = self.grid.get_params(False)
             self.best_score = 1
 
-            cache.save(cache_key, {
+            cache.save_pickle(cache_key, {
                 "est": self.best_estimator,
                 "scr": self.best_score,
                 "parm": self.best_params

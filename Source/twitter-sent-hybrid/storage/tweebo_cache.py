@@ -1,10 +1,10 @@
 import cache
 
 class TweeboCacher(object):
-    pos_counts = cache.get("pos_counts_cache", False)
-    tokens = cache.get("token_cache", False)
-    pos_tokens = cache.get("pos_tokens_cache", False)
-    dependencies = cache.get("dependency_cache", False)
+    pos_counts = cache.load_json("pos_counts_cache")
+    tokens = cache.load_json("tokens_cache")
+    pos_tokens = cache.load_json("pos_tokens_cache")
+    dependencies = cache.load_json("dependency_cache")
 
     @staticmethod
     def get_cached_pos_counts():
