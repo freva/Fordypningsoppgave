@@ -1,7 +1,7 @@
 """
     Sentiment analysis using basic bigrams.
 """
-from models.base import BaseMethod
+from sentiment_classifier.base import BaseMethod
 from utils import utils
 import numpy as np
 

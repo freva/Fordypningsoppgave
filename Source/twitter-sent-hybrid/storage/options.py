@@ -1,4 +1,4 @@
-from transformer import TfidfNegTransformer, LexiconTransformer, POSTransformer, ClusterTransformer, PunctuationTransformer, EmoticonTransformer
+from sentiment_classifier.transformer import TfidfNegTransformer, LexiconTransformer, POSTransformer, ClusterTransformer, PunctuationTransformer, EmoticonTransformer
 from sklearn.pipeline import FeatureUnion
 
 import utils.filters as f

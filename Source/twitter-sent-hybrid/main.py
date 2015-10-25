@@ -9,8 +9,8 @@ import storage.resource_reader as d
 from storage.options import General, SubjectivityFeatures, PolarityFeatures
 
 # Do import of all different methods here:
-from models.base import BaseMethod
-from models.combination import Combined
+from sentiment_classifier.base import BaseMethod
+from sentiment_classifier.combination import Combined
 
 
 if __name__ == "__main__":
