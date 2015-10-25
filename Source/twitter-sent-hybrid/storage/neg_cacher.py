@@ -4,6 +4,8 @@ from tweebo_cache import TweeboCacher
 from storage import cache
 from storage import resource_reader
 
+punctuation = {',', '.', ':', ';', '!', '?'}
+negation_cues = set(open("../data/dictionaries/negation_cues.txt", "r").read().split("\n"))
 
 def _split_into_contexts(raw_tweets):
     crf_transformer = CRFTransformer()
@@ -37,17 +39,14 @@ def _split_into_contexts_naive(raw_tweets):
     for tweet in raw_tweets:
         contexts = []
         negated = False
-        first = False
         for token in TweeboCacher.get_cached_tokens()[tweet]:
             token = token.lower()
-            if token == 'not':
+            if token in negation_cues:
                 negated = True
-                first = True
-            elif token[0] in (',', '.', ':', ';', '!', '?'):
+            elif token[0] in punctuation:
                 negated = False
             elif negated:
-                token += '_NEGFIRST' if first else '_NEG'
-                first = False
+                token += '_NEG'
             contexts.append(token)
         tweets.append(contexts)
     return tweets
@@ -67,9 +66,8 @@ class NegCacher(object):
     cached = {}
 
     @staticmethod
-    def cache(raw_tweets):
-        naive = False
+    def cache(raw_tweets, method):
         if any([tweet not in NegCacher.cached for tweet in raw_tweets]):
-            cached = _split_into_contexts_naive(raw_tweets) if naive else _split_into_contexts(raw_tweets)
+            cached = _split_into_contexts_naive(raw_tweets) if method=='naive' else _split_into_contexts(raw_tweets)
             for raw_tweet, cached_tweet in zip(raw_tweets, cached):
                 NegCacher.cached[raw_tweet] = cached_tweet

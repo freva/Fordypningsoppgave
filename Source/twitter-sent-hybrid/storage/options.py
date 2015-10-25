@@ -24,7 +24,7 @@ class SubjectivityFeatures:
             'smooth_idf': True,
             'min_df': 0.0,
             'max_df': 0.5,
-            'negate': False
+            'negation': None
         },
 
         "char_ngrams": {
@@ -33,13 +33,13 @@ class SubjectivityFeatures:
             'analyzer': 'char',
             'ngram_range': (3, 5),
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
-                             f.reduce_letter_duplicates],
+                             f.reduce_letter_duplicates],# f.naive_negation_attachment],
             'sublinear_tf': True,
             'use_idf': True,
             'smooth_idf': False,
             'min_df': 0.0,
             'max_df': 0.5,
-            'negate': True
+            'negation': 'naive'
         },
 
         "lexicon": {
@@ -100,8 +100,7 @@ class PolarityFeatures:
             'ngram_range': (1, 4),
             'sublinear_tf': True,
             'tokenizer': t.tokenize,
-            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.no_hash, f.no_emoticons, f.no_rt_tag,
-                             f.naive_negation_attachment],
+            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.no_hash, f.no_emoticons, f.no_rt_tag],
             'use_idf': True,
             'smooth_idf': True,
             'max_df': 0.5,
@@ -113,7 +112,7 @@ class PolarityFeatures:
             'analyzer': 'char',
             'ngram_range': (3, 5),
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
-                             f.reduce_letter_duplicates, f.quote_placeholder, f.naive_negation_attachment],
+                             f.reduce_letter_duplicates, f.quote_placeholder],
             'min_df': 1,
         },
 
@@ -121,7 +120,7 @@ class PolarityFeatures:
             'enabled': True,
             'type': LexiconTransformer,
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
-                             f.reduce_letter_duplicates, f.quote_placeholder, f.naive_negation_attachment],
+                             f.reduce_letter_duplicates, f.quote_placeholder],
         },
 
         "pos_tagger": {
