@@ -9,7 +9,7 @@ tweets_to_cache = ['../2013-2-train-full-B.tsv', '../2013-2-test-gold-B.tsv']
 
 
 def read_tsv(filename):
-    return [line.split("\t") for line in open(filename).read().decode("windows-1252").split("\n") if len(line) > 0]
+    return [line.split("\t") for line in open(filename).read().decode("ISO8859-16").split("\n") if len(line) > 0]
 
 
 def preprocessor(tweet_text):

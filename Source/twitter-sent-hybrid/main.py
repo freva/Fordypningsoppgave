@@ -5,7 +5,7 @@ import numpy as np
 from sklearn.metrics import f1_score, accuracy_score, precision_score, recall_score, confusion_matrix
 
 # System specific
-import storage.data as d
+import storage.resource_reader as d
 from storage.options import General, SubjectivityFeatures, PolarityFeatures
 
 # Do import of all different methods here:

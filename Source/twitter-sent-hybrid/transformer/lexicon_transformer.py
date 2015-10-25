@@ -2,13 +2,13 @@ import re
 import numpy as np
 from sklearn.base import TransformerMixin, BaseEstimator
 from sklearn.preprocessing import normalize
-from storage import lexicon
+from storage import resource_reader
 
 
 class LexiconTransformer(TransformerMixin, BaseEstimator):
     negated_RE = re.compile(r'(.*)_NEG(?:FIRST)?$')
-    manual_lexicon = [lexicon.get_bing_liu_lexicon(), lexicon.get_mpqa_lexicon(), lexicon.get_nrc_emotion_lexicon(), lexicon.get_afinn_lexicon()]
-    automatic_lexicon = [(lexicon.get_automated_lexicon(name), bigram) for name, bigram in [
+    manual_lexicon = [resource_reader.get_bing_liu_lexicon(), resource_reader.get_mpqa_lexicon(), resource_reader.get_nrc_emotion_lexicon(), resource_reader.get_afinn_lexicon()]
+    automatic_lexicon = [(resource_reader.get_automated_lexicon(name), bigram) for name, bigram in [
         ('../Testing/lexica/Sentiment140/S140-AFFLEX-NEGLEX-unigrams.txt',      False),
         ('../Testing/lexica/Sentiment140/S140-AFFLEX-NEGLEX-bigrams.txt',       True),
         ('../Testing/lexica/HashtagSentiment/HS-AFFLEX-NEGLEX-unigrams.txt',    False),

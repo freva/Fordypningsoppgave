@@ -2,14 +2,14 @@ from sklearn.base import TransformerMixin, BaseEstimator
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.preprocessing import normalize
 from utils import tokenizer
-from storage import lexicon
+from storage import resource_reader
 
 
 class ClusterTransformer(TransformerMixin, BaseEstimator):
     dictionary = None
 
     def __init__(self, norm=True, preprocessors=None):
-        ClusterTransformer.dictionary = lexicon.get_brown_cluster_dict()
+        ClusterTransformer.dictionary = resource_reader.get_brown_cluster_dict()
         self.cluster_dict = dict.fromkeys(ClusterTransformer.dictionary.values(), 0)
         self.normalize = norm
         self.vectorizer = None
