@@ -1,7 +1,8 @@
 from negation_classifier.crf_estimator import CRF, get_classifier
 from negation_classifier.crf_transformer import CRFTransformer
-from negation_classifier.negation_scope.twitter_negation_reader import parse_twitter_negation
 from tweebo_cache import TweeboCacher
+from storage import cache
+from storage import resource_reader
 
 
 def _split_into_contexts(raw_tweets):
@@ -50,6 +51,17 @@ def _split_into_contexts_naive(raw_tweets):
             contexts.append(token)
         tweets.append(contexts)
     return tweets
+
+
+def parse_twitter_negation():
+    tweets = resource_reader.get_twitter_negation_corpus()
+
+    pos_tokens = cache.load_json("neg_pos_tokens_cache")
+    dependency_tweets = cache.load_json("neg_dependency_cache")
+
+    return [[(token, pos_tokens[str(i)][j], dependency_tweets[str(i)][j], is_cue, label)
+            for j, (token, label, is_cue) in enumerate(sentence)] for i, sentence in enumerate(tweets)]
+
 
 class NegCacher(object):
     cached = {}

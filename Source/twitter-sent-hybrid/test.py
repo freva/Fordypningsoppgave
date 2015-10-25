@@ -1,5 +1,5 @@
 from storage.neg_cacher import NegCacher
-from storage import data
+from storage import resource_reader
 from storage.options import General
 
 def evaluate():

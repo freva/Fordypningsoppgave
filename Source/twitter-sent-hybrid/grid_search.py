@@ -6,7 +6,7 @@ from sklearn.metrics import make_scorer, f1_score, precision_score
 from time import time, strftime
 from sklearn.pipeline import Pipeline
 
-from storage import data as d
+from storage import resource_reader as d
 from storage.options import General, SubjectivityFeatures
 
 import utils.tokenizer as t
