@@ -7,8 +7,8 @@ from sklearn.svm import SVC
 
 
 class General:
-    TRAIN_SET = '../Testing/2013-2-train-full-B.tsv'
-    TEST_SET = '../Testing/2013-2-test-gold-B.tsv'
+    TRAIN_SET = '../data/2013-2-train-full-B.tsv'
+    TEST_SET = '../data/2013-2-test-gold-B.tsv'
 
 
 class SubjectivityFeatures:
