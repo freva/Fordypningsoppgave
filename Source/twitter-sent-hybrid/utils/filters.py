@@ -33,7 +33,7 @@ quote_RE = re.compile(r'".*?"')
 url_RE = re.compile(r'(\w+:\/\/\S+)')
 
 
-punctuation = ['.', ',', '!', '?', '(', ')']
+punctuation = ['.', ',', '!', '?', ':', ';']
 negation_cues = open("../data/dictionaries/negation_cues.txt", "r").read().split("\n")
 
 word_finder = re.compile(r'(\S+)')
