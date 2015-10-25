@@ -34,7 +34,7 @@ url_RE = re.compile(r'(\w+:\/\/\S+)')
 
 
 punctuation = ['.', ',', '!', '?', '(', ')']
-negation_cues = open("../Testing/dictionaries/negation_cues.txt", "r").read().split("\n")
+negation_cues = open("../data/dictionaries/negation_cues.txt", "r").read().split("\n")
 
 word_finder = re.compile(r'(\S+)')
 not_finder = re.compile(r'(^|\s)(' + '|'.join(negation_cues) + ')(\s.*?)(?=[' + ''.join(punctuation) + ']|$)', re.IGNORECASE)

@@ -5,13 +5,13 @@ import numpy as np
 import utils.utils as u
 
 
-bing_liu_negative_path = "../Testing/lexica/BingLiu/negative-words.txt"
-bing_liu_positive_path = "../Testing/lexica/BingLiu/positive-words.txt"
-afinn_lexicon_path = "../Testing/lexica/AFINN/AFINN-111.txt"
-mpqa_lexicon_path = "../Testing/lexica/MPQA/subjclueslen1-HLTEMNLP05.tff"
-nrc_emoticon_path = "../Testing/lexica/NRC-Emotion-Lexicon-v0.92/NRC-emotion-lexicon-wordlevel-alphabetized-v0.92.txt"
-brown_word_cluster_path = "../Testing/dictionaries/50mpaths2.txt"
-twitter_negation_corpus_path = "../Testing/negation_corpus/twitter_negation_corpus.xml"
+bing_liu_negative_path = "../data/lexica/BingLiu/negative-words.txt"
+bing_liu_positive_path = "../data/lexica/BingLiu/positive-words.txt"
+afinn_lexicon_path = "../data/lexica/AFINN/AFINN-111.txt"
+mpqa_lexicon_path = "../data/lexica/MPQA/subjclueslen1-HLTEMNLP05.tff"
+nrc_emoticon_path = "../data/lexica/NRC-Emotion-Lexicon-v0.92/NRC-emotion-lexicon-wordlevel-alphabetized-v0.92.txt"
+brown_word_cluster_path = "../data/dictionaries/50mpaths2.txt"
+twitter_negation_corpus_path = "../data/negation_corpus/twitter_negation_corpus.xml"
 
 
 def get_automated_lexicon(filename):
