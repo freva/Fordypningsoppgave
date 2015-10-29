@@ -136,3 +136,7 @@ def split_into_contexts_naive2(tweet):
             negated +=1
         contexts.append(token)
     return ' '.join(contexts)
+
+
+def split(tweet):
+    return ' '.join(tokenizer.tokenize(tweet))
