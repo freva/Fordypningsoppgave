@@ -1,5 +1,4 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
-from storage.neg_cacher import NegCacher
 
 
 class TfidfNegTransformer(TfidfVectorizer):

@@ -3,6 +3,7 @@
 """
 import HTMLParser
 import re
+import tokenizer
 
 # Emoticon definitions.
 NormalEyes = r'[:=8]'
@@ -101,3 +102,37 @@ def strip_tweet(tweet_text):
 
 def dummy(text):
     return text
+
+
+
+punctuation = {',', '.', ':', ';', '!', '?'}
+negation_cues = set(open("../data/dictionaries/negation_cues.txt", "r").read().split("\n"))
+def split_into_contexts_naive(tweet):
+    contexts = []
+    negated = False
+    for token in tokenizer.tokenize(tweet):
+        token = token.lower()
+        if token in negation_cues:
+            negated = True
+        elif token[0] in punctuation:
+            negated = False
+        elif negated:
+            token += '_NEG'
+        contexts.append(token)
+    return ' '.join(contexts)
+
+
+def split_into_contexts_naive2(tweet):
+    contexts = []
+    negated = -1
+    for token in tweet.split():
+        token = token.lower()
+        if token in negation_cues:
+            negated = 0
+        elif token[0] in punctuation:
+            negated = -1
+        elif negated != -1 and negated < 4:
+            token += '_NEG'
+            negated +=1
+        contexts.append(token)
+    return ' '.join(contexts)
