@@ -33,7 +33,7 @@ class SubjectivityFeatures:
             'analyzer': 'char',
             'ngram_range': (3, 5),
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
-                             f.reduce_letter_duplicates],# f.naive_negation_attachment],
+                             f.reduce_letter_duplicates, f.naive_negation_attachment],
             'sublinear_tf': True,
             'use_idf': True,
             'smooth_idf': False,
@@ -53,6 +53,7 @@ class SubjectivityFeatures:
         "pos_tagger": {
             'enabled': True,
             'type': POSTransformer,
+            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag, f.strip_tweet],
             'norm': True
         },
 
