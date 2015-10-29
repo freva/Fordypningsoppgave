@@ -10,9 +10,6 @@ class TfidfNegTransformer(TfidfVectorizer):
         self.negation = negation
         self.preprocessors = preprocessors
 
-        if self.negation not in [None, 'naive', 'advanced']:
-            print self.negation
-            raise Exception("Illegal negation parameter! None | 'naive" | 'advanced')
 
     def filter(self, docs):
         filtered_tweets = []
@@ -29,8 +26,5 @@ class TfidfNegTransformer(TfidfVectorizer):
         return super(TfidfNegTransformer, self).fit_transform(self.filter(raw_documents), y)
 
     def transform(self, raw_documents, **kwargs):
-        if self.negation:
-            NegCacher.cache(raw_documents, self.negation)
-            raw_documents = [' '.join(NegCacher.cached[tweet]) for tweet in raw_documents]
         return super(TfidfNegTransformer, self).transform(self.filter(raw_documents), **kwargs)
 
