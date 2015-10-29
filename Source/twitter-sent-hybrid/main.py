@@ -12,7 +12,6 @@ from storage.options import General, SubjectivityFeatures, PolarityFeatures
 from sentiment_classifier.base import BaseMethod
 from sentiment_classifier.combination import Combined
 
-
 if __name__ == "__main__":
     train, test = d.get_data(General.TRAIN_SET, General.TEST_SET)
     docs_test, y_test = test[:,0], test[:,1]
