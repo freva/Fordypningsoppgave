@@ -33,7 +33,7 @@ class SubjectivityFeatures:
             'analyzer': 'char',
             'ngram_range': (3, 5),
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
-                             f.reduce_letter_duplicates, f.split_into_contexts_naive, f.strip_tweet],
+                              f.reduce_letter_duplicates, f.limit_chars, f.split_into_contexts_naive2],
             'sublinear_tf': True,
             'use_idf': True,
             'smooth_idf': False,
@@ -46,15 +46,14 @@ class SubjectivityFeatures:
             'enabled': True,
             'type': LexiconTransformer,
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
-                             f.reduce_letter_duplicates, f.split_into_contexts_naive, f.strip_tweet],
+                              f.reduce_letter_duplicates, f.limit_chars],
             'norm': True
         },
 
         "pos_tagger": {
             'enabled': True,
             'type': POSTransformer,
-            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
-                              f.reduce_letter_duplicates, f.limit_chars, f.split_into_contexts_naive2],
+            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.no_hash, f.no_rt_tag, f.split],
             'norm': True
         },
 
