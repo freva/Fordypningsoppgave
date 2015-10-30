@@ -24,7 +24,7 @@ class SubjectivityFeatures:
             'smooth_idf': True,
             'min_df': 0.0,
             'max_df': 0.5,
-            'negation': None
+            'negation_scope_length': None
         },
 
         "char_ngrams": {
@@ -33,19 +33,19 @@ class SubjectivityFeatures:
             'analyzer': 'char',
             'ngram_range': (3, 5),
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
-                              f.reduce_letter_duplicates, f.limit_chars, f.split_into_contexts_naive2],
+                              f.reduce_letter_duplicates, f.limit_chars],
             'sublinear_tf': True,
             'use_idf': True,
             'smooth_idf': False,
             'min_df': 0.0,
             'max_df': 0.5,
-            'negation': 'naive'
+            'negation_scope_length': 4
         },
 
         "lexicon": {
             'enabled': True,
             'type': LexiconTransformer,
-            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
+            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag, f.lower_case,
                               f.reduce_letter_duplicates, f.limit_chars],
             'norm': True
         },
@@ -60,7 +60,7 @@ class SubjectivityFeatures:
         "word_clusters": {
             'enabled': True,
             'type': ClusterTransformer,
-            'preprocessors': [f.html_decode, f.reduce_letter_duplicates, f.hash_as_normal],
+            'preprocessors': [f.html_decode, f.hash_as_normal, f.no_rt_tag, f.lower_case, f.reduce_letter_duplicates],
             'norm': True
         },
 
