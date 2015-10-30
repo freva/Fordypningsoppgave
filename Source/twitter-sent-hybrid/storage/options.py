@@ -53,7 +53,8 @@ class SubjectivityFeatures:
         "pos_tagger": {
             'enabled': True,
             'type': POSTransformer,
-            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag, f.strip_tweet],
+            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
+                              f.reduce_letter_duplicates, f.limit_chars, f.split_into_contexts_naive2],
             'norm': True
         },
 
