@@ -32,6 +32,8 @@ hashtag_RE = re.compile(r'(#[a-zA-Z]+[a-zA-Z0-9_]*)')
 rt_tag_RE = re.compile(r'(^RT\s+|\s+RT\s+)')
 quote_RE = re.compile(r'".*?"')
 url_RE = re.compile(r'(\w+:\/\/\S+)')
+characters_RE = re.compile(r"[^a-zA-Z !?,.:()']")
+characters_limit_RE = re.compile(r"[^a-zA-Z ]")
 
 
 punctuation = ['.', ',', '!', '?', ':', ';']
@@ -140,3 +142,9 @@ def split_into_contexts_naive2(tweet):
 
 def split(tweet):
     return ' '.join(tokenizer.tokenize(tweet))
+
+def clear_chars(tweet):
+    return characters_RE.sub("", tweet)
+
+def limit_chars(tweet):
+    return characters_limit_RE.sub("", tweet)
