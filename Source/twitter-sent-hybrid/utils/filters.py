@@ -36,8 +36,8 @@ characters_RE = re.compile(r"[^a-zA-Z !?,.:()']")
 characters_limit_RE = re.compile(r"[^a-zA-Z ]")
 
 
-punctuation = ['.', ',', '!', '?', ':', ';']
-negation_cues = open("../data/dictionaries/negation_cues.txt", "r").read().split("\n")
+punctuation = {',', '.', ':', ';', '!', '?'}
+negation_cues = set(open("../data/dictionaries/negation_cues.txt", "r").read().split("\n"))
 
 word_finder = re.compile(r'(\S+)')
 not_finder = re.compile(r'(^|\s)(' + '|'.join(negation_cues) + ')(\s.*?)(?=[' + ''.join(punctuation) + ']|$)', re.IGNORECASE)
@@ -47,9 +47,14 @@ def html_decode(tweet_text):
     h = HTMLParser.HTMLParser()
     return h.unescape(tweet_text)
 
+def split(tweet):
+    return ' '.join(tokenizer.tokenize(tweet))
 
-def naive_negation_attachment(tweet_text):
-    return not_finder.sub((lambda m: m.group(1) + m.group(2) + word_finder.sub(r'\1_NEG', m.group(3))), tweet_text)
+def limit_chars(tweet):
+    return characters_limit_RE.sub("", tweet)
+
+def lower_case(tweet):
+    return tweet.lower()
 
 
 def no_emoticons(tweet_text):
@@ -98,57 +103,7 @@ def reduce_letter_duplicates(tweet_text):
 def hash_as_normal(tweet_text):
     return re.sub(r'#([a-zA-Z]+[a-zA-Z0-9_]*)', "\\1", tweet_text)
 
-def strip_tweet(tweet_text):
-    return " ".join(tweet_text.split())
 
+def naive_negation_attachment(tweet_text):
+    return not_finder.sub((lambda m: m.group(1) + m.group(2) + word_finder.sub(r'\1_NEG', m.group(3))), tweet_text)
 
-def dummy(text):
-    return text
-
-
-
-punctuation = {',', '.', ':', ';', '!', '?'}
-negation_cues = set(open("../data/dictionaries/negation_cues.txt", "r").read().split("\n"))
-def split_into_contexts_naive(tweet):
-    contexts = []
-    negated = False
-    for token in tokenizer.tokenize(tweet):
-        token = token.lower()
-        if token in negation_cues:
-            negated = True
-        elif token[0] in punctuation:
-            negated = False
-        elif negated:
-            token += '_NEG'
-        contexts.append(token)
-    return ' '.join(contexts)
-
-
-def split_into_contexts_naive2(tweet):
-    contexts = []
-    negated = -1
-    for token in tweet.split():
-        token = token.lower()
-        if token in negation_cues:
-            negated = 0
-        elif token[0] in punctuation:
-            negated = -1
-        elif negated != -1 and negated < 4:
-            token += '_NEG'
-            negated +=1
-        contexts.append(token)
-    return ' '.join(contexts)
-
-
-def split(tweet):
-    return ' '.join(tokenizer.tokenize(tweet))
-
-def clear_chars(tweet):
-    return characters_RE.sub("", tweet)
-
-def limit_chars(tweet):
-    return characters_limit_RE.sub("", tweet)
-
-
-def lower_case(tweet):
-    return tweet.lower()
