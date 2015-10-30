@@ -2,6 +2,7 @@ from subprocess import Popen, PIPE, STDOUT
 import io
 import re
 import os
+import random
 import cache
 pos_cache = cache.load_pickle("pos_cache", False)
 pos_cache = pos_cache if pos_cache else {}
@@ -13,13 +14,14 @@ def get_pos_tags(tweets):
     gate_tagger_path = "../data/gate_pos_tagger/"
 
     if raw_tweets:
-        f = io.open(gate_tagger_path + "tweets.txt", "w", encoding="utf-8")
+        temp_file = "temp_" + ('%030x' % random.randrange(16**30)) + ".temp" 
+        f = io.open(gate_tagger_path + temp_file, "w", encoding="utf-8")
         f.write("\n".join(raw_tweets))
         f.close()
 
         old_dir = os.getcwd()
         os.chdir(gate_tagger_path)
-        p = Popen(['java', '-Xmx1024m', '-jar', 'twitie_tag.jar', 'models/gate-EN-twitter.model', 'tweets.txt'],
+        p = Popen(['java', '-Xmx1024m', '-jar', 'twitie_tag.jar', 'models/gate-EN-twitter.model', temp_file],
                   stdout=PIPE, stderr=STDOUT)
         os.chdir(old_dir)
 
