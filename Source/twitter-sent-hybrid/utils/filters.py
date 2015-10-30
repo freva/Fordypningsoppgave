@@ -45,7 +45,7 @@ not_finder = re.compile(r'(^|\s)(' + '|'.join(negation_cues) + ')(\s.*?)(?=[' + 
 
 def html_decode(tweet_text):
     h = HTMLParser.HTMLParser()
-    return h.unescape(tweet_text).lower()
+    return h.unescape(tweet_text)
 
 
 def naive_negation_attachment(tweet_text):
@@ -148,3 +148,7 @@ def clear_chars(tweet):
 
 def limit_chars(tweet):
     return characters_limit_RE.sub("", tweet)
+
+
+def lower_case(tweet):
+    return tweet.lower()
