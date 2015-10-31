@@ -24,7 +24,7 @@ class SubjectivityFeatures:
             'smooth_idf': True,
             'min_df': 0.0,
             'max_df': 0.5,
-            'negation_scope_length': None
+            'negation_scope_length': 4
         },
 
         "char_ngrams": {
@@ -39,7 +39,7 @@ class SubjectivityFeatures:
             'smooth_idf': False,
             'min_df': 0.0,
             'max_df': 0.5,
-            'negation_scope_length': 4
+            'negation_scope_length': None
         },
 
         "lexicon": {

@@ -3,8 +3,8 @@ from utils import filters as f
 
 
 class TfidfNegTransformer(TfidfVectorizer):
-    def __init__(self, negation_scope_length=None, preprocessors=[], tokenizer=None, analyzer='word', ngram_range=(1, 1), max_df=1.0,
-                 min_df=1, use_idf=True, smooth_idf=True, sublinear_tf=False):
+    def __init__(self, negation_scope_length=None, preprocessors=[], tokenizer=None, analyzer='word',
+                 ngram_range=(1, 1), max_df=1.0, min_df=1, use_idf=True, smooth_idf=True, sublinear_tf=False):
         super(TfidfNegTransformer, self).__init__(self, tokenizer=tokenizer, analyzer=analyzer, ngram_range=ngram_range,
             max_df=max_df, min_df=min_df, use_idf=use_idf, smooth_idf=smooth_idf, sublinear_tf=sublinear_tf)
         self.negation_scope_length = negation_scope_length
@@ -16,7 +16,7 @@ class TfidfNegTransformer(TfidfVectorizer):
             for preprocessor in self.preprocessors:
                 tweet = preprocessor(tweet)
 
-            if self.negation_scope_length != None:
+            if self.negation_scope_length is not None:
                 tweet = TfidfNegTransformer.split_into_contexts_naive2(tweet, self.negation_scope_length)
             filtered_tweets.append(tweet)
         return filtered_tweets
