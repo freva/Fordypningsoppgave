@@ -23,8 +23,8 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
 
     parameters = {
         'clf__kernel': ['linear'],#('linear', 'rbf'),
-        'clf__C': (0.1, 0.3, 0.5, 0.75, 1.0, 1.25),
-        'clf__gamma': (0, 0.001, 0.01, 0.1, 0.3, 0.5),
+        'clf__C': [0.25],
+        #'clf__gamma': (0, 0.001, 0.01, 0.1, 0.3, 0.5),
         'features__word_vectorizer__ngram_range': [(1, 4)],
         'features__word_vectorizer__sublinear_tf': [True],
         'features__word_vectorizer__tokenizer': [t.tokenize],

@@ -1,4 +1,5 @@
-from sentiment_classifier.transformer import TfidfNegTransformer, LexiconTransformer, POSTransformer, ClusterTransformer, PunctuationTransformer, EmoticonTransformer
+from sentiment_classifier.transformer import TfidfNegTransformer, LexiconTransformer, POSTransformer, \
+    ClusterTransformer, PunctuationTransformer, EmoticonTransformer
 from sklearn.pipeline import FeatureUnion
 
 import utils.filters as f
@@ -79,17 +80,15 @@ class SubjectivityFeatures:
         }
     }
 
-
     CLASSIFIER = {
         'clf': SVC,
         'defaults': {
-            'C': 0.5,
-            'gamma': 0.001,
-            'kernel': 'linear'
+            'kernel': 'linear',
+            'C': 0.25,
         },
-        'useCache': False,
+        'useCache': True,
         'feature_union': FeatureUnion([(name, vars.pop("type")(**TRANSFORMER_OPTIONS[name]))
-                                  for name, vars in TRANSFORMER_OPTIONS.items() if vars.pop("enabled", False)])
+                                       for name, vars in TRANSFORMER_OPTIONS.items() if vars.pop("enabled", False)])
     }
 
 
@@ -113,7 +112,7 @@ class PolarityFeatures:
             'analyzer': 'char',
             'ngram_range': (3, 5),
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
-                             f.reduce_letter_duplicates, f.quote_placeholder],
+                              f.reduce_letter_duplicates, f.quote_placeholder],
             'min_df': 1,
         },
 
@@ -121,7 +120,7 @@ class PolarityFeatures:
             'enabled': True,
             'type': LexiconTransformer,
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
-                             f.reduce_letter_duplicates, f.quote_placeholder],
+                              f.reduce_letter_duplicates, f.quote_placeholder],
         },
 
         "pos_tagger": {
@@ -152,7 +151,6 @@ class PolarityFeatures:
         }
     }
 
-
     CLASSIFIER = {
         'clf': SVC,
         'defaults': {
@@ -162,5 +160,5 @@ class PolarityFeatures:
         },
         'useCache': False,
         'feature_union': FeatureUnion([(name, vars.pop("type")(**TRANSFORMER_OPTIONS[name]))
-                                  for name, vars in TRANSFORMER_OPTIONS.items() if vars.pop("enabled", False)])
+                                       for name, vars in TRANSFORMER_OPTIONS.items() if vars.pop("enabled", False)])
     }

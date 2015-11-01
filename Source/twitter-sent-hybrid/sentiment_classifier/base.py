@@ -1,8 +1,6 @@
-"""
-    Base class for different methods of using sentiment analysis.
-"""
 from sklearn.pipeline import Pipeline
 from storage import cache
+import re
 
 
 class BaseMethod(object):
@@ -10,19 +8,15 @@ class BaseMethod(object):
         self.clf = clf(**defaults)
         self.useCache = useCache
         self.feature_union = feature_union
-        self.train(train[:,0], train[:,1])
-
-
-    def train(self, docs_train, y_train):
         self.grid = Pipeline([
             ('features', self.feature_union),
             ('clf', self.clf)
         ])
+        self.train(train[:, 0], train[:, 1])
 
-        #vars = [model[1] for model in pipeline.steps[0][1].transformer_list]
-        #print [var.fit_transform(docs_train, y_train).shape for var in vars]
-
-        cache_key = str(self.feature_union) + str(docs_train)
+    def train(self, docs_train, y_train):
+        feature_union_hash = re.sub(r" at 0x........>", "", str(self.feature_union.transformer_list))
+        cache_key = feature_union_hash + str(self.clf) + str(docs_train)
         cached = cache.load_pickle(cache_key)
 
         if cached and self.useCache:
@@ -42,9 +36,7 @@ class BaseMethod(object):
                 "scr": self.best_score,
                 "parm": self.best_params
             })
-
         return self.grid
-
 
     def predict(self, arg_input):
         orig = arg_input
@@ -54,5 +46,4 @@ class BaseMethod(object):
         predictions = self.best_estimator.predict(orig)
         if isinstance(arg_input, basestring):
             return predictions[0]
-
         return predictions
