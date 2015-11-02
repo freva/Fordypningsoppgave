@@ -7,7 +7,7 @@ from time import time, strftime
 from sklearn.pipeline import Pipeline
 
 from storage import resource_reader as d
-from storage.options import General, SubjectivityFeatures
+from storage.options import General, SubjectivityFeatures, PolarityFeatures
 
 import utils.tokenizer as t
 import utils.filters as p
@@ -58,7 +58,7 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
     grid = GridSearchCV(
         pipeline,
         param_grid=parameters,
-        scoring=make_scorer(f1_score, pos_label="neutral", average='binary'),
+        scoring=make_scorer(f1_score, pos_label=None, average='binary'),
         cv=StratifiedKFold(y_train, 5, shuffle=True),
         n_jobs=-1,
         verbose=10
@@ -95,4 +95,4 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
 
 if __name__ == '__main__':
     train, test = d.get_data(General.TRAIN_SET, General.TEST_SET)
-    grid_search(SubjectivityFeatures.CLASSIFIER['clf'], SubjectivityFeatures.CLASSIFIER['feature_union'], train[:,0], train[:,1])
+    grid_search(PolarityFeatures.CLASSIFIER['clf'], PolarityFeatures.CLASSIFIER['feature_union'], train[:, 0], train[:, 1])

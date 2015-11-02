@@ -146,14 +146,14 @@ class PolarityFeatures:
         },
 
         "punctuation": {
-            'enabled': False,
+            'enabled': True,
             'type': PunctuationTransformer,
             'preprocessors': [f.html_decode, f.no_url, f.no_username],
             'norm': True
         },
 
         "emoticons": {
-            'enabled': False,
+            'enabled': True,
             'type': EmoticonTransformer,
             'preprocessors': [f.html_decode, f.no_url],
             'norm': True
