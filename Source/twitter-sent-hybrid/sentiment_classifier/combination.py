@@ -1,6 +1,3 @@
-"""
-    Sentiment analysis using basic bigrams.
-"""
 from sentiment_classifier.base import BaseMethod
 from utils import utils
 import numpy as np
@@ -10,9 +7,7 @@ class Combined:
         train_subjectivity, train_polarity = utils.generate_two_part_dataset(train)
         self.subjectivity_clf = BaseMethod(train_subjectivity, **sub_clf_options)
         self.polarity_clf = BaseMethod(train_polarity, **pol_clf_options)
-
         self.best_score = (self.subjectivity_clf.best_score + self.polarity_clf.best_score) / 2
-
 
     def predict(self, arg_input):
         orig = arg_input
