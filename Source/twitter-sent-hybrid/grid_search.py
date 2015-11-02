@@ -25,7 +25,7 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
         'clf__kernel': ['linear'],#('linear', 'rbf'),
         'clf__C': [0.25],
         #'clf__gamma': (0, 0.001, 0.01, 0.1, 0.3, 0.5),
-        'features__word_vectorizer__ngram_range': [(1, 4)],
+        'features__word_vectorizer__ngram_range': [(1, 3), (1, 4), (1, 5), (2, 5)],
         'features__word_vectorizer__sublinear_tf': [True],
         'features__word_vectorizer__tokenizer': [t.tokenize],
         'features__word_vectorizer__use_idf': [True],
@@ -33,16 +33,16 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
         'features__word_vectorizer__min_df': [0.0],
         'features__word_vectorizer__max_df': [0.5],
         'features__word_vectorizer__preprocessors': [(p.html_decode, p.no_url, p.no_username, p.no_hash, p.no_emoticons, p.no_rt_tag)],
-        'features__word_vectorizer__negation_scope_length': [4],
+        'features__word_vectorizer__negation_scope_length': [None, -1, 3, 4, 5],
         'features__char_ngrams__analyzer': ['char'],
-        'features__char_ngrams__ngram_range': [(3, 5)],
+        'features__char_ngrams__ngram_range': [(2, 5), (3, 5), (3, 6)],
         'features__char_ngrams__sublinear_tf': [True],
         'features__char_ngrams__use_idf': [True],
         'features__char_ngrams__smooth_idf': [True],
         'features__char_ngrams__min_df': [0.0],
         'features__char_ngrams__max_df': [0.5],
         'features__char_ngrams__preprocessors': [(p.html_decode, p.no_url, p.no_username, p.hash_as_normal, p.no_rt_tag, p.reduce_letter_duplicates, p.limit_chars)],
-        'features__char_ngrams__negation_scope_length': [None],
+        'features__char_ngrams__negation_scope_length': [None, -1, 3, 4, 5],
         'features__lexicon__preprocessors': [(p.html_decode, p.no_url, p.no_username, p.hash_as_normal, p.no_rt_tag, p.lower_case, p.reduce_letter_duplicates, p.limit_chars)],
         'features__lexicon__norm': [True],
         'features__pos_tagger__preprocessors': [(p.html_decode, p.no_url, p.no_username, p.no_hash, p.no_rt_tag, p.split)],
@@ -58,7 +58,7 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
     grid = GridSearchCV(
         pipeline,
         param_grid=parameters,
-        scoring=make_scorer(precision_score, pos_label="neutral", average='binary'),
+        scoring=make_scorer(f1_score, pos_label="neutral", average='binary'),
         cv=StratifiedKFold(y_train, 5, shuffle=True),
         n_jobs=-1,
         verbose=10
@@ -90,10 +90,7 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
     for s in grid.grid_scores_:
         f.write(str.format("{0:.3f}", s.cv_validation_scores.mean()*100) + "\t" +
                 str.format("{0:.3f}", s.cv_validation_scores.std()*100) + "\t" + str(s.parameters) + "\n")
-
     f.close()
-
-    return grid.best_estimator_
 
 
 if __name__ == '__main__':
