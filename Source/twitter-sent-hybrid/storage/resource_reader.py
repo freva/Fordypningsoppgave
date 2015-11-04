@@ -87,8 +87,8 @@ def get_data(train_set, test_set):
     #test = u.generate_subjective_set(test)
     #train = u.generate_subjective_set(train)
 
-    test = u.generate_polarity_set(test)
-    train = u.generate_polarity_set(train)
+    #test = u.generate_polarity_set(test)
+    #train = u.generate_polarity_set(train)
 
     # Normalize data?
     #train = u.reduce_dataset(train, 3000)
