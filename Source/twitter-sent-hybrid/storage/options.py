@@ -105,7 +105,7 @@ class PolarityFeatures:
             'smooth_idf': True,
             'min_df': 0.0,
             'max_df': 0.5,
-            'negation_scope_length': 4
+            'negation_scope_length': -1
         },
 
         "char_ngrams": {
@@ -120,7 +120,7 @@ class PolarityFeatures:
             'smooth_idf': False,
             'min_df': 0.0,
             'max_df': 0.5,
-            'negation_scope_length': None
+            'negation_scope_length': -1
         },
 
         "lexicon": {
@@ -164,9 +164,9 @@ class PolarityFeatures:
         'clf': SVC,
         'defaults': {
             'kernel': 'linear',
-            'C': 0.25,
+            'C': 0.05,
         },
-        'useCache': False,
+        'useCache': True,
         'feature_union': FeatureUnion([(name, vars.pop("type")(**TRANSFORMER_OPTIONS[name]))
                                        for name, vars in TRANSFORMER_OPTIONS.items() if vars.pop("enabled", False)])
     }
