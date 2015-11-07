@@ -22,9 +22,8 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
     ])
 
     parameters = {
-        'clf__kernel': ['linear'],#('linear', 'rbf'),
-        'clf__C': [0.25],
-        #'clf__gamma': (0, 0.001, 0.01, 0.1, 0.3, 0.5),
+        'clf__kernel': ['linear'],
+        'clf__C': [0.01, 0.1, 0.25, 0.4, 0.6],
         'features__word_vectorizer__ngram_range': [(1, 3), (1, 4), (1, 5), (2, 5)],
         'features__word_vectorizer__sublinear_tf': [True],
         'features__word_vectorizer__tokenizer': [t.tokenize],
@@ -33,7 +32,7 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
         'features__word_vectorizer__min_df': [0.0],
         'features__word_vectorizer__max_df': [0.5],
         'features__word_vectorizer__preprocessors': [(p.html_decode, p.no_url, p.no_username, p.no_hash, p.no_emoticons, p.no_rt_tag)],
-        'features__word_vectorizer__negation_scope_length': [None, -1, 3, 4, 5],
+        'features__word_vectorizer__negation_scope_length': [None, -1, 4],
         'features__char_ngrams__analyzer': ['char'],
         'features__char_ngrams__ngram_range': [(2, 5), (3, 5), (3, 6)],
         'features__char_ngrams__sublinear_tf': [True],
@@ -42,7 +41,7 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
         'features__char_ngrams__min_df': [0.0],
         'features__char_ngrams__max_df': [0.5],
         'features__char_ngrams__preprocessors': [(p.html_decode, p.no_url, p.no_username, p.hash_as_normal, p.no_rt_tag, p.reduce_letter_duplicates, p.limit_chars)],
-        'features__char_ngrams__negation_scope_length': [None, -1, 3, 4, 5],
+        'features__char_ngrams__negation_scope_length': [None, -1, 4],
         'features__lexicon__preprocessors': [(p.html_decode, p.no_url, p.no_username, p.hash_as_normal, p.no_rt_tag, p.lower_case, p.reduce_letter_duplicates, p.limit_chars)],
         'features__lexicon__norm': [True],
         'features__pos_tagger__preprocessors': [(p.html_decode, p.no_url, p.no_username, p.no_hash, p.no_rt_tag, p.split)],
@@ -53,6 +52,8 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
         'features__punctuation__norm': [True],
         'features__emoticons__preprocessors': [(p.html_decode, p.no_url)],
         'features__emoticons__norm': [True],
+        'features__vader__preprocessors': [(p.html_decode, p.no_url, p.no_username, p.hash_as_normal, p.no_rt_tag)],
+        'features__vader__norm': [True]
     }
 
     grid = GridSearchCV(
@@ -94,5 +95,5 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
 
 
 if __name__ == '__main__':
-    train, test = d.get_data(General.TRAIN_SET, General.TEST_SET)
+    train, test = d.get_data("../data/all.tsv", General.TEST_SET)
     grid_search(PolarityFeatures.CLASSIFIER['clf'], PolarityFeatures.CLASSIFIER['feature_union'], train[:, 0], train[:, 1])
