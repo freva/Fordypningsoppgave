@@ -5,3 +5,4 @@ from .emoticon_transformer import EmoticonTransformer
 from .pos_transformer import POSTransformer
 from .lexicon_transformer import LexiconTransformer
 from .tfidf_neg_transformer import TfidfNegTransformer
+from .vader_transformer import VaderTransformer
