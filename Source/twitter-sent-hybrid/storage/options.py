@@ -1,5 +1,5 @@
 from sentiment_classifier.transformer import TfidfNegTransformer, LexiconTransformer, POSTransformer, \
-    ClusterTransformer, PunctuationTransformer, EmoticonTransformer
+    ClusterTransformer, PunctuationTransformer, EmoticonTransformer, VaderTransformer
 from sklearn.pipeline import FeatureUnion
 
 import utils.filters as f
@@ -40,7 +40,7 @@ class SubjectivityFeatures:
             'smooth_idf': False,
             'min_df': 0.0,
             'max_df': 0.5,
-            'negation_scope_length': None
+            'negation_scope_length': 3
         },
 
         "lexicon": {
@@ -76,6 +76,13 @@ class SubjectivityFeatures:
             'enabled': True,
             'type': EmoticonTransformer,
             'preprocessors': [f.html_decode, f.no_url],
+            'norm': True
+        },
+
+        "vader": {
+            'enabled': True,
+            'type': VaderTransformer,
+            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag],
             'norm': True
         }
     }
@@ -157,6 +164,13 @@ class PolarityFeatures:
             'type': EmoticonTransformer,
             'preprocessors': [f.html_decode, f.no_url],
             'norm': True
+        },
+
+        "vader": {
+            'enabled': True,
+            'type': VaderTransformer,
+            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag],
+            'norm': True
         }
     }
 
@@ -164,7 +178,7 @@ class PolarityFeatures:
         'clf': SVC,
         'defaults': {
             'kernel': 'linear',
-            'C': 0.05,
+            'C': 0.25,
         },
         'useCache': True,
         'feature_union': FeatureUnion([(name, vars.pop("type")(**TRANSFORMER_OPTIONS[name]))
