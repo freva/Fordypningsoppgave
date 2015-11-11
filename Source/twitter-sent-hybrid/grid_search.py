@@ -24,7 +24,7 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
     parameters = {
         'clf__kernel': ['linear'],
         'clf__C': [0.01, 0.1, 0.25, 0.4, 0.6],
-        'features__word_vectorizer__ngram_range': [(1, 3), (1, 4), (1, 5), (2, 5)],
+        'features__word_vectorizer__ngram_range': [(1, 5)],
         'features__word_vectorizer__sublinear_tf': [True],
         'features__word_vectorizer__tokenizer': [t.tokenize],
         'features__word_vectorizer__use_idf': [True],
@@ -34,7 +34,7 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
         'features__word_vectorizer__preprocessors': [(p.html_decode, p.no_url, p.no_username, p.no_hash, p.no_emoticons, p.no_rt_tag)],
         'features__word_vectorizer__negation_scope_length': [None, -1, 4],
         'features__char_ngrams__analyzer': ['char'],
-        'features__char_ngrams__ngram_range': [(2, 5), (3, 5), (3, 6)],
+        'features__char_ngrams__ngram_range': [(3, 6)],
         'features__char_ngrams__sublinear_tf': [True],
         'features__char_ngrams__use_idf': [True],
         'features__char_ngrams__smooth_idf': [True],

@@ -17,7 +17,7 @@ class SubjectivityFeatures:
         "word_vectorizer": {
             'enabled': True,
             'type': TfidfNegTransformer,
-            'ngram_range': (1, 4),
+            'ngram_range': (1, 5),
             'tokenizer': t.tokenize,
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.no_hash, f.no_emoticons, f.no_rt_tag],
             'sublinear_tf': True,
@@ -32,7 +32,7 @@ class SubjectivityFeatures:
             'enabled': True,
             'type': TfidfNegTransformer,
             'analyzer': 'char',
-            'ngram_range': (3, 5),
+            'ngram_range': (3, 6),
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
                               f.reduce_letter_duplicates, f.limit_chars],
             'sublinear_tf': True,
@@ -40,7 +40,7 @@ class SubjectivityFeatures:
             'smooth_idf': False,
             'min_df': 0.0,
             'max_df': 0.5,
-            'negation_scope_length': 3
+            'negation_scope_length': None
         },
 
         "lexicon": {
@@ -91,7 +91,7 @@ class SubjectivityFeatures:
         'clf': SVC,
         'defaults': {
             'kernel': 'linear',
-            'C': 0.25,
+            'C': 0.1,
         },
         'useCache': True,
         'feature_union': FeatureUnion([(name, vars.pop("type")(**TRANSFORMER_OPTIONS[name]))
@@ -104,7 +104,7 @@ class PolarityFeatures:
         "word_vectorizer": {
             'enabled': True,
             'type': TfidfNegTransformer,
-            'ngram_range': (1, 4),
+            'ngram_range': (1, 5),
             'tokenizer': t.tokenize,
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.no_hash, f.no_emoticons, f.no_rt_tag],
             'sublinear_tf': True,
@@ -119,7 +119,7 @@ class PolarityFeatures:
             'enabled': True,
             'type': TfidfNegTransformer,
             'analyzer': 'char',
-            'ngram_range': (3, 5),
+            'ngram_range': (2, 5),
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag,
                               f.reduce_letter_duplicates, f.limit_chars],
             'sublinear_tf': True,
@@ -127,7 +127,7 @@ class PolarityFeatures:
             'smooth_idf': False,
             'min_df': 0.0,
             'max_df': 0.5,
-            'negation_scope_length': -1
+            'negation_scope_length': None
         },
 
         "lexicon": {
@@ -178,7 +178,7 @@ class PolarityFeatures:
         'clf': SVC,
         'defaults': {
             'kernel': 'linear',
-            'C': 0.25,
+            'C': 0.01,
         },
         'useCache': True,
         'feature_union': FeatureUnion([(name, vars.pop("type")(**TRANSFORMER_OPTIONS[name]))
