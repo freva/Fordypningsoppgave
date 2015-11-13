@@ -54,7 +54,7 @@ class SubjectivityFeatures:
         "pos_tagger": {
             'enabled': True,
             'type': POSTransformer,
-            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.no_hash, f.no_rt_tag, f.split],
+            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.no_hash, f.no_rt_tag, f.tokenize],
             'norm': True
         },
 
@@ -134,14 +134,14 @@ class PolarityFeatures:
             'enabled': True,
             'type': LexiconTransformer,
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag, f.lower_case,
-                              f.reduce_letter_duplicates, f.limit_chars],
+                              f.reduce_letter_duplicates, f.limit_chars, f.naive_negation_attachment],
             'norm': True
         },
 
         "pos_tagger": {
             'enabled': True,
             'type': POSTransformer,
-            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.no_hash, f.no_rt_tag, f.split],
+            'preprocessors': [f.html_decode, f.no_url, f.no_username, f.no_hash, f.no_rt_tag, f.tokenize],
             'norm': True
         },
 
