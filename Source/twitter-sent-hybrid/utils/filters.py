@@ -47,7 +47,7 @@ def html_decode(tweet_text):
     h = HTMLParser.HTMLParser()
     return h.unescape(tweet_text)
 
-def split(tweet):
+def tokenize(tweet):
     return ' '.join(tokenizer.tokenize(tweet))
 
 def limit_chars(tweet):
