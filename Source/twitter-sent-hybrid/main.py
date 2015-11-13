@@ -16,7 +16,7 @@ if __name__ == "__main__":
     train, test = d.get_data(General.TRAIN_SET, General.TEST_SET)
     docs_test, y_test = test[:,0], test[:,1]
 
-    #clf = BaseMethod(train, **PolarityFeatures.CLASSIFIER)
+    #clf = BaseMethod(train, **SubjectivityFeatures.CLASSIFIER)
     clf = Combined(SubjectivityFeatures.CLASSIFIER, PolarityFeatures.CLASSIFIER, train)
     print "Finished training in", "%.2f" % (time.clock()-start_time), "sec"
     y_pred = clf.predict(docs_test)
