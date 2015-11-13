@@ -47,7 +47,7 @@ class SubjectivityFeatures:
             'enabled': True,
             'type': LexiconTransformer,
             'preprocessors': [f.html_decode, f.no_url, f.no_username, f.hash_as_normal, f.no_rt_tag, f.lower_case,
-                              f.reduce_letter_duplicates, f.limit_chars],
+                              f.reduce_letter_duplicates, f.limit_chars, f.naive_negation_attachment],
             'norm': True
         },
 
