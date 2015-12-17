@@ -44,7 +44,7 @@ def grid_search(clf, feature_pipeline, docs_train, y_train):
         'features__char_ngrams__negation_scope_length': [None],
         'features__lexicon__preprocessors': [(p.html_decode, p.no_url, p.no_username, p.hash_as_normal, p.no_rt_tag, p.lower_case, p.reduce_letter_duplicates, p.limit_chars)],
         'features__lexicon__norm': [True],
-        'features__pos_tagger__preprocessors': [(p.html_decode, p.no_url, p.no_username, p.no_hash, p.no_rt_tag, p.split)],
+        'features__pos_tagger__preprocessors': [(p.html_decode, p.no_url, p.no_username, p.no_hash, p.no_rt_tag, p.tokenize)],
         'features__pos_tagger__norm': [True],
         'features__word_clusters__preprocessors': [(p.html_decode, p.hash_as_normal, p.no_rt_tag, p.lower_case, p.reduce_letter_duplicates)],
         'features__word_clusters__norm': [True],

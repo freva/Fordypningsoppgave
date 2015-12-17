@@ -81,9 +81,6 @@ def get_data(train_set, test_set):
     train = read_tsv(train_set)
     test = read_tsv(test_set)
 
-    test = u.normalize_test_set_classification_scheme(test)
-    train = u.normalize_test_set_classification_scheme(train)
-
     #test = u.generate_subjective_set(test)
     #train = u.generate_subjective_set(train)
 
@@ -96,4 +93,5 @@ def get_data(train_set, test_set):
 
 
 def read_tsv(filename):
-    return np.array([line.split("\t") for line in open(filename).read().decode("ISO8859-16").split("\n") if len(line) > 0])
+    data = np.array([line.split("\t") for line in open(filename).read().decode("ISO8859-16").split("\n") if len(line) > 0])
+    return u.normalize_test_set_classification_scheme(data)

@@ -15,10 +15,10 @@ class BaseMethod(object):
         self.train(train[:, 0], train[:, 1])
 
     def train(self, docs_train, y_train):
-        feature_union_hash = re.sub(r" at 0x........>", "", str(self.feature_union.transformer_list))
+        feature_union_hash = re.sub(r" at 0x[0-9a-f]+>", "", str(self.feature_union.transformer_list))
         cache_key = feature_union_hash + str(self.clf) + str(docs_train)
         cached = cache.load_pickle(cache_key)
-
+        
         if cached and self.useCache:
             print "Loading from cache..."
             self.best_estimator = cached['est']
