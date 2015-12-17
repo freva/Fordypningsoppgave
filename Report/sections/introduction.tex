@@ -1,22 +1,40 @@
 %!TEX root = ../report.tex
 \chapter{Introduction}
 \label{cha:introduction}
-\glsresetall
 
-bla bla
-
-\section{(some title related to the field}
+\section{Task Description}
 \label{sec:field}
 
-bla bla about the issue
+The task was given by Björn Gambäck and Lars Bungum at IDI, NTNU:
+\begin{center}{\large Sentiment Analysis in Tweets }\\\end{center}
+
+\textit{``In recent years, micro-blogging has become prevalent, and the Twitter API allows users to collect a corpus from their micro-blogosphere. The posts, named tweets, are limited to 140 characters, and are often used to express positive or negative emotions to a person or product. } \\
+
+\textit{In this project, the goal is to use the Twitter corpus to do sentiment analysis, that is, to classify tweets as to whether they express positive or negative opinions, or are neutral/objective. The work would be an extension of a previous master thesis at NTNU, with the aim to participate in a shared task competition on Twitter Sentiment Analysis.''} \\
 
 \section{Motivation and Research Focus Area}
 \label{sec:motivation}
+As a growing platform for people to express themselves on a global scale, Twitter has become exceedingly attractive for companies, marketeers, politicians and others that are interested in feedback. A problem with this is that collecting and analysing the large amount of data manually is close to impossible and at least not a sensible course of action. A system that can perform this process automatically and accurately is on the other hand therefore sought after.\\
+
+Tweets and other informal texts on social media are often quite different from texts elsewhere. They are short in length and contain a lot of abbreviations, acronyms, misspellings and Internet slang. This leads to some problems when analysing them using traditional natural language processing systems. Some research has been done in the last few years for handling this new vocabulary, with for example Twitter specific sentiment lexica such as AFINN by \citet{AFINN} and NRC Hashtag Sentiment by \cite{MohammadKZ2013}.  \\
+
+As well as containing text, a tweet also comes with metadata. This can be hashtags and information of the origin of the sender such as location and language. Since Twitter allows searching for tweets tagged with one or several specific hashtags, one could quickly get vast amounts of data regarding one specific product, person or event. With a working Twitter Sentiment Analysis system, production companies for example, could get a feel of what the consumers think of their products, or politicians could estimate their popularity amongst Twitter users in specific regions.
+
 
 \section{Project Goals}
 \label{sec:project_goals}
 
-\section{Contributions}
+\subsection*{G1: Research the State-of-the-Art in Twitter Sentiment Analysis}
+As Twitter Sentiment Analysis (TSA) is the focus of this specialization project, we find researching the state-of-art in the field necessary. The research will be centered around the submissions to the shared TSA tasks from SemEval hosted by the Association for Computational Linguistics\footnote{http://aclweb.org/} and the structured literature review conducted by \cite{SelmerBrevik}. The knowledge we gain from the research will form the basis for developing a state-of-the-art TSA system ourselves. 
+
+\subsection*{G2: Improve on previous NTNU Twitter Sentiment Classifier}
+Based on our research on the state-of-art in TSA, we aim to improve on previous TSA systems developed at NTNU, by \citet{SelmerBrevik} and by \citet{FaretReitan}, with the goal of participating in SemEval-2016. Improving such a system will be time consuming and involves simplifying its architecture and including some of the most recent advances in TSA. This goal will therefore have a central role in our project. As a direct result of this goal, we will get hands on experience within the field of Sentiment Analysis.
+
+\subsection*{G3: Outline future work for the Master's thesis}
+Being a pre-study project for the Master's thesis, we should outline the tasks to be performed in the thesis. A goal is therefore to establish future work within Sentiment Analysis, that can be used as a baseline for the project goals in the Master's thesis.
+
 
 \section{Thesis Structure}
+In Chapter~\ref{cha:background_theory}, the relevant background theory, tools and external data sets used, are described. Chapter~\ref{cha:related_work} presents our research method as well as an overview of the state-of-art in TSA. In Chapter~\ref{cha:architecture}, the overall architecture of our TSA system is detailed along with an overview of the specific features used. Chapter~\ref{cha:results} includes the tests conducted on our system along with test results and discussions. Finally, in Chapter~\ref{cha:discussion} we will outline the tasks to be performed in the Master's thesis as part of future work and evaluate to which degree our goals have been achieved along with conclusions drawn.   
 
+\glsresetall

@@ -2,18 +2,79 @@
 \chapter{Related Work}
 \label{cha:related_work}
 
-\glsresetall
-
-bla bla
 
 \section{Literature Review Method}
+\label{sec:literature_review_method}
+Within the field of Twitter Sentiment Analysis (TSA), a lot of research has been conducted in recent years. \cite{SelmerBrevik} performed a structured literature review (SLR), where the 23 most relevant research papers in the field were studied. The review resulted in an overview of the state-of-the-art in TSA. \cite{FaretReitan} continued the review within the state-of-the-art in TSA, by researching the best TSA systems participating in SemEval-2013 and SemEval-2014, building upon the results of \cite{SelmerBrevik}. Similarly we have decided to center our research method around the sentiment analysis systems participating in SemEval-2015. As one of our project goals is to participate in SemEval-2016, the systems that performed best have been prioritized. In addition, a collection of introductory papers on the field of Sentiment Analysis from our supervisors have been studied. \\
+
+Because of the extensive SLR conducted by \cite{SelmerBrevik} as well as the review on TSA systems from SemEval-2013 and SemEval-2014 by \cite{FaretReitan}, we have decided to prioritize developing a TSA system ourselves over performing a new structured literature review within the field. By only reviewing developments within the field from the last year, we will have the time to develop a functional TSA system able to participate in SemEval-2016, as well as incorporating new ideas from recent developments. 
 
 
+\section{The International Workshop on Semantic Evaluation}
+The International Workshop on Semantic Evaluation (SemEval) is a workshop where several computational semantic language analysis systems are developed to solve a series of shared tasks. The overall process of the workshop consists of the three steps: receiving relevant training data, develop the system and evaluate the system. In recent years the workshop has been hosted annually, where some of the shared tasks have carried over from one year to the next. Among these tasks, is a collection of tasks centered around TSA. The same tasks within TSA are also a part of SemEval-2016. As being a part of SemEval in recent years, the Twitter Sentiment Analysis tasks have yielded significant improvements to the state-of-art in the field, as will be discussed in the following section.    
 
-\section{State-of-the-Art in...  (or something related)}
+
+\section{State-of-the-Art in Sentiment Analysis}
 \label{sec:state_of_the_art}
+Based on the developments in recent years within TSA, a typical approach has been identified. The approach uses a supervised machine learning system, consisting of three main steps: preprocessing, feature extraction and training of a classifier. Preprocessing is used in order to remove noise and standardize the tweet format, by for example replacing or removing URLs. Desired features of the tweets are then extracted, such as sentiment scores using specific sentiment lexica or the occurrence of different emoticons\footnote{Unless specifically stated otherwise, emoticon refers to a sequence of ASCII characters, and not the modern Unicode emoticons, that represent a facial expression.}. Finally, training of the classifier is performed using the extracted features.
 
-Here you should be quoting a lot of very important papers, such as \citet{SelmerEA:13},
-or maybe some olden goldies \citep{Bar-Hillel:60}.
-Or maybe you just want to quote an author's name, e.g., \citeauthor{Harris:54},
-or the year someone wrote something, e.g., \citeyear{Tesniere:59}.
+\subsection{Preprocessing}
+The preprocessing in Sentiment Analysis of tweets commonly comprises a series of tasks in order to normalize the tweet format and prepare it for feature extraction. The main tasks in preprocessing commonly revolve around text filtering and negation detection. 
+
+\subsection*{Text Filtering}
+Text filtering often includes removing items providing minimal information regarding the actual classification task. Items such as user mentions and URLs are therefore often substituted with tags as done by \cite{GoSentimentAnalysis09}, where the tag ``USER'' is used for user mentions and the tag ``URL'' for URLs. Another common approach is to remove the URLs and user mentions completely.\\
+
+The use of retweets\footnote{Until early 2015 retweeting was not an official Twitter feature and users used to tweet with `RT' at the beginning of a tweet to indicate that the tweet is a re-post of someone else's content.} are also often handled as a text filtering task during preprocessing. The retweets are detected by the tag `RT', which indicate that the following segment of the tweet is a repost of someone else's tweet. This is commonly handled by simply removing the retweet tag `RT' from the tweet, because `RT' tag by itself carries no information. A retweet can be about how someone agrees or disagrees about the original quote and analysis of the text itself is needed to determine which one it is. \\
+
+Elongated words are common in tweets. Elongated words are words spelled with extra characters, such as ``booooring'' or ``coool''. These words are often modified by reducing the surplus of equal consecutive characters. The words are then either reduced down to the actual correct spelling of the word, ``booooring'' becomes ``boring'', or down to a maximum number of consecutive equal characters. With a maximum of 2 consecutive equal characters, ``booooring'' becomes ``booring''. A reason for not removing all of the extra characters is that elongation can be a form of expressing the sentiment, and can therefore be useful in the analysis. \\
+
+Tweets often contain one or more hashtags; hashtags are commonly used to express the topic of the tweet or an emotion. \cite{SelmerBrevik} found that the common approach was to remove all hashtags completely in the preprocessing step, based on the assumption that hashtags were only used to express the topic of the tweet, and not sentiment. The research done by \cite{FaretReitan} on the other hand, points to a transition in the use of hashtags, contradicting the approach. Hashtags are now often used to express feelings or emotions as well, which in turn means they may provide important information regarding the overall sentiment of the tweet, and therefore should not be removed. 
+
+\subsection*{Negation Detection}
+Both through their review of Sentiment Analysis systems participating in SemEval and their own research, \cite{FaretReitan} found that detecting and using negation in Sentiment Analysis led to improved performance. A common approach to identify negation is to look for negation cues, comprising words such as ``not'', ``wouldn't'' and ``ain't''. To then determine the scope, the collection of words affected by the negation cue, a simple method proposed by \cite{Das01yahoo} is often used. The simple approach consists of selecting the $n$ consecutive words appearing after the negation cue, or as done by \cite{SelmerBrevik}, all consecutive words appearing after the negation cue until reaching the next punctuation mark.
+
+
+\subsection{Feature Extraction}
+In order to predict or say anything about the overall sentiment of a tweet, the features of the tweet needs to be identified and evaluated. This process is commonly called feature extraction. In our review of the participating Twitter Sentiment Analysis systems in SemEval-2015 as well as in the review \cite{FaretReitan} conducted on SemEval systems participating in 2013 and 2014, a state-of-the-art feature set has been identified. The state-of-the-art feature set comprises the features most commonly used by the top ranked systems, first introduced by \cite{MohammadKZ2013} in SemEval-2013. The state-of-the-art feature set includes the following features:
+
+\begin{itemize}
+    \item \textit{Word n-grams}: Collecting and weighting of words or collections of consecutive words.
+    \item \textit{Char n-grams}: Collecting and weighting of characters or collections of consecutive characters.
+    \item \textit{Word clusters}: Determining which clusters the words each word in a tweet belongs to. 
+    \item \textit{Prior Polarity Sentiment Lexica}: Collecting the sentiment value of the individual words in a tweet, by looking up the words in specialized prior polarity sentiment lexica, and extracting features based on the values.
+    \item \textit{Part-of-Speech tagging}: Utilizing specialized Twitter Part-of-Speech taggers to tag each word and count the occurrences of each tag.
+    \item \textit{Punctuation}: The number of consecutive punctuation marks and whether the last character of a tweet is an exclamation mark or a question mark.
+    \item \textit{Emoticons}: The number of positive and negative emoticons.
+    \item \textit{Negation}: The marked negation scopes are utilized using prior polarity lexica able to handle words in negated contexts. The negation marking also has an effect in \textit{Word n-grams}, \textit{Char n-grams} and Prior Polarity Sentiment Lexica.
+\end{itemize}
+
+\subsection{Classification}
+By using the feature representation of tweets, created in the feature extraction step, a supervised machine learning algorithm called a classifier is commonly used to perform the classification task. Among the supervised machine learning algorithms, the most popular within TSA are: Support Vector Machine, Logistic Regression, Stochastic Gradient Descent and Naïve Bayes. In Table~\ref{tab:semeval_2015_results} the top ten submissions of SemEval-2015 are listed together with the machine learning algorithm used. We see that the Support Vector Machine is the most used algorithm, which by \cite{Svetlana14} is considered to be the state-of-the-art algorithm within TSA. \\     
+
+\noindent\begin{table}[ht]
+    \begin{tabular}{| l | l | l |}
+        \hline
+        \textbf{Rank} & \textbf{Name} & \textbf{Classifier} \\ \hline
+        1 & Webis & Ensemble of four classifiers, averaging results \\ \hline
+        2 & unitn & Deep Convolutional neural network (CNN) \\ \hline
+        3 & lsislif & Logistic regression \\ \hline
+        4 & INESC-ID & Stochastic Gradient Descent \\ \hline
+        5 & Splusplus & Two stage classifier. SVM and CNN \\ \hline
+        6 & wxiaoac & SVM \\ \hline
+        7 & IOA & SVM with RBF kernel \\ \hline
+        8 & Swiss-Chocolate & SVM, Logistic regression and random forest \\ \hline
+        9 & CLaC-SentiPipe & Linear SVM and Logistic regression \\ \hline
+        10 & TwitterHawk & Linear SVM \\ \hline
+    \end{tabular}
+    \caption{Overview of top 10 submissions for SemEval 2015}
+    \label{tab:semeval_2015_results}
+\end{table}
+
+\subsection*{One-Step vs. Two-Step Classification}
+The most common classification approach in TSA, identified by \cite{FaretReitan}, is a one-step process, where a single machine learning algorithm classifies the tweets into three different classes; positive, negative and neutral. Most of the top ranked submissions in SemEval-2014 and SemEval-2015 used this approach. \\
+
+There are, however, other approaches. One of these is the two-step classification approach, consisting of two consecutive steps: subjectivity classification and polarity classification. In the subjectivity classification step, tweets will either be classified as subjective or objective/neutral. The tweets classified as subjective will then proceed to the polarity classifier, where they are classified as either positive or negative. \\
+
+In SemEval-2015, the top ranked TSA system, \cite{Webis15}, used yet an other approach, by utilizing an ensemble of four classifiers. In the ensemble approach, classification is commonly done through a vote among the classifiers, where each classifier votes for the class it has predicted. \cite{Webis15} let each classifier present its calculated probability for each class, and the class with highest average probability is chosen.  
+
+\glsresetall
