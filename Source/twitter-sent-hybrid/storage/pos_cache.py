@@ -28,4 +28,5 @@ def get_pos_tags(tweets):
         raw_pos = [pos_tags_RE.findall(line) for line in p.stdout if "_" in line]
         pos_cache.update(dict(zip(raw_tweets, raw_pos)))
         cache.save_pickle("pos_cache", pos_cache, False)
+        os.remove(gate_tagger_path + temp_file)
     return [pos_cache[tweet] for tweet in tweets]
