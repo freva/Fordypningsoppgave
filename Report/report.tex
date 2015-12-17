@@ -30,11 +30,13 @@
 
 % comments and notes
 \usepackage[draft]{todonotes}
-%\usepackage[disable]{todonotes}
 \usepackage{verbatim}
+\usepackage{multirow}
+
+\usepackage[hyphens]{url}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% bibliography stuff
+% BIBLIOGRAPHY STUFF
 
 \usepackage{natbib}
 
@@ -93,13 +95,26 @@
 \end{comment}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% HYPHENATION DEFINITIONS
+
+\usepackage{hyphenat}
+\hyphenation{Tweebo-Parser}
+\hyphenation{hash-tag}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\mathchardef\mhyphen="2D
+\newcommand*\rot{\rotatebox{90}}
+\usepackage{float}
+\restylefloat{table}
 
 % Author
 % Fill in here, and use commands in the text.
-\newcommand{\thesisAuthor}{Your Name}
-\newcommand{\thesisTitle}{Your Title}
-\newcommand{\thesisType}{Master's Thesis}
-\newcommand{\thesisDate}{Semester Year}
+\newcommand{\thesisAuthor}{Valerij Fredriksen \& Brage Ekroll Jahren}
+\newcommand{\thesisTitle}{Twitter Sentiment Analysis}
+\newcommand{\thesisType}{Specialization project}
+\newcommand{\thesisDate}{Fall 2015}
 
 % add correct hyphenations as needed
 \hyphenation{Sem-Eval}
@@ -120,7 +135,7 @@
 \noindent {\Huge \thesisTitle}
 \vspace{.5cm}
 
-\noindent {\Large Subtitle}
+%\noindent {\Large Subtitle}
 \vspace{2cm}
 
 \noindent \thesisType, \thesisDate
@@ -139,10 +154,9 @@
 
 \frontmatter
 
-\include{sections/abstract}
-\include{sections/sammendrag}
-\include{sections/preface}
-\include{sections/acknowledgements}
+\include{intro/abstract}
+\include{intro/abstract_norwegian}
+\include{intro/preface}
 
 \clearpage
 
@@ -159,20 +173,18 @@
 \include{sections/introduction}
 \include{sections/background}
 \include{sections/related_work}
-\include{sections/annotation}
 \include{sections/architecture}
-\include{sections/experiments}
-\include{sections/discussion}
+\include{sections/results}
 \include{sections/conclusion}
 
 \addcontentsline{toc}{chapter}{Bibliography}
 
+\nocite{*}
 \bibliographystyle{plainnat}
-\bibliography{bib/bibliography,bib/references}
-
+\bibliography{bib/bibliography}
 % alternative, if using biber as backend
 % \printbibliography
 
-\include{appendices/appendices}
+%\include{appendices/appendices}
 
 \end{document}

@@ -1,13 +1,31 @@
 %!TEX root = ../report.tex
-\chapter{Conclusion and Future Work}
-\label{cha:conclusion}
+\chapter{Discussion}
+\label{cha:discussion}
 \glsresetall
-
-bla bla
-
-\section{Conclusion}
-\label{sec:conclusion}
 
 
 \section{Future Work}
 \label{sec:future_work}
+Through our work with developing a TSA system, we have especially found the Sentiment Lexica feature interesting. As we could see from the ablation study in Section~\ref{sec:ablation_study} it is the single most important feature while also being one of the simplest, our implementation is based only on summing up the sentiment value of each word. We believe it should be possible to extract more information by considering the order of the words, part-of-speech tags, and degree modifiers. Degree modifiers are words such as ``very'', ``really'' and ``somewhat'', that can affect the sentiment value of the following word, these words are currently not handled by our sentiment lexica extractor at all, yet they clearly carry a lot of sentiment weight. \\
+
+Another interesting feature of lexicon based systems is their run-time performance, this is also confirmed in our system, where the lexicon feature extractor is one of the fastest feature extractors. We believe this is particularly important feature for a TSA system to actually be useful in the real world, as the opinion mining accuracy confidence depends on number of opinions examined. \\
+
+Creating a Sentiment Lexica based TSA system with good run-time performance while incorporating the ideas stated above will therefore be the main goal of our Master's thesis. The system should both work as a standalone TSA system and as a feature in TSA systems as the one we have developed in this project.
+
+
+
+\section{Evaluation of Goals}
+\label{sec:evaluation}
+
+\subsection*{G1: Research the State-of-the-Art in Twitter Sentiment Analysis}
+The State-of-the-Art within the field of Twitter Sentiment Analysis has been explored, focusing on the best performing systems participating in the TSA shared task that has been hosted in recent years. This research formed the basis for the work done towards reaching our second goal (G2) as well as providing us with ideas for our Master's thesis (G3). 
+
+\subsection*{G2: Improve on previous NTNU Twitter Sentiment Classifier}
+Based on the two TSA systems, created by \cite{SelmerBrevik}, and \cite{FaretReitan}, we have created a new TSA system. The system combines the simplified system of \cite{SelmerBrevik} and the more complex system of \cite{FaretReitan} into a hybrid of the two. The performance in terms of the scoring metrics described in Section~\ref{sec:classification_scoring_metrics} is on par with the complex system of \cite{FaretReitan} and better than the system of \cite{SelmerBrevik}. In terms of execution time, our system ends up between the two. This being the main goal of the project, we are quite satisfied with our final system and its performance in relation to the systems we aimed to improve. In addition, the work done to reach this goal has similarly to our first goal provided us with ideas for our Master's thesis (G3).    
+
+\subsection*{G3: Outline future work for Master's thesis}
+As stated in Section~\ref{sec:future_work}, the work to be done in our Master's thesis has been outlined. The Master's thesis will be centered around developing a Sentiment Lexica based TSA system with good run-time performance. We find the upcoming task interesting and are looking forward to start working on it.
+
+
+
+

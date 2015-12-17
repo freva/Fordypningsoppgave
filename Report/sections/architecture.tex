@@ -1,6 +1,159 @@
 %!TEX root = ../report.tex
 \chapter{Architecture}
 \label{cha:architecture}
+To solve the three-class classification problem, a general multi-class classifier, \textit{BaseClassifier}, has been created. By following a general interface it is possible to combine several BaseClassifiers together in different ways, such as sequentially, to create a multi-step classifier or in parallel, to create an ensemble classifier.
+
+
+\section{BaseClassifier}
+\label{sec:core_architecture}
+The Sentiment Analysis system created has been developed using the Python programming language and the Scikit-Learn machine learning framework described in Section~\ref{sec:background_scikit}. The BaseClassifier consists of a three step process: preprocessing, feature extraction, and classification or training. The three consecutive steps are handled by the Pipeline also described in Section~\ref{sec:background_scikit}. Each Transformer (feature extractor) is presented with preprocessed data. The preprocessing methods used are dependent on the different Transformers and the features they aim to extract. The different Transformers and the range of preprocessors used, are described later in this section. Figure~\ref{fig:core_architecture} illustrates the overall architecture of the system. \\
+
+\begin{figure}[t]
+    \begin{center}
+        \includegraphics[width=\textwidth]{./figs/core_architecture}
+    \end{center}
+    \caption{Overview of the core architecture of our system}
+    \label{fig:core_architecture}
+\end{figure}
+
+The BaseClassifier is very general. When creating a BaseClassifier instance, it takes in a dictionary that specifies all of its parameters. The parameter dictionary includes the classifier type, such as SVM, Naïve Bayes or MaxEnt, options for each of the transformers, for example $n$ value for the character and word $n$-gram transformers, or which preprocessing functions to use.
+
+\subsection{Preprocessing}
+The preprocessing step of our system modifies the raw tweets before they are passed to feature extraction, and is a necessary stage to improve the overall performance of the system. In this stage, simple filters remove noise and negation scopes are detected.
+
+\subsection*{Filtering}
+The filtering step consists of a set of simple methods, chained together, that modify raw tweets using regular expressions. Limiting each filter to perform only one simple task allows for easy management of the preprocessing used by the different transformers. Table~\ref{tab:filters} lists all the basic filters.
+
+\noindent\begin{table}[t]
+    \begin{tabular}{| p{2.2cm} | p{9.3cm} |}
+        \hline
+        \textbf{Filter} & \textbf{Description} \\ \hline
+        %html_decode
+        tokenize & Performs tweet tokenization using tokenizer by \cite{PottsTokenizer} \\ \hline
+        lower\_case & Transforms all uppercase characters to lowercase \\ \hline
+        no\_emotes & Replaces various emoticons with empty string \\ \hline
+        no\_user & Replaces all username mentions with empty string \\ \hline
+        no\_rt\_tag & Replaces all RT tags with empty string \\ \hline
+        no\_url & Replaces all URLs with empty string \\ \hline
+        no\_hashsign & Replaces only hashtag signs (\#) with empty string \\ \hline
+        no\_hashtag & Replaces all hashtag signs with the strings that follows directly after it with empty string \\ \hline
+        limit\_chars & Removes all non alphabetic or space characters \\ \hline
+        limit\_repeat & Limits maximum repeating of a single character to three \\ \hline
+    \end{tabular}
+    \caption{Overview of basic filters used in our system}
+    \label{tab:filters}
+\end{table}
+
+\subsection*{Negation Detection}
+A subset of the transformers perform better when negation is identified in the tweets. Negation detection is therefore an important tweet preprocessing step performed on all tweets before being sent to negation-dependent transformers. \\
+
+To perform negation detection, the system uses a simple approach, where $n$ words appearing after a negation cue, are marked as negated by attaching ``\texttt{\_NEG}'' to the end of each word. If a punctuation mark is encountered before reaching the $n$--th word, the negation marking is stopped. By setting $n=-1$, negation marking is extended until the next punctuation or the end of the tweet. To detect the negation cues, all words in a tweet are checked against a list of negation cues. All negation cues used in our system are listed in Table~\ref{tab:negation_cues}. The negation cues were adopted from \cite{Councill10}, additionally we added common misspellings and other closely related words by looking up each negation cue in TweetNLP word cluster, described in Section~\ref{sec:tweetnlp}.
+
+\noindent\begin{table}[t]
+    \begin{tabular}{| l | l | l | l | l | l | l |}
+        \hline
+        \multicolumn{7}{|c|}{\textbf{Negation Cues}} \\ \hline
+        ain't & aint & anit & can't & cannot & cant & couldn't \\ \hline
+        couldnt & didn't & didnt & dnt & does'nt & doesn't & doesnt \\ \hline
+        don't & dont & hadn't & hasn't & hasnt & haven't & havent \\ \hline
+        havn't & havnt & isn't & isnt & lack & lacking & lacks \\ \hline
+        no & nor & not & shouldn't & shouldnt & wasn't & wasnt\\ \hline
+        won't & wont & wouldn't & wouldnt & \multicolumn{3}{c|}{} \\ \hline
+    \end{tabular}
+    \caption{List of all negation cues used in the system}
+    \label{tab:negation_cues}
+\end{table}
+
+
+\subsection{Feature Extraction}
+\label{sec:feature_extraction}
+In our system the feature extraction set is implemented as a Scikit-Learn Feature Union, which is a collection of independent transformers (feature extractors), that build a feature matrix for the classifier. Each feature we want to extract is represented by a transformer.
+
+\noindent\begin{table}[ht]
+    \begin{tabular}{| l | p{10cm} |}
+        \hline
+        \textbf{Features} & \textbf{Description} \\ \hline
+        Word n-grams & Extracts TF--IDF values for combination of sequential words as described in Section~\ref{sec:background_tfidf} \\ \hline
+        Char n-grams & Extracts TF--IDF values for combination of sequential characters \\ \hline
+        Lexicon & Extracts a few values that are calculated as a function of the sentiment value of words in the tweet \\ \hline
+        Word Clusters & Extracts a \textit{Bag-of-Words} model of cluster IDs for each token in the tweet \\ \hline
+        Part-of-Speech & Extracts a \textit{Bag-of-Words} model of part-of-speech tags  for each token in the tweet. \\ \hline
+        Emoticons & Extracts number of positive and negative emoticons found in the tweet \\ \hline
+        Punctuation & Extracts number of repeated alphabetical and grammatical signs \\ \hline
+        VADER & Extracts results from VADER sentiment analysis \\ \hline
+    \end{tabular}
+    \caption{Overview of feature extractors}
+    \label{tab:feature_extractors}
+\end{table}
+
+
+\subsection*{TF--IDF Transformer}
+Both \textit{Word n-grams} and \textit{char n-grams} are realized using a TF-IDF vectorizer that uses the bag of words model outlined in Section~\ref{sec:background_nlp}. Our implementation extends Scikit-Learn's default \textit{TfidfVectorizer}.
+
+
+\subsection*{Lexicon Transformer}
+The sentiment lexicon feature is represented by a single transformer using multiple different prior polarity sentiment lexica. The lexica used are a combination of automatic and manually annotated lexica, where some also contain sentiment scores for words in negated contexts. \\
+
+The automatically annotated lexica used are the NRC Sentiment140 and the HashtagSentiment by \cite{MohammadKZ2013}, and contain sentiment scores for both unigrams and bigrams, where some are in a negated context. The unigrams and bigrams in a negated context are listed with a ``\texttt{\_NEG}'' attachment to differentiate between the two types of sentiment scores.
+
+The features extracted for each tweet from these two lexica are adopted from \cite{FaretReitan} and comprise:
+\begin{itemize}
+\item The number of unigrams or bigrams with sentiment score $\neq0$.
+\item The sum of all sentiment scores.
+\item The highest sentiment score.
+\item The sentiment score of the last unigram or bigram.
+\end{itemize}
+
+The manually annotated lexica we used are the MPQA, the BingLiu, the AFINN, and the NRC Emoticon lexica. The MPQA and the BingLiu lexica do not list sentiment scores for words, but instead whether a word contains positive or negative sentiment. After checking a word of a tweet against these lexica, the word is either given the score $-1$ or $+1$, for a negative or positive word sentiment respectively. The AFINN and the NRC Emoticon lexica are similar to the two automatically annotated lexica described above, where each word for the AFINN lexicon and each emoticon for the Emoticon lexicon is given a sentiment score.
+
+Also for the manually annotated lexica four features were extracted. The four features are as above, adopted from \cite{FaretReitan} and comprise:
+\begin{itemize}
+\item The sum of positive scores for words not in a negated context.
+\item The sum of negative scores for words not in a negated context.
+\item The sum of positive scores for words in a negated context.
+\item The sum of negative scores for words in a negated context.
+\end{itemize}
+
+
+\subsection*{Word Cluster Transformer}
+The word cluster transformer extracts the word cluster feature by counting the occurrences of the different clusters in each tweet. That is, if a word in a tweet exists in a cluster, a counter for that specific cluster is incremented by one. The clusters are predefined, we use the cluster described in Section~\ref{sec:tweetnlp}.
+
+\subsection*{Part-of-Speech Tagger}
+Uses the Gate TwitieTagger to assign part-of-speech tag for every token in the text, the tag occurrences are then counted and returned.
+
+\subsection*{Punctuation Transformer}
+The occurrences of continuous use of punctuation marks and characters are detected by the punctuation transformer. The feature it extracts is the number of these occurrences. 
+
+\subsection*{Emoticon Transformer}
+Similarly to the punctuation transformer, the emoticon transformer also searches for specific occurrences of characters that make up an emoticon in a tweet. For the emoticon transformer this is the use of happy and sad emoticons. The features it extracts are therefore the number of happy emoticons and the number of sad emoticons.
+
+\subsection*{VADER Transformer}
+The VADER transformer is very simple, it simply runs the VADER sentiment analysis tool, described in Section~\ref{sec:vaderSentiment}, and extracts the output from it.
+
+\subsection{Classification}
+\label{sec:arch_classification}
+After all desired features have been extracted, our system uses the Support Vector Machine algorithm to classify the data into one of the three classes: positive, neutral or negative. The SVM algorithm was chosen for being a state-of-the-art text classification algorithm as discussed in Section~\ref{sec:state_of_the_art}.  \\
+
+The classifier was realized using the Scikit-Learn framework which includes a series of SVM implementations. We chose the SVC variant, also known as C-Support SVM classifier, which is based around the idea of setting a constant $C$ that will be used to penalize instances not correctly classified. High $C$ values will create a narrower margin, which makes it able to classify more elements correctly, but this could lead to overfitting, therefore it is desirable to perform some kind of parameter optimization to find optimal $C$ value. For multi-class classification, Scikit-Learn it uses One-vs-One method, its run time complexity is more that quadratic to number of elements, but this will not be a problem for our relatively small (under 10,000 elements) datasets.
+
+
+\section{Combining BaseClassifiers}
+\subsection{Multi-Step Classifier}
+\label{sec:multi_step_classifier}
+
+\begin{figure}[t]
+    \begin{center}
+        \includegraphics[width=\textwidth]{./figs/data_flow}
+    \end{center}
+    \caption{Overview of flow of data in the two-step classifier}
+    \label{fig:data_flow}
+\end{figure}
+
+A single BaseClassifier acts as a one-step classifier, but by chaining BaseClassifiers sequentially, we can create a multi-step classifier. Each classifier can be trained independently on different data thereby learning a different classification function. Figure~\ref{fig:data_flow} illustrates how chaining of two BaseClassifiers can create a two-step classifier. The first BaseClassifier is trained only on data labeled as subjective or objective, while the second BaseClassifier trains only on subjective data, labeled positive or negative. When classifying, if the first BaseClassifier classifies an instance as subjective, the instance is forwarded to the second BaseClassifier to determine if the instance is positive or negative. The results from both classifiers are then combined together and the final classifications are returned.
+
+\subsection{Ensemble Classifier}
+By combining the BaseClassifiers in parallel, we can create an ensemble of classifiers. Each of the classifiers is independent of the others and all classify the same instances. At the end the classifiers take a vote to decide on the final classification of the instance. Because the BaseClassifiers are so general, it is possible to create BaseClassifiers that extract different features, do different preprocessing or use a different classification algorithm; we could combine them to create an ensemble system. 
+
 
 \glsresetall
 
