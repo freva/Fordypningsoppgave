@@ -1,0 +1,190 @@
+%!TEX root = ../report.tex
+\chapter{Results}
+\label{cha:results}
+
+\section{Parameter Grid Search}
+Through Scikit-Learn framework we performed an extensive grid search in order to find the optimal parameter values for our system. The optimal parameter values for the system are those that yield the best results on average over any subset of the training set. The grid search was performed on shuffled datasets, using stratified $k$-fold with $k=5$ by optimizing the $F_1$-score. The optimal parameters are described in detail in Section~\ref{sec:optimal_parameters}. \\
+
+During development we were able to find parameters that yielded a better result on the complete test set than the optimal parameters from the grid search. As mentioned above, the optimal parameters are those that perform best on average. Using the parameters identified through development when presented with new data would then most likely perform worse than using the parameters identified through grid search. 
+
+\subsection*{Optimal Parameters}
+\label{sec:optimal_parameters}
+BaseClassifier has $2n$ options where $n$ is the number of feature extractors. For each feature extractor the user has to specify whether the feature is \textit{enabled} and what is the class \textit{type} or class name, that will be doing the extraction of that feature. We have implemented a total of eight different feature extractors, all of which are enabled and are described in detail in Section~\ref{sec:feature_extraction}. \\
+
+The remaining options are for the classifier algorithm and the feature extractors themselves. There are a total of 19 feature extractor options. Table~\ref{tab:grid_search_results} displays the 3 option settings for the SVM algorithm in addition to 11 the feature extractor options. The remaining 8 are the preprocessor settings for each of the feature extractors. These are shown in Table~\ref{tab:feature_preprocessing} for clarity. \\
+
+\begin{itemize}
+    \item \textit{n-range}: Lower and upper bound of $n$-value for different $n$-grams.
+    \item \textit{use\_idf}: Enable Inverse Document Frequency weighting. 
+    \item \textit{min\_df}: Proportion of lowest document frequency occurring terms to be excluded from the final vocabulary.
+    \item \textit{max\_df}: Proportion of highest document frequency occurring terms to be excluded from the final vocabulary.
+    \item \textit{negation\_length}: Maximum number of tokens inside a negation scope. Negation scope starts once it hits one of the negation cues and continues until it either reaches \textit{negation\_length} tokens or the next punctuation mark. Value -1 means no limit (until next punctuation mark or end of text), value None means negation is disabled all together.
+\end{itemize}
+
+
+\begin{table}[t]
+    \centering
+    \begin{tabular}{|l|l|p{5cm}|}
+        \hline
+                        & \textbf{Parameter} & \textbf{Value} \\ \hline
+        Classifier      & Type              & SVC \\ \cline{2-3}
+                        & Kernel            & Linear \\ \cline{2-3}
+                        & C                 & 0.1 \\ \hline
+        
+        Word $n$-grams  & $n$-range         & (1, 5) \\ \cline{2-3}
+                        & use\_idf          & True \\ \cline{2-3}
+                        & min\_df           & 0.0 \\ \cline{2-3}
+                        & max\_df           & 0.5 \\ \cline{2-3}
+                        & negation\_length  & 4 \\ \hline
+                        
+        Character $n$-grams & $n$-range     & (3, 6) \\ \cline{2-3}
+                        & use\_idf          & True \\ \cline{2-3}
+                        & min\_df           & 0.0 \\ \cline{2-3}
+                        & max\_df           & 0.5 \\ \cline{2-3}
+                        & negation\_length  & None \\ \hline
+                        
+        Lexicon         & negation\_length  & -1 \\ \hline
+    \end{tabular}
+    \caption{The optimal parameters for the classifier and the feature extractors}
+    \label{tab:grid_search_results}   
+\end{table}
+
+
+\begin{table}[t]
+    \centering
+    \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+            \textbf{Feature} & \rot{\textbf{tokenize}} & \rot{\textbf{lower\_case}} & \rot{\textbf{no\_emotes}} & \rot{\textbf{no\_user}} & \rot{\textbf{no\_rt\_tag}} & \rot{\textbf{no\_url}} & \rot{\textbf{no\_hashsign}} & \rot{\textbf{no\_hashtag}} & \rot{\textbf{limit\_chars}} & \rot{\textbf{limit\_repeat}} \\ \hline
+            
+            Word $n$-grams      & & & X & X & X & X & & X & & \\ \hline
+            Character $n$-grams & & & & X & X & X & X & & X & X \\ \hline
+            Lexicon             & & X & & X & X & X & X & & X & X \\ \hline
+            PoS Tagger          & X & & & X & X & X & & X & & \\ \hline
+            Word Clusters       & & X & & X & X & X & X & & & X \\ \hline
+            Punctuation         & & & & X & & X & & & & \\ \hline
+            Emoticons           & & & & & & X & & & & \\ \hline
+            VADER Sentiment     & & & & X & X & X & X & & & \\ \hline
+    \end{tabular}
+    \caption{Preprocessing functions used by each feature extractor}
+    \label{tab:feature_preprocessing}   
+\end{table}
+
+
+\section{Classifier Performance}
+ Our TSA system was trained on the Twitter training set, using the optimal parameters identified through grid search, and tested on the Twitter test sets from 2013 and 2014 before being scored using the scoring metrics described in Section~\ref{sec:classification_scoring_metrics}. The results are shown in Table~\ref{tab:system_comparison} together with the results of the systems we aimed to improve. \\
+ 
+ The performance of our system, compared to the TSA systems of \cite{FaretReitan} and \cite{SelmerBrevik}, is quite good. On the 2013 test set, we can see that our system performs just as well as \cite{FaretReitan} and a lot better than \cite{SelmerBrevik}. On the 2014-test set our system does not quite keep up with \cite{FaretReitan} while it still performs significantly better than \cite{SelmerBrevik}. However, an important aspect to notice is the execution time. Although we were not able to replicate the results of \cite{FaretReitan} by running their system, we got a rough estimate of their execution time. On the 2013-test set their execution time was 180 seconds against our 106, and on the 2014-test set their time was 93 against our 53. Even though these execution time estimates are unofficial they still indicate a reduction in execution time from their system to ours. Compared to the execution time of \cite{SelmerBrevik} our system is still quite slow, but the simplicity of their system also leads to a lower performance.
+ 
+
+\begin{table}[b]
+    \centering
+    \begin{tabular}{l|c|c|c|c|c|c|}
+        \cline{2-7}
+        & System & Precision & Recall & F1-Score & Accuracy & Time \\
+        \cline{1-7}
+        \multirow{3}{*}{\rot{2013}} & Brevik Selmer & .6439 & .6153 & .6259 & .6647 & 0.64 \\
+        \cline{2-7}
+        & Faret Reitan & .731 & .697 & .688 & - & - \\
+        \cline{2-7}
+        & \textbf{Our System} & .7370 & .6639 & .6848 & .7227 & 106.97 \\
+        \cline{1-7}
+        
+        \multirow{3}{*}{\rot{2014}} & Brevik Selmer & .6153 & .6025 & .6046 & .6607 & 0.29 \\
+        \cline{2-7}
+        & Faret Reitan & .738 & .684 & .684 & - & - \\
+        \cline{2-7}
+        & \textbf{Our System} & .7031 & .6619 & .6691 & .6905 & 53.01 \\
+        \cline{1-7}
+    \end{tabular}
+    \caption{Sentiment classifier performance}
+    \label{tab:system_comparison}   
+\end{table}
+
+%Faret Reitan & .6988 & .6142 & .6320 & .6871 & 181.31 2013
+%Faret Reitan & .6885 & .6449 & .6483 & .6793 & 93.65 2014
+
+
+\section{Ablation Study}
+\label{sec:ablation_study}
+In order to detect the overall importance or impact each feature has on our TSA system, we conducted a simple ablation study. This was done by removing each feature in turn and check how the performance of the system was affected. The results of the ablation study are shown in Table~\ref{tab:ablation_study}. \\
+
+As we can see, the single most important feature is the  Sentiment Lexica. On the 2013-test set the accuracy of the system is reduced from 0.7227 to 0.6945 when the feature is removed. The effect of removing the Sentiment Lexica feature when tested on the 2014-test set is not as apparent. A possible cause of the difference in performance impact, may be that most of the Sentiment Lexica used were created at the same time as the 2013-test set, and could possibly better reflect the language in that period of time. The most important feature when testing the system on the 2014-test set is the Vader Sentiment feature, reducing the accuracy from 0.6905 to 0.6793 when being removed. On the 2013-test set on the other hand Vader Sentiment feature does not have the same impact. As Vader Sentiment was created in 2014, the cause of this difference may also be a change in how the language is used and that Vader Sentiment better reflects the language in 2014.  \\
+
+The second most important features are the n-gram features. The removal of both character n-grams and word n-grams leads to a degradation in performance. On the 2013-test set the degradation in performance is quite significant, while on the 2014-test set the degradation is quite subtle. \\
+
+Another interesting result is the impact of the features: Emoticons counts and Punctuation counts. On the 2013-test set, we can observe a slight reduction in performance, while on the 2014-test set we can observe a slight increase in performance. One possible cause for this might be that the way emoticons and punctuation are used in tweets has changed, but the most likely cause is merely noise in the data. Although causing slightly increased or decreased performance, the count features does not impose considerable changes in performance individually.
+
+\begin{table}[t]
+    \centering
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \textbf{Features} & \textbf{2013-test} & \textbf{2014-test} \\ \hline
+        All & .7227 & .6905 \\ \hline
+        All - Word $n$-grams & .7136 & .6892 \\
+        All - Character $n$-grams & .7085 & .6885 \\
+        All - Both n-grams & .7017 & .6872 \\ \hline
+        All - Automatic Lexica & .7088 & .6799 \\
+        All - Manual Lexica & .7085 & .6938 \\
+        All - All Sentiment Lexica & .6945 & .6826 \\ \hline
+        All - Word Clusters & .7166 & .6872 \\ \hline
+        All - Part-of-Speech tag counts & .7159 & .6865 \\
+        All - Punctuation counts & .7143 & .6932 \\
+        All - Emoticons counts & .7156 & .6918 \\ 
+        All - All counts & .7127 & .6925 \\ \hline
+        All - VADER Sentiment & .7114 & .6793 \\ \hline
+    \end{tabular}
+    \caption[Ablation study results]{Ablation study results. All - F means all features except for F. All values are $F_1$-scores.}
+    \label{tab:ablation_study}   
+\end{table}
+
+\section{Architectural Experiments}
+
+\subsection{Two-Step Classifier}
+As described in Section~\ref{sec:multi_step_classifier} two instances of our BaseClassifier can be chained sequentially creating a 2-step classifier. In order to compare our standard 1-step classifier with a 2-step classifier, the 2-step classifier was tested on both the 2013-test set and the 2014-test set. The results are shown in Table~\ref{tab:2_step_classifier}.  \\
+
+Compared to the results of our 1-step classifier in Table~\ref{tab:system_comparison} we can observe that the 2-step classifier performs worse on the 2013-test set, while the performance on the 2014 is on par with the 1-step classifier. We can not draw a conclusion whether the 1-step classifier is better than the 2-step classifier or not based on the results, but as mentioned in Section~\ref{sec:state_of_the_art} we see a trend towards using a 1-step classifier over a 2-step classifier within the field of TSA. 
+
+\begin{table}[t]
+    \centering
+    \begin{tabular}{l|c|c|c|c|c|}
+        \cline{2-6}
+        & Precision & Recall & F1-Score & Accuracy & Time \\
+        \cline{1-6}
+        \multirow{1}{*}{2013} & .7278  & .6526 &  .6729 &  .7172 &  118.36 \\
+        \cline{1-6}
+        
+        \multirow{1}{*}{2014} & .7079  & .6570 &  .6676 &  .6912 &  59.6 \\
+        \cline{1-6}
+    \end{tabular}
+    \caption{Two-step classifier results}
+    \label{tab:2_step_classifier}   
+\end{table}
+
+\subsection{Fast PoS Tagging}
+The Part-of-Speech tagger used, the Gate TwitieTagger, uses an underlying model when tagging the tweets. In addition to the standard best performing model, another high-speed model trading 2.5\% token accuracy for half the tagging speed is available. As part of our main goal (G2) was to simplify the system of \cite{FaretReitan}, a reduction of execution time would also be preferable. The test results from testing our BaseClassifier using the high-speed PoS tagger model are shown in Table~\ref{tab:fast_pos_tagging}. \\
+
+Although we can observe a reduction in performance compared to the the system using the best PoS tagger model, the reduction is only a slight one. Interestingly the use of the high-speed model has reduced the execution time from 106 seconds to 80 seconds on the 2013-test set and from 53 to 40 on the 2014-test set. That is a quite significant reduction, especially because the precision, recall, F1-score and the accuracy are only slightly reduced.  
+
+\begin{table}[t]
+    \centering
+    \begin{tabular}{l|c|c|c|c|c|}
+        \cline{2-6}
+        & Precision & Recall & F1-Score & Accuracy & Time \\
+        \cline{1-6}
+        \multirow{1}{*}{2013} & .7364  & .6639  & .6846  & .7221  & 80.13 \\
+        \cline{1-6}
+        
+        \multirow{1}{*}{2014} & .7032  & .6591  & .6673  & .6892  & 41.03 \\
+        \cline{1-6}
+    \end{tabular}
+    \caption{One-step classifier with fast PoS tagging}
+    \label{tab:fast_pos_tagging}   
+\end{table}
+
+
+\glsresetall
+
+
+%BS: 21 filer, 1136 linjer kode, 33160 bytes
+%FR: 39 filer, 2997 linjer kode, 111794 bytes
+%FJ: 18 filer, 1221 linjer kode, 45498 bytes
